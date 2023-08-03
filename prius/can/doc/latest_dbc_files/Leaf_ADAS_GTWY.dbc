@@ -1,0 +1,56 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: 
+
+
+BO_ 976 Steering_Wheel_CAN6: 5 Vector__XXX
+ SG_ steering_angle_CAN6__deg : 24|16@1- (0.1,0) [-3276.8|3276.7] "" Vector__XXX
+
+BO_ 853 Veh_Spd_CAN6: 4 Vector__XXX
+ SG_ veh_speed1_CAN6__kph : 7|16@0+ (0.01,0) [0|655.35] "kph" Vector__XXX
+ SG_ veh_speed2_CAN6__kph : 23|16@0+ (0.01,0) [0|655.35] "kph" Vector__XXX
+
+BO_ 569 Pedal_Accel_CAN6: 6 Vector__XXX
+ SG_ pedal_accel_pos_CAN6__per : 47|8@0+ (0.5,0) [0|127.5] "%" Vector__XXX
+
+BO_ 384 Torque_Req_CAN6: 5 Vector__XXX
+ SG_ driver_torque_req_CAN6__Nm : 27|12@0- (2.5,0) [-5120|5117.5] "Nm" Vector__XXX
+
+BO_ 470 ePedal: 2 Vector__XXX
+ SG_ ePedal_brake_req_torque__CAN6__N : 4|13@0- (-0.25,952) [-71.75|1976] "Nm" Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+

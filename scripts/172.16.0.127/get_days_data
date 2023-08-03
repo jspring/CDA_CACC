@@ -1,0 +1,15 @@
+#!/bin/sh
+cd /home/qnxuser/path_can_bin
+
+DATE=$1
+
+if [ q$DATE == 'q' ]
+then
+	DATE=`date +%m%d%Y`
+fi
+
+echo "Must execute as qnxuser"
+IPADDR=`ifconfig| grep inet | grep broadcast |gawk '{print $2}'`
+ssh jspring@172.16.0.150 "mkdir -p /windows/big/data/$IPADDR"
+
+scp -p *$DATE* jspring@172.16.0.150:/windows/big/data/$IPADDR

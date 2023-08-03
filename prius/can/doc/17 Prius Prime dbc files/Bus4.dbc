@@ -1,0 +1,228 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: FCAM 
+VAL_TABLE_ Veh_pre_collision_system_sensitivity_CAN4 1 "long" 2 "mid" 3 "short" ;
+
+
+BO_ 452 HS_CAN4__1C4: 2 Vector__XXX
+ SG_ Gen_spd_CAN4__rpm : 7|16@0- (2.81,0) [-92078.08|92075.27] "rpm" Vector__XXX
+
+BO_ 862 HS_CAN4__35E: 0 Vector__XXX
+
+BO_ 295 HS_CAN4__127: 0 Vector__XXX
+
+BO_ 550 HS_CAN4__226: 0 Vector__XXX
+
+BO_ 37 HS_CAN4__25: 0 Vector__XXX
+
+BO_ 36 HS_CAN4__24: 0 Vector__XXX
+
+BO_ 1020 HS_CAN4__3FC: 0 Vector__XXX
+
+BO_ 740 HS_CAN4__2E4: 0 Vector__XXX
+
+BO_ 1196 HS_CAN4__4AC: 0 Vector__XXX
+
+BO_ 1212 HS_CAN4__4BC: 0 Vector__XXX
+
+BO_ 971 HS_CAN4__3CB: 0 Vector__XXX
+
+BO_ 989 HS_CAN4__3DD: 0 Vector__XXX
+
+BO_ 944 HS_CAN4__3B0: 0 Vector__XXX
+
+BO_ 1595 HS_CAN4__63B: 0 Vector__XXX
+
+BO_ 1778 HS_CAN4__6F2: 0 Vector__XXX
+
+BO_ 1190 HS_CAN4__4A6: 0 Vector__XXX
+
+BO_ 865 Bus_4__361: 7 Vector__XXX
+ SG_ Cruise_decel_CAN4 : 4|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Cruise_set_speed_CAN4 : 47|8@0+ (1,0) [2|257] "kph" Vector__XXX
+ SG_ Cruise_veh_actual_speed_MAYBE_CAN4 : 55|8@0+ (1,0) [2|257] "" Vector__XXX
+ SG_ Cruise_veh_active_CAN4 : 2|1@0+ (1,0) [2|3] "" Vector__XXX
+ SG_ Cruise_veh_radar_active_CAN4 : 1|1@0+ (1,0) [2|3] "" Vector__XXX
+ SG_ Cruise_accel_CAN4 : 5|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 836 Bus_4__344: 3 Vector__XXX
+ SG_ Veh_pre_collision_system_CAN4 : 16|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 830 Bus_4__33E: 4 Vector__XXX
+ SG_ Veh_pre_collision_system_sensitivity_CAN4 : 31|2@0+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 560 Bus_4__230: 0 Vector__XXX
+
+BO_ 296 Bus_4__128: 0 Vector__XXX
+
+BO_ 1185 Bus_4__4A1: 0 Vector__XXX
+
+BO_ 552 Bus_4__228: 0 Vector__XXX
+
+BO_ 1186 Bus_4__4A2: 0 Vector__XXX
+
+BO_ 610 Bus_4__262: 0 Vector__XXX
+
+BO_ 32 Bus_4__20: 0 Vector__XXX
+
+BO_ 180 Bus_4__B4: 0 Vector__XXX
+
+BO_ 170 Bus_4__AA: 0 Vector__XXX
+
+BO_ 643 Bus_4__283: 0 Vector__XXX
+
+BO_ 581 Bus_4__245: 0 Vector__XXX
+
+BO_ 583 Bus_4__247: 0 Vector__XXX
+
+BO_ 608 Bus_4__260: 0 Vector__XXX
+
+BO_ 614 Bus_4__266: 0 Vector__XXX
+
+BO_ 658 Bus_4__292: 0 Vector__XXX
+
+BO_ 562 Bus_4__232: 0 Vector__XXX
+
+BO_ 835 Bus_4__343: 0 Vector__XXX
+
+BO_ 869 Bus_4__365: 0 Vector__XXX
+
+BO_ 676 Bus_4__2A4: 0 Vector__XXX
+
+BO_ 426 Bus_4__1AA: 0 Vector__XXX
+
+BO_ 800 Bus_4__320: 0 Vector__XXX
+
+BO_ 810 Bus_4__32A: 0 Vector__XXX
+
+BO_ 1187 Bus_4__4A3: 0 Vector__XXX
+
+BO_ 814 Bus_4__32E: 0 Vector__XXX
+
+BO_ 1245 Bus_4__4DD: 0 Vector__XXX
+
+BO_ 849 Bus_4__351: 0 Vector__XXX
+
+BO_ 916 Bus_4__394: 0 Vector__XXX
+
+BO_ 1217 Bus_4__4C1: 0 Vector__XXX
+
+BO_ 1114 Bus_4__45A: 0 Vector__XXX
+
+BO_ 863 Bus_4__35F: 0 Vector__XXX
+
+BO_ 896 Bus_4__380: 0 Vector__XXX
+
+BO_ 1017 Bus_4__3F9: 0 Vector__XXX
+
+BO_ 951 Bus_4__3B7: 0 Vector__XXX
+
+BO_ 870 Bus_4__366: 0 Vector__XXX
+
+BO_ 1222 Bus_4__4C6: 0 Vector__XXX
+
+BO_ 871 Bus_4__367: 0 Vector__XXX
+
+BO_ 1028 Bus_4__404: 0 Vector__XXX
+
+BO_ 1184 Bus_4__4A0: 0 Vector__XXX
+
+BO_ 1556 Bus_4__614: 0 Vector__XXX
+
+BO_ 1568 Bus_4__620: 0 Vector__XXX
+
+BO_ 1552 Bus_4__610: 0 Vector__XXX
+
+BO_ 956 Bus_4__3BC: 0 Vector__XXX
+
+BO_ 1043 Bus_4__413: 0 Vector__XXX
+
+BO_ 953 Bus_4__3B9: 0 Vector__XXX
+
+BO_ 955 Bus_4__3BB: 0 Vector__XXX
+
+BO_ 1569 Bus_4__621: 0 Vector__XXX
+
+BO_ 1572 Bus_4__624: 0 Vector__XXX
+
+BO_ 1593 Bus_4__639: 0 Vector__XXX
+
+BO_ 1589 Bus_4__635: 0 Vector__XXX
+
+BO_ 1666 Bus_4__682: 0 Vector__XXX
+
+BO_ 1056 Bus_4__420: 0 Vector__XXX
+
+BO_ 1344 Bus_4__540: 0 Vector__XXX
+
+BO_ 1570 Bus_4__622: 0 Vector__XXX
+
+BO_ 1219 Bus_4__4C3: 0 Vector__XXX
+
+BO_ 1224 Bus_4__4C8: 0 Vector__XXX
+
+BO_ 945 Bus_4__3B1: 0 Vector__XXX
+
+BO_ 1014 Bus_4__3F6: 0 Vector__XXX
+
+BO_ 1059 Bus_4__423: 0 Vector__XXX
+
+BO_ 1026 Bus_4__402: 0 Vector__XXX
+
+BO_ 950 Bus_4__3B6: 0 Vector__XXX
+
+BO_ 929 Bus_4__3A1: 0 Vector__XXX
+
+BO_ 1553 Bus_4__611: 0 Vector__XXX
+
+BO_ 1418 Bus_4__58A: 0 Vector__XXX
+
+BO_ 1232 Bus_4__4D0: 0 Vector__XXX
+
+BO_ 900 Bus_4__384: 0 Vector__XXX
+
+BO_ 902 Bus_4__386: 0 Vector__XXX
+
+BO_ 998 Bus_4__3E6: 0 Vector__XXX
+
+BO_ 1554 Bus_4__612: 0 Vector__XXX
+
+BO_ 1557 Bus_4__615: 0 Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+BA_ "SignalType" SG_ 830 Veh_pre_collision_system_sensitivity_CAN4 "ENM";
+VAL_ 830 Veh_pre_collision_system_sensitivity_CAN4 1 "long" 2 "mid" 3 "short" ;
+

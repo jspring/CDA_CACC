@@ -1,0 +1,12 @@
+#!/bin/sh
+cd /home/qnxuser/path_can_bin
+
+DATE=$1
+
+if [ q$DATE == 'q' ]
+then
+	DATE=`date +%m%d%Y`
+fi
+
+scp -rp *$DATE* jspring@172.16.0.150:/big/data/volvo_rolys/neweagle
+scp -rp data/*$DATE* jspring@172.16.0.150:/big/data/volvo_rolys/neweagle

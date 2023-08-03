@@ -1,0 +1,311 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: FCAM 
+VAL_TABLE_ Radar_following_distance_state_CAN1 3 "short" 2 "mid" 1 "long" 0 "off" ;
+VAL_TABLE_ Cruise_low_speed_lockout_CAN1 2 "low speed locked" 1 "ok" ;
+VAL_TABLE_ Veh_mode_CAN1 0 "Off" 1 "Accessory" 3 "Ignition On" ;
+VAL_TABLE_ Veh_cruise_state_CAN1 8 "active" 7 "standstill" 1 "off" ;
+VAL_TABLE_ Cruise_control_state_CAN1 2 "disabled" 11 "hold" 10 "hold_waiting_user_cmd" 6 "enabled" 5 "faulted" ;
+VAL_TABLE_ Veh_units_CAN1 1 "km" 2 "miles" ;
+
+
+BO_ 467 HS_CAN5__1D3: 8 Vector__XXX
+ SG_ Radar_following_distance_2_CAN1 : 62|7@0+ (0.5,0) [0|127] "" Vector__XXX
+ SG_ Cruise_active_state_CAN1 : 63|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_following_distance_state_CAN1 : 4|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ Cruise_main_on_CAN1 : 15|1@0+ (1,0) [0|0] "" XXX
+ SG_ Cruise_low_speed_lockout_CAN1 : 14|2@0+ (1,0) [0|3] "" XXX
+ SG_ Cruise_set_speed_CAN1__kph : 23|8@0+ (1,0) [0|255] "kph" XXX
+
+BO_ 295 HS_CAN5__127: 0 Vector__XXX
+
+BO_ 550 HS_CAN5__226: 5 Vector__XXX
+ SG_ Veh_brake_pressure_CAN1 : 0|9@0+ (1,0) [0|511] "" XXX
+ SG_ Veh_brake_position_CAN1 : 16|9@0+ (1,0) [0|511] "" XXX
+ SG_ Veh_brake_switch_CAN1 : 37|1@0+ (1,0) [0|0] "" XXX
+
+BO_ 37 HS_CAN5__25: 6 Vector__XXX
+ SG_ Veh_steer_angle_CAN1__deg : 3|12@0- (1.5,0) [-2048|2047] "deg" Vector__XXX
+ SG_ Veh_steer_angle_fraction_CAN1__deg : 39|4@0+ (0.1,0) [0|15] "" Vector__XXX
+ SG_ Veh_steer_rate_CAN1__degps : 35|12@0- (1,0) [0|4095] "" Vector__XXX
+
+BO_ 36 HS_CAN5__24: 6 Vector__XXX
+ SG_ Veh_accel_Y_CAN1 : 33|10@0+ (1,-512) [0|65535] "" XXX
+ SG_ Veh_yaw_rate_CAN1 : 1|10@0+ (1,-512) [0|65535] "" XXX
+ SG_ Veh_steering_torque_CAN1 : 17|10@0+ (1,-512) [0|65535] "" XXX
+
+BO_ 740 Bus_1_FCC__2E4: 0 Vector__XXX
+
+BO_ 944 Bus_1_DAS__3B0: 0 Vector__XXX
+
+BO_ 1086 Bus_1_DAS__43E: 0 Vector__XXX
+
+BO_ 898 Bus_1_DAS__382: 0 Vector__XXX
+
+BO_ 1161 Bus_1_FCC__489: 0 Vector__XXX
+
+BO_ 1162 Bus_1_FCC__48A: 0 Vector__XXX
+
+BO_ 1279 Bus_1_MMWR__4FF: 0 Vector__XXX
+
+BO_ 1904 Bus_1_MMWR__770: 0 Vector__XXX
+
+BO_ 1912 Bus_1_MMWR__778: 0 Vector__XXX
+
+BO_ 1990 Bus_1_MMWR__7C6: 0 Vector__XXX
+
+BO_ 1998 Bus_1_MMWR__7CE: 0 Vector__XXX
+
+BO_ 871 Bus_1_FCC__367: 0 Vector__XXX
+
+BO_ 1042 Bus_1_FCC__412: 0 Vector__XXX
+
+BO_ 1044 Bus_1_FCC__414: 0 Vector__XXX
+
+BO_ 1163 Bus_1_FCC__48B: 0 Vector__XXX
+
+BO_ 1235 Bus_1_FCC__4D3: 0 Vector__XXX
+
+BO_ 643 Bus_1_DAS__283: 0 Vector__XXX
+
+BO_ 742 Bus_1_DAS__2E6: 4 Vector__XXX
+ SG_ Radar_forward_veh_relative_spd_CAN1__kph : 23|12@0- (0.09,0) [-204.8|204.7] "kph" Vector__XXX
+ SG_ Radar_forward_veh_distance_CAN1__m : 7|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_forward_veh_relative_spd_CAN1__mps : 23|12@0- (0.025,0) [-100|100] "m/s" HCU
+ SG_ Signal_3 : 7|13@0+ (0.05,0) [0|8191] "" Vector__XXX
+
+BO_ 743 Bus_1_DAS__2E7: 2 Vector__XXX
+ SG_ Radar_tractive_force_desired_UNK_CAN1__kph : 7|10@0- (0.025,0) [-12.8|12.775] "KN" Vector__XXX
+
+BO_ 830 Bus_1_DAS__33E: 0 Vector__XXX
+
+BO_ 835 Bus_1_DAS__343: 2 Vector__XXX
+ SG_ Cruise_accel_target_CAN1__mps2 : 7|16@0- (0.001,0) [-32.768|32.767] "mps2" Vector__XXX
+
+BO_ 836 Bus_1_DAS__344: 0 Vector__XXX
+
+BO_ 869 Bus_1_DAS__365: 0 Vector__XXX
+
+BO_ 870 Bus_1_DAS__366: 0 Vector__XXX
+
+BO_ 900 Bus_1_DAS__384: 0 Vector__XXX
+
+BO_ 902 Bus_1_DAS__386: 0 Vector__XXX
+
+BO_ 933 Bus_1_DAS__3A5: 0 Vector__XXX
+
+BO_ 998 Bus_1_DAS__3E6: 0 Vector__XXX
+
+BO_ 999 Bus_1_DAS__3E7: 0 Vector__XXX
+
+BO_ 1000 Bus_1_DAS__3E8: 0 Vector__XXX
+
+BO_ 1001 Bus_1_DAS__3E9: 0 Vector__XXX
+
+BO_ 1014 Bus_1_DAS__3F6: 0 Vector__XXX
+
+BO_ 1041 Bus_1_DAS__411: 0 Vector__XXX
+
+BO_ 1084 Bus_1_DAS__43C: 0 Vector__XXX
+
+BO_ 1085 Bus_1_DAS__43D: 0 Vector__XXX
+
+BO_ 1164 Bus_1_DAS__48C: 0 Vector__XXX
+
+BO_ 1165 Bus_1_DAS__48D: 0 Vector__XXX
+
+BO_ 1166 Bus_1_DAS__48E: 0 Vector__XXX
+
+BO_ 1167 Bus_1_DAS__48F: 0 Vector__XXX
+
+BO_ 1227 Bus_1_DAS__4CB: 0 Vector__XXX
+
+BO_ 1237 Bus_1_DAS__4D5: 0 Vector__XXX
+
+BO_ 1568 Bus_1__620: 6 Vector__XXX
+ SG_ Veh_door_df_position_CAN1 : 45|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Veh_door_driver_rear_position_CAN1 : 42|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Veh_door_pass_front_position_CAN1 : 44|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Veh_door_pass_rear_position_CAN1 : 43|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Veh_door_hatch_position_CAN1 : 41|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Veh_lights_interior_state_CAN1 : 38|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_mode_CAN1 : 37|2@0+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 608 Bus_1__260: 0 Vector__XXX
+
+BO_ 560 Bus_1__230: 0 Vector__XXX
+
+BO_ 452 Bus_1__1C4: 0 Vector__XXX
+
+BO_ 824 Bus_1__338: 0 Vector__XXX
+
+BO_ 296 Bus_1__128: 0 Vector__XXX
+
+BO_ 466 Bus_1__1D2: 7 Vector__XXX
+ SG_ Veh_accel_pedal_released_CAN1 : 4|1@0+ (1,0) [0|0] "" XXX
+ SG_ Veh_standstill_on_CAN1 : 12|1@0+ (1,0) [0|0] "" XXX
+ SG_ Veh_accel_net_WRONG_CAN1__mps2 : 20|13@0- (0.001,0) [-4.096|4.095] "m/s2" XXX
+ SG_ Veh_cruise_state_CAN1 : 55|4@0+ (1,0) [0|15] "" XXX
+
+BO_ 552 Bus_1__228: 4 Vector__XXX
+ SG_ Veh_long_accel_CAN1__mps2 : 6|15@0- (0.001,0) [-16.384|16.383] "mps2" Vector__XXX
+ SG_ Veh_lat_accel_CAN1__mps2 : 22|15@0- (0.001,0) [-16.384|16.383] "mps2" Vector__XXX
+
+BO_ 610 Bus_1__262: 0 Vector__XXX
+
+BO_ 180 Bus_1__B4: 7 Vector__XXX
+ SG_ Veh_spd_CAN1__kph : 47|16@0+ (0.01,0) [0|250] "kph" XXX
+
+BO_ 170 Bus_1__AA: 8 Vector__XXX
+ SG_ Veh_wheel_spd_FR_CAN1__kph : 7|16@0+ (0.01,-67.67) [0|250] "kph" XXX
+ SG_ Veh_wheel_spd_FL_CAN1__kph : 23|16@0+ (0.01,-67.67) [0|250] "kph" XXX
+ SG_ Veh_wheel_spd_RR_CAN1__kph : 39|16@0+ (0.01,-67.67) [0|250] "kph" XXX
+ SG_ Veh_wheel_spd_RL_CAN1__kph : 55|16@0+ (0.01,-67.67) [0|250] "kph" XXX
+
+BO_ 166 Bus_1__A6: 0 Vector__XXX
+
+BO_ 993 Bus_1__3E1: 0 Vector__XXX
+
+BO_ 581 Bus_1__245: 3 Vector__XXX
+ SG_ GAS_PEDAL_CAN1 : 23|8@0+ (0.005,0) [0|1] "" XXX
+
+BO_ 614 Bus_1__266: 0 Vector__XXX
+
+BO_ 658 Bus_1__292: 0 Vector__XXX
+
+BO_ 1114 Bus_1__45A: 0 Vector__XXX
+
+BO_ 713 Bus_1__2C9: 0 Vector__XXX
+
+BO_ 562 Bus_1__232: 0 Vector__XXX
+
+BO_ 426 Bus_1__1AA: 0 Vector__XXX
+
+BO_ 800 Bus_1__320: 0 Vector__XXX
+
+BO_ 810 Bus_1__32A: 0 Vector__XXX
+
+BO_ 814 Bus_1__32E: 0 Vector__XXX
+
+BO_ 918 Bus_1__396: 0 Vector__XXX
+
+BO_ 1082 Bus_1__43A: 0 Vector__XXX
+
+BO_ 1175 Bus_1__497: 0 Vector__XXX
+
+BO_ 863 Bus_1__35F: 0 Vector__XXX
+
+BO_ 975 Bus_1__3CF: 0 Vector__XXX
+
+BO_ 1017 Bus_1__3F9: 0 Vector__XXX
+
+BO_ 913 Bus_1__391: 0 Vector__XXX
+
+BO_ 951 Bus_1__3B7: 3 Vector__XXX
+ SG_ Veh_brake_lights_from_ACC_CAN1 : 18|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1132 Bus_1__46C: 0 Vector__XXX
+
+BO_ 1556 Bus_1__614: 0 Vector__XXX
+
+BO_ 1552 Bus_1__610: 0 Vector__XXX
+
+BO_ 829 Bus_1__33D: 0 Vector__XXX
+
+BO_ 956 Bus_1__3BC: 0 Vector__XXX
+
+BO_ 1057 Bus_1__421: 0 Vector__XXX
+
+BO_ 953 Bus_1__3B9: 0 Vector__XXX
+
+BO_ 1228 Bus_1__4CC: 0 Vector__XXX
+
+BO_ 1077 Bus_1__435: 0 Vector__XXX
+
+BO_ 955 Bus_1__3BB: 0 Vector__XXX
+
+BO_ 1571 Bus_1__623: 0 Vector__XXX
+
+BO_ 1572 Bus_1__624: 0 Vector__XXX
+
+BO_ 974 Bus_1__3CE: 0 Vector__XXX
+
+BO_ 1056 Bus_1__420: 0 Vector__XXX
+
+BO_ 1071 Bus_1__42F: 0 Vector__XXX
+
+BO_ 1570 Bus_1__622: 0 Vector__XXX
+
+BO_ 945 Bus_1__3B1: 0 Vector__XXX
+
+BO_ 1083 Bus_1__43B: 0 Vector__XXX
+
+BO_ 921 Bus_1__399: 4 Vector__XXX
+ SG_ Cruise_main_on_CAN1 : 4|1@0+ (1,0) [0|0] "" XXX
+ SG_ Cruise_control_state_CAN1 : 11|4@0+ (1,0) [0|15] "" XXX
+ SG_ Cruise_dash_set_speed_CAN1 : 31|8@0+ (1,0) [0|255] "" XXX
+
+BO_ 1779 Bus_1__6F3: 0 Vector__XXX
+
+BO_ 1059 Bus_1__423: 0 Vector__XXX
+
+BO_ 905 Bus_1__389: 0 Vector__XXX
+
+BO_ 1076 Bus_1__434: 0 Vector__XXX
+
+BO_ 950 Bus_1__3B6: 0 Vector__XXX
+
+BO_ 1553 Bus_1__611: 4 Vector__XXX
+ SG_ Veh_units_CAN1 : 26|2@0+ (1,0) [0|3] "" XXX
+
+BO_ 1777 Bus_1__6F1: 0 Vector__XXX
+
+BO_ 1557 Bus_1__615: 0 Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+BA_ "SignalType" SG_ 467 Radar_following_distance_state_CAN1 "ENM";
+BA_ "SignalType" SG_ 467 Cruise_low_speed_lockout_CAN1 "ENM";
+BA_ "SignalType" SG_ 1568 Veh_mode_CAN1 "ENM";
+BA_ "SignalType" SG_ 466 Veh_cruise_state_CAN1 "ENM";
+BA_ "SignalType" SG_ 921 Cruise_control_state_CAN1 "ENM";
+BA_ "SignalType" SG_ 1553 Veh_units_CAN1 "ENM";
+VAL_ 467 Radar_following_distance_state_CAN1 3 "short" 2 "mid" 1 "long" 0 "off" ;
+VAL_ 467 Cruise_low_speed_lockout_CAN1 2 "low speed locked" 1 "ok" ;
+VAL_ 1568 Veh_mode_CAN1 0 "Off" 1 "Accessory" 3 "Ignition On" ;
+VAL_ 466 Veh_cruise_state_CAN1 8 "active" 7 "standstill" 1 "off" ;
+VAL_ 921 Cruise_control_state_CAN1 2 "disabled" 11 "hold" 10 "hold_waiting_user_cmd" 6 "enabled" 5 "faulted" ;
+VAL_ 1553 Veh_units_CAN1 1 "km" 2 "miles" ;
+

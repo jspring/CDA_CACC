@@ -1,0 +1,23 @@
+
+# Makefile - PATH GPS sample programs
+#
+# Copyright (c) 2008   Regents of the University of California
+#
+
+include capath_qnx.mk
+
+PATH_OBJS += $(OBJDIR)/long_control.o /windows/Linux/KACST/ide-7.0-workspace/UC-PATH_KACST/path/db/qnx/db_utils.o
+PATH_CFLAGS += -I/home/das3/src -I../../common -I../include -fPIC
+PATH_LDFLAGS += -fPIC -L../lib -L/windows/Linux/KACST/ide-7.0-workspace/UC-PATH_KACST/path/db/qnx
+
+EXEC = $(OBJDIR)/argonne_cacc
+
+all: $(OBJDIR) $(PATH_INCLUDES) $(PATH_OBJS) $(EXEC)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+install:
+	cp -p $(EXEC) ../../test
+clean:
+	rm -f $(OBJDIR)/*.o *.err $(EXEC)

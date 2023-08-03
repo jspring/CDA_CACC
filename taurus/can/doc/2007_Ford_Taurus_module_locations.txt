@@ -1,0 +1,16 @@
+2007 Ford Taurus Module Locations
+
+ABS Control Module Left front of engine compartment, below battery.
+Brake Shift interlock Near bottom of steering column.
+Flexible Fuel Sensor Module Behind center of dash, near instrument cluster.
+Front Blower Motor Speed Controller Behind center of dash, near HVAC unit.
+Fuel Pump Driver Module Behind right side luggage compartment trim panel.
+Intake Manifold Runner Control (IMRC) Module Top rear of engine. 6.
+Passenger’s Air Bag Module Behind right side of dash, near glove box.
+Passive Anti-Theft System Transceiver Module On steering column, near ignition switch.
+Powertrain Control Module Right rear corner of engine compartment.
+Remote Climate Control (RCC) Module Behind center of dash, near glove box.
+Restraints Control Module Under center of dash.
+Seat Weight Sensor Module Under front Passenger’s seat.
+Side Air Bag Module, Left side outer portion of left front seat back.
+Side Air Bag Module, Right side outer portion of right front seat back.

@@ -1,0 +1,22 @@
+#!/bin/sh
+slay -f can_tx
+slay -f argonne_cacc
+slay -f accord_can
+slay -f can_rx
+slay -f clt_vars_accord
+slay -f db_slv
+cd /home/qnxuser/path_can_bin
+./db_slv -Q -S `hostname` &
+sleep 1	
+./clt_vars_accord &
+sleep 1	
+./can_rx -p 2 -cv >can_rx_out.txt &
+sleep 1
+./can_tx -t 0.02 -a 1 -b 2 -cv >can_tx_out_accel.txt &
+sleep 1
+./accord_can -v -b 30 >accord_can_out.txt &
+sleep 1
+slay accord_can
+./accord_can -v >accord_can_out.txt &
+sleep 1
+./argonne_cacc

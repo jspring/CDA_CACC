@@ -1,0 +1,93 @@
+bandwidth-client.o: bandwidth-client.c \
+  /usr/qnx641/target/qnx6/usr/include/stdio.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/platform.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/srcversion.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/compiler_gnu.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/cdefs.h \
+  /usr/qnx641/target/qnx6/usr/include/x86/platform.h \
+  /usr/qnx641/target/qnx6/usr/include/_pack64.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/target_nto.h \
+  /usr/qnx641/target/qnx6/usr/include/_packpop.h \
+  /usr/qnx641/target/qnx6/usr/include/unistd.h \
+  /usr/qnx641/target/qnx6/usr/include/confname.h \
+  /usr/qnx641/target/qnx6/usr/include/process.h \
+  /usr/qnx641/target/qnx6/usr/include/string.h \
+  /usr/qnx641/target/qnx6/usr/include/strings.h \
+  /usr/qnx641/target/qnx6/usr/include/x86/string.h \
+  /usr/qnx641/target/qnx6/usr/include/stdlib.h \
+  /usr/qnx641/target/qnx6/usr/include/malloc.h \
+  /usr/qnx641/target/qnx6/usr/include/alloca.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/wait.h \
+  /usr/qnx641/target/qnx6/usr/include/signal.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/siginfo.h \
+  /usr/qnx641/target/qnx6/usr/include/time.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/time.h \
+  /usr/qnx641/target/qnx6/usr/include/sys/select.h \
+  /usr/qnx641/target/qnx6/usr/include/limits.h \
+  /usr/qnx641/target/qnx6/usr/include/errno.h ../src/modbus.h \
+  /usr/qnx641/target/qnx6/usr/include/stdint.h ../src/modbus-version.h \
+  ../src/modbus-tcp.h ../src/modbus.h ../src/modbus-rtu.h
+
+/usr/qnx641/target/qnx6/usr/include/stdio.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/platform.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/srcversion.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/compiler_gnu.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/cdefs.h:
+
+/usr/qnx641/target/qnx6/usr/include/x86/platform.h:
+
+/usr/qnx641/target/qnx6/usr/include/_pack64.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/target_nto.h:
+
+/usr/qnx641/target/qnx6/usr/include/_packpop.h:
+
+/usr/qnx641/target/qnx6/usr/include/unistd.h:
+
+/usr/qnx641/target/qnx6/usr/include/confname.h:
+
+/usr/qnx641/target/qnx6/usr/include/process.h:
+
+/usr/qnx641/target/qnx6/usr/include/string.h:
+
+/usr/qnx641/target/qnx6/usr/include/strings.h:
+
+/usr/qnx641/target/qnx6/usr/include/x86/string.h:
+
+/usr/qnx641/target/qnx6/usr/include/stdlib.h:
+
+/usr/qnx641/target/qnx6/usr/include/malloc.h:
+
+/usr/qnx641/target/qnx6/usr/include/alloca.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/wait.h:
+
+/usr/qnx641/target/qnx6/usr/include/signal.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/siginfo.h:
+
+/usr/qnx641/target/qnx6/usr/include/time.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/time.h:
+
+/usr/qnx641/target/qnx6/usr/include/sys/select.h:
+
+/usr/qnx641/target/qnx6/usr/include/limits.h:
+
+/usr/qnx641/target/qnx6/usr/include/errno.h:
+
+../src/modbus.h:
+
+/usr/qnx641/target/qnx6/usr/include/stdint.h:
+
+../src/modbus-version.h:
+
+../src/modbus-tcp.h:
+
+../src/modbus.h:
+
+../src/modbus-rtu.h:

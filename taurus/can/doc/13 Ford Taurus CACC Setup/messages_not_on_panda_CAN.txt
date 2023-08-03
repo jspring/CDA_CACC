@@ -1,0 +1,35 @@
+jspring@mert:/big/data/accord/taurus_march_20_data$ diff can2_rx_out_RX_ONLY_WITH_PANDA_03202020_191508/msgfile.mod  can2_rx_out_RX_ONLY_WITH_JUMPER_03202020_194129_DIR/msgfile.mod
+13a14
+> 153
+26a28
+> 389
+27a30,31
+> 393
+> 394
+69a74
+> 997
+jspring@mert:/big/data/accord/taurus_march_20_data$ taurus
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/src$ cd ../doc/13\ Ford\ Taurus\ CACC\ Setup
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ d
+total 2701
+drwxrwxrwx 1 root root    4096 Feb 26 17:07 .
+drwxrwxrwx 1 root root    4096 Feb 26 17:07 ..
+-rwxrwxrwx 1 root root  251698 Feb 26 17:07 13 Ford Taurus E-Stop Info.docx
+-rwxrwxrwx 1 root root 2271881 Feb 26 17:07 13 Ford Taurus Longitudinal Control.docx
+-rwxrwxrwx 1 root root  139441 Feb 26 17:07 Accelerator Pedal Map - 13 Ford Taurus (from drive cycles).xlsx
+-rwxrwxrwx 1 root root   69134 Feb 26 17:07 ford_cgea1_2_ptcan_2011.dbc
+-rwxrwxrwx 1 root root   16384 Feb 26 17:07 .ford_cgea1_2_ptcan_2011.dbc.swp
+-rwxrwxrwx 1 root root     171 Feb 26 17:07 README.txt
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ 
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ 
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ grep 153 ford_cgea1_2_ptcan_2011.dbc 
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ grep 389 ford_cgea1_2_ptcan_2011.dbc 
+BO_ 389 ACCDATA_CG1: 8 XXX
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ grep 393 ford_cgea1_2_ptcan_2011.dbc 
+BO_ 393 ACCDATA_2_CG1: 8 XXX
+ SG_ FUEL_ALCOHOL_PERCNT : 63|8@0+ (0.3937008,0) [0|0] "%" XXX
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ grep 394 ford_cgea1_2_ptcan_2011.dbc 
+BO_ 394 ACCDATA_3: 8 XXX
+jspring@mert:/windows/Linux/Argonne_CACC/taurus/can/doc/13 Ford Taurus CACC Setup$ grep 997 ford_cgea1_2_ptcan_2011.dbc 
+BO_ 997 Personality_CCM_Data: 8 XXX
+

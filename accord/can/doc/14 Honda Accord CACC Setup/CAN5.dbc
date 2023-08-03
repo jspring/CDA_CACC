@@ -1,0 +1,128 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: 
+
+
+BO_ 768 HS_CAN5__300: 2 Vector__XXX
+ SG_ Veh_Speed_CAN5__ : 15|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ ACC_Radar_active_CAN5__ : 4|1@0+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 1024 HS_CAN5__400: 1 Vector__XXX
+ SG_ ACC_Radar_active2_CAN5__ : 4|1@0+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 1040 HS_CAN5__410: 8 Vector__XXX
+ SG_ ACC_relative_position_obj1_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj1_CAN5__ : 7|16@0+ (0.00775,0) [0|4095.9375] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj1_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_1_counter_CAN5__ : 61|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ ACC_obj_1_checksum_CAN5__ : 59|4@0+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 1041 HS_CAN5__411: 8 Vector__XXX
+ SG_ ACC_relative_position_obj2_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj2_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj2_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_2_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1042 HS_CAN5__412: 8 Vector__XXX
+ SG_ ACC_relative_position_obj3_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj3_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj3_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_3_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1043 HS_CAN5__413: 8 Vector__XXX
+ SG_ ACC_relative_position_obj4_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj4_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj4_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_4_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1044 HS_CAN5__414: 8 Vector__XXX
+ SG_ ACC_relative_position_obj5_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj5_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj5_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_5_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1045 HS_CAN5__415: 8 Vector__XXX
+ SG_ ACC_relative_position_obj6_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj6_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj6_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_6_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1046 HS_CAN5__416: 8 Vector__XXX
+ SG_ ACC_relative_position_obj7_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj7_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj7_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_7_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1047 HS_CAN5__417: 8 Vector__XXX
+ SG_ ACC_relative_position_obj8_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj8_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj8_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_8_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1056 HS_CAN5__420: 8 Vector__XXX
+ SG_ ACC_relative_position_obj9_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj9_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj9_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_9_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1057 HS_CAN5__421: 8 Vector__XXX
+ SG_ ACC_relative_position_obj10_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj10_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj10_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_10_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1058 HS_CAN5__422: 8 Vector__XXX
+ SG_ ACC_relative_position_obj11_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj11_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj11_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_11_counter_CAN5__ : 61|6@0+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1059 HS_CAN5__423: 8 Vector__XXX
+ SG_ ACC_relative_position_obj12_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj12_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj12_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_12_counter_CAN5__ : 61|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ ACC_obj_12_checksum_CAN5__ : 59|4@0+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 1060 HS_CAN5__424: 8 Vector__XXX
+ SG_ ACC_relative_position_obj13_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
+ SG_ ACC_relative_distance_obj13_CAN5__ : 7|16@0+ (0.00775,0) [0|65535] "m" Vector__XXX
+ SG_ ACC_relative_velocity_obj13_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
+ SG_ ACC_obj_13_counter_CAN5__ : 61|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ ACC_obj_13_checksum_CAN5__ : 59|4@0+ (1,0) [0|15] "" Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+

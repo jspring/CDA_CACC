@@ -1,0 +1,361 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: FCAM 
+
+
+BO_ 580 HS_CAN5__VNET_B___244: 0 Vector__XXX
+
+BO_ 581 HS_CAN5__VNET_B___245: 0 Vector__XXX
+
+BO_ 584 HS_CAN5__VNET_B___248: 0 Vector__XXX
+
+BO_ 832 HS_CAN5__VNET_B___340: 0 Vector__XXX
+
+BO_ 833 HS_CAN5__VNET_B___341: 0 Vector__XXX
+
+BO_ 834 HS_CAN5__VNET_B___342: 0 Vector__XXX
+
+BO_ 835 HS_CAN5__VNET_B___343: 0 Vector__XXX
+
+BO_ 836 HS_CAN5__VNET_B___344: 0 Vector__XXX
+
+BO_ 837 HS_CAN5__VNET_B___345: 0 Vector__XXX
+
+BO_ 867 HS_CAN5__VNET_B___363: 0 Vector__XXX
+
+BO_ 868 HS_CAN5__VNET_B___364: 0 Vector__XXX
+
+BO_ 296 HS_CAN5__VNET_B___128: 0 Vector__XXX
+
+BO_ 869 HS_CAN5__VNET_B___365: 0 Vector__XXX
+
+BO_ 880 HS_CAN5__VNET_B___370: 0 Vector__XXX
+
+BO_ 881 HS_CAN5__VNET_B___371: 0 Vector__XXX
+
+BO_ 882 HS_CAN5__VNET_B___372: 0 Vector__XXX
+
+BO_ 883 HS_CAN5__VNET_B___373: 0 Vector__XXX
+
+BO_ 884 HS_CAN5__VNET_B___374: 0 Vector__XXX
+
+BO_ 885 HS_CAN5__VNET_B___375: 3 Vector__XXX
+ SG_ FCAM_obj_1_distance_DACAN__m : 10|11@0+ (0.1,0) [0|204.7] "m" Vector__XXX
+
+BO_ 896 HS_CAN5__VNET_B___380: 0 Vector__XXX
+
+BO_ 897 HS_CAN5__VNET_B___381: 0 Vector__XXX
+
+BO_ 898 HS_CAN5__VNET_B___382: 0 Vector__XXX
+
+BO_ 899 HS_CAN5__VNET_B___383: 7 Vector__XXX
+ SG_ FCAM_distance_1_DSCAN : 45|12@0+ (1,0) [0|4095] "" Vector__XXX
+
+BO_ 528 HS_CAN5__VNET_B___210: 8 Vector__XXX
+ SG_ Radar_pos_210_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_210_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_210_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_210_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_210_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_210_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_210_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 544 HS_CAN5__VNET_B___220: 7 Vector__XXX
+ SG_ Radar_accel_UNK_220_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_220_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_220_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_220_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 545 HS_CAN5__VNET_B___221: 7 Vector__XXX
+ SG_ Radar_accel_UNK_221_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_221_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_221_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_221_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 546 HS_CAN5__VNET_B___222: 7 Vector__XXX
+ SG_ Radar_accel_UNK_222_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_222_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_222_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_222_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 547 HS_CAN5__VNET_B___223: 7 Vector__XXX
+ SG_ Radar_accel_UNK_223_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_223_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_223_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_223_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 548 HS_CAN5__VNET_B___224: 7 Vector__XXX
+ SG_ Radar_accel_UNK_224_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_224_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_224_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_224_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 549 HS_CAN5__VNET_B___225: 7 Vector__XXX
+ SG_ Radar_accel_UNK_225_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_225_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_225_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_225_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 550 HS_CAN5__VNET_B___226: 7 Vector__XXX
+ SG_ Radar_accel_UNK_226_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_226_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_226_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_226_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 551 HS_CAN5__VNET_B___227: 7 Vector__XXX
+ SG_ Radar_accel_UNK_227_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_227_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_227_DSCAN : 47|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_227_DSCAN : 55|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 552 HS_CAN5__VNET_B___228: 5 Vector__XXX
+ SG_ Radar_accel_UNK_228_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_228_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_228_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_228_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 553 HS_CAN5__VNET_B___229: 5 Vector__XXX
+ SG_ Radar_accel_UNK_229_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_229_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_229_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_229_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 554 HS_CAN5__VNET_B___22A: 5 Vector__XXX
+ SG_ Radar_accel_UNK_22A_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_22A_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_22A_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_22A_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 555 HS_CAN5__VNET_B___22B: 5 Vector__XXX
+ SG_ Radar_accel_UNK_22B_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_22B_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_22B_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_22B_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 556 HS_CAN5__VNET_B___22C: 5 Vector__XXX
+ SG_ Radar_accel_UNK_22C_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_22C_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_22C_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_22C_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 557 HS_CAN5__VNET_B___22D: 5 Vector__XXX
+ SG_ Radar_accel_UNK_22D_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_22D_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_22D_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_22D_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 558 HS_CAN5__VNET_B___22E: 5 Vector__XXX
+ SG_ Radar_accel_UNK_22E_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_22E_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_22E_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_22E_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 559 HS_CAN5__VNET_B___22F: 5 Vector__XXX
+ SG_ Radar_accel_UNK_22F_DSCAN : 15|7@0- (1,0) [-64|63] "" Vector__XXX
+ SG_ Radar_accuracy_22F_DSCAN : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state1_22F_DSCAN : 31|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_state2_22F_DSCAN : 39|8@0- (1,0) [-128|127] "" Vector__XXX
+
+BO_ 560 HS_CAN5__VNET_B___230: 0 Vector__XXX
+
+BO_ 561 HS_CAN5__VNET_B___231: 0 Vector__XXX
+
+BO_ 562 HS_CAN5__VNET_B___232: 0 Vector__XXX
+
+BO_ 576 HS_CAN5__VNET_B___240: 0 Vector__XXX
+
+BO_ 976 HS_CAN5__VNET_B___3D0: 0 Vector__XXX
+
+BO_ 577 HS_CAN5__VNET_B___241: 0 Vector__XXX
+
+BO_ 977 HS_CAN5__VNET_B___3D1: 0 Vector__XXX
+
+BO_ 978 HS_CAN5__VNET_B___3D2: 0 Vector__XXX
+
+BO_ 979 HS_CAN5__VNET_B___3D3: 0 Vector__XXX
+
+BO_ 1126 HS_CAN5__VNET_B___466: 0 Vector__XXX
+
+BO_ 321 HS_CAN5__VNET_B___141: 0 Vector__XXX
+
+BO_ 1136 HS_CAN5__VNET_B___470: 0 Vector__XXX
+
+BO_ 352 HS_CAN5__VNET_B___160: 0 Vector__XXX
+
+BO_ 353 HS_CAN5__VNET_B___161: 3 Vector__XXX
+ SG_ Veh_spd_withoffset_DSECU_DSCAN : 15|16@0+ (1,0) [-30|65505] "" Vector__XXX
+
+BO_ 291 HS_CAN5__VNET_B___123: 0 Vector__XXX
+
+BO_ 304 HS_CAN5__VNET_B___130: 0 Vector__XXX
+
+BO_ 529 HS_CAN5__VNET_B___211: 8 Vector__XXX
+ SG_ Radar_pos_211_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_211_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_211_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_211_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_211_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_211_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_211_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 530 HS_CAN5__VNET_B___212: 8 Vector__XXX
+ SG_ Radar_pos_212_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_212_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_212_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_212_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_212_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_212_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_212_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 531 HS_CAN5__VNET_B___213: 8 Vector__XXX
+ SG_ Radar_pos_213_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_213_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_213_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_213_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_213_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_213_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_213_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 532 HS_CAN5_VNET_B___214: 8 Vector__XXX
+ SG_ Radar_pos_214_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_214_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_214_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_214_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_214_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_214_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_214_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 533 HS_CAN5_VNET_B___215: 8 Vector__XXX
+ SG_ Radar_pos_215_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_215_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_215_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_215_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_215_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_215_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_215_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 534 HS_CAN5_VNET_B___216: 8 Vector__XXX
+ SG_ Radar_pos_216_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_216_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_216_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_216_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_216_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_216_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_216_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 535 HS_CAN5_VNET_B___217: 8 Vector__XXX
+ SG_ Radar_pos_217_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_217_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_217_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_217_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_217_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_217_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_217_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 536 HS_CAN5_VNET_B___218: 8 Vector__XXX
+ SG_ Radar_pos_218_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_218_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_218_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_218_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_218_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_218_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_218_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 537 HS_CAN5_VNET_B___219: 8 Vector__XXX
+ SG_ Radar_pos_219_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_219_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_219_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_219_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_219_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_219_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_219_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 538 HS_CAN5_VNET_B___21A: 8 Vector__XXX
+ SG_ Radar_pos_21A_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_21A_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_21A_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_21A_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21A_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_21A_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21A_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 539 HS_CAN5_VNET_B___21B: 8 Vector__XXX
+ SG_ Radar_pos_21B_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_21B_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_21B_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_21B_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21B_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_21B_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21B_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 540 HS_CAN5_VNET_B___21C: 8 Vector__XXX
+ SG_ Radar_pos_21C_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_21C_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_21C_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_21C_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21C_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_21C_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21C_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 541 HS_CAN5_VNET_B___21D: 8 Vector__XXX
+ SG_ Radar_pos_21D_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_21D_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_21D_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_21D_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21D_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_21D_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21D_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 542 HS_CAN5_VNET_B___21E: 8 Vector__XXX
+ SG_ Radar_pos_21E_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_21E_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_21E_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_21E_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21E_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_21E_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21E_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 543 HS_CAN5_VNET_B___21F: 8 Vector__XXX
+ SG_ Radar_pos_21F_counter_DACAN__m : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ Radar_pos_21F_longitudinal_distance_DACAN__m : 15|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
+ SG_ Radar_pos_21F_lateral_distance_DACAN__m : 31|11@0- (0.04,0) [-1024|1023] "" Vector__XXX
+ SG_ Radar_pos_21F_newtrack_DACAN : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21F_relative_spd_DACAN__mps : 47|12@0- (0.025,0) [-204.8|204.7] "mps" Vector__XXX
+ SG_ Radar_pos_21F_active_DACAN : 48|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Radar_pos_21F_checksum_DACAN : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+

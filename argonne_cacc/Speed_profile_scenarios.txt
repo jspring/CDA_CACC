@@ -1,0 +1,17 @@
+# To use with -i 1 -c 0 -s (ID); 
+# Dmax: Top deceleration, Amax: Top acceleration, Vmax: Top speed, Vmin: Bottom speed
+
+ID | Dmax | Amax | Vmax | Vmin  |    Description
+----------------------------------------------------------------------------------------------------------
+-1   N/A    N/A     N/A    N/A       Speed set through HMI and expects -h and development HMI            
+0     0      0      Vcc    Vcc       Maintains DESIRED_CC_SPEED set in config file
+1    N/A    N/A     N/A    N/A       Speed planning profile customizable in config file (VARNAME)_SPEED_PROFILE
+2    0.6    0.4     65     55
+3    2.2    2.0     70     50
+4    1.2    1.0     35     20
+5    4.0    2.0     35     20
+6   -------------------------------> Multisine speed profile for testing string stability low speed low accel
+7   -------------------------------> Multisine speed profile for testing string stability high speed low accel
+8   -------------------------------> Multisine speed profile for testing string stability low speed high accel
+9   -------------------------------> Multisine speed profile for testing string stability high speed high accel
+10  -------------------------------> Emergency braking test. Goes and maintains DESIRED_CC_SPEED for 10s, after executes stopping at t=E_BRAKING_STOPPING_TRIGGER_TIME to stop in E_BRAKING_STOPPING_DISTANCE meters

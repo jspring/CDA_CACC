@@ -1,0 +1,11 @@
+#!/bin/sh
+cd /home/qnxuser/path_can_bin
+
+DATE=$1
+
+if [ q$DATE == 'q' ]
+then
+	DATE=`date +%m%d%Y`
+fi
+
+scp -rp qnxuser@inhouse121:"path_can_bin/"*$DATE* /big/data/volvo_rolys/neweagle

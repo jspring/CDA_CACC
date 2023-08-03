@@ -1,0 +1,104 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: 
+
+
+BO_ 380 BC_17C: 8 Vector__XXX
+ SG_ Pedal_Accel_Pos_CAN2___ : 7|8@0+ (0.390625,0) [0|255] "" Vector__XXX
+ SG_ Pedal_Accel_State_CAN__ : 39|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Pedal_Brake_State_CAN__ : 32|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ Eng_Speed_CAN_RPM_ : 23|16@0+ (1,0) [0|65535] "RPM" Vector__XXX
+
+BO_ 420 BC_1A4: 8 Vector__XXX
+ SG_ Switch_TracCtrl_State_CAN__ : 28|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Pedal_Brake_Press_CAN__ : 7|16@0+ (1,0) [0|800] "" Vector__XXX
+ SG_ Veh_Traction_Control_Alarm_CAN__ : 29|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 344 BC_158: 8 Vector__XXX
+ SG_ Vehicle_Speed_CAN_MPH_ : 7|16@0+ (0.00624,0) [0|404.5344] "" Vector__XXX
+
+BO_ 422 BC_1A6: 8 Vector__XXX
+ SG_ HVAC_AC_Demand_State_CAN__ : 22|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ HVAC_Defrost_State_CAN__ : 19|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 804 BC_324: 8 Vector__XXX
+ SG_ Fuel_Integrated_Flow_CAN__ : 23|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 476 BC_1DC: 8 Vector__XXX
+ SG_ Eng_Speed2_CAN_rpm_ : 15|16@0+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 387 BC__183: 8 Vector__XXX
+ SG_ Brake_master_cylinder_pressure_CAN_Mpa_ : 23|16@0+ (0.001,0) [0|65.535] "MPa" Vector__XXX
+ SG_ Brake_VSA_fluid_pressure_sensor_CAN_MPa_ : 39|16@0+ (0.001,0) [0|65.535] "MPa" Vector__XXX
+ SG_ Regen_Braking_Pressure_CAN__ : 7|16@0+ (0.001,0) [0|65.535] "" Vector__XXX
+
+BO_ 392 BC__188: 6 Vector__XXX
+ SG_ PRNDL_Pos_CAN__ : 32|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 904 BC__388: 8 Vector__XXX
+ SG_ Hybrid_Button_State_CAN__ : 50|2@0+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 342 BC__156: 8 Vector__XXX
+ SG_ Steering_Wheel_Pos_CAN_deg_ : 7|16@0- (0.1,0) [-32.768|32.767] "deg" Vector__XXX
+ SG_ Steering_Wheel_Rate_CAN_degps_ : 23|16@0- (1,0) [-127|127] "" Vector__XXX
+
+BO_ 533 BC__215: 8 Vector__XXX
+ SG_ HVBatt_Current_CAN_A_ : 15|16@0- (0.03125,0) [-60000|60000] "A" Vector__XXX
+ SG_ HVBatt_SOC_CAN___ : 55|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 545 BC__221: 4 Vector__XXX
+ SG_ Econ_Button_State_CAN__ : 23|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 531 BC__213: 8 Vector__XXX
+ SG_ Motor_Speed_CAN_RPM_ : 7|16@0- (1,0) [-60000|60000] "" Vector__XXX
+
+BO_ 530 BC__212: 8 Vector__XXX
+ SG_ Gen_Torque_CAN_Nm_ : 15|16@0- (0.02,0) [-127|127] "" Vector__XXX
+ SG_ Motor_Torque_CAN_Nm_ : 31|16@0- (0.02,0) [-127|127] "" Vector__XXX
+
+BO_ 537 HS_CAN2__neoVI_3G___219: 6 Vector__XXX
+ SG_ HVBatt_Current_CAN2__ : 23|16@0- (0.03125,0) [-1023.96875|1023.96875] "A" Vector__XXX
+ SG_ HVBatt_Current_CAN3__ : 39|16@0- (0.03125,0) [-1023.96875|1023.96875] "A" Vector__XXX
+
+BO_ 532 HS_CAN2__neoVI_3G___214: 5 Vector__XXX
+ SG_ Gen_Speed_CAN_RPM_ : 7|16@0+ (1,0) [0|33750.525] "RPM" Vector__XXX
+ SG_ VCU_input_voltage_CAN_V_ : 31|16@0- (0.05,0) [-1638.35|1638.35] "V" Vector__XXX
+
+BO_ 535 HS_CAN2__neoVI_3G___217: 3 Vector__XXX
+ SG_ Torque_Unknown_1_CAN__ : 15|16@0+ (0.077,0) [0|5046.195] "RPM" Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+

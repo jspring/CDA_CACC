@@ -1,0 +1,5 @@
+     Time        Chn     ID    Name   Event Type   Dir    DLC   Data                      
+     76.074234   CAN 1   7E8          CAN Frame    Rx     8     03 41 2F 9E 00 00 00 00   
+     76.047486   CAN 1   7DF          CAN Frame    Tx     8     02 01 2F CC CC CC CC CC   
+The fuel level is one byte, byte 4 in the 7E8 response, or 9E.  The fuel level is 0x9E = 158 * 100 / 255 = 61.96%. The resolution works out to 0.4%.
+The Taurus tank capacity is 19.0 gal = 71.9 liter. So 0.4% * 71.9 l = 0.2876 l = 288 ml.

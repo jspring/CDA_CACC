@@ -1,0 +1,72 @@
+2013 Ford Taurus ACC Override Procedure
+Turn on and set ACC speed to a value greater than expected speeds to be reached
+
+To Accelerate:
+1) Msg 185:
+   Set 'AccPrpl_A_Rq' to desired acceleration rate
+
+
+To Brake:
+1) Msg 185:
+   Set 'AccPrpl_A_Rq' to -5   ACC propulsion req
+   Set 'AccBrkPrchg_B_Rq' to 1
+   Msg 189:
+   Set 'Acc_Resume_Active' to 0
+   Set 'Acc_Autobrake_Cancel' to 1
+   Set 'AccPrpl_V_Rq' to actual vehicle speed (Veh_V_ActlEng), otherwise simply gateway signal
+   
+2) Set 'AccBrkDecel_B_Rq' to 1 (0.3 seconds after step 1) - does not have to include the 0.3 seconds wait but braking force initially lower due to lack of ABS module pressure
+
+3) Set 'AccBrkTot_A_Rq' to desired deceleration rate in m/s^2
+
+
+ACC State Values:
+CCStat_D_Actl
+	0 = Cruise Control 'Off'
+	1 = 
+	2 = 'Adaptive Cruise not available'
+	3 = Cruise Control 'On'
+	4 =
+	5 = Cruise Speed 'Set'
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Pseudo Code for Panda Man-in-the-Middle
+
+% variable description:
+% accel = acceleration command in m/s^2, This is the CAN acceleration override command we would send in a message with Arb ID 99 and a 2 byte signed 2's complement integer signal with scale: {Raw Value}*0.001
+% veh_spd = current vehicle speed from CAN bus in kph (Veh_V_ActlEng in dbc file)
+% decel_calc = calculated coastdown deceleration rate based on function of current vehicle speed, and maybe trans gear. decel_calc = f(veh_spd,trans_gear?)
+% 
+
+
+if accel >= 0 	% positive acceleration requested
+	AccPrpl_A_Rq = accel
+	AccBrkTot_A_Rq = 0
+	AccBrkPrchg_B_Rq = 0
+	AccBrkDecel_B_Rq = 0
+	% gateway all other signals
+	
+elseif accel < 0 && accel > decel_calc 	% negative acceleration requested AND requested acceleration rate is higher (less negative) than coastdown deceleration rate at current vehicle speed
+	% use AccPrpl_A_Rq to command negative acceleration which requires some accelerator input to achieve
+	% example: very low deceleration rate at 70 mph requires only backing off of the accelerator but not completely taking foot off which will cause a greater deceleration rate
+	AccPrpl_A_Rq = accel
+	AccBrkTot_A_Rq = 0
+	AccBrkPrchg_B_Rq = 0
+	AccBrkDecel_B_Rq = 0
+	% gateway all other signals
+	
+elseif accel < 0 && accel < decel_calc % negative acceleration requested AND requested acceleration rate is lower (more negative) than coastdown deceleration rate at current vehicle speed
+	% brake application is required to slow the car down quicker than coastdown only.
+	AccBrkTot_A_Rq = accel
+	AccPrpl_A_Rq = -5
+	AccBrkPrchg_B_Rq = 1
+	Acc_Resume_Active = 0
+	Acc_Autobrake_Cancel = 1 (set this to zero on the Panda for Berkeley)
+	AccPrpl_V_Rq = veh_spd
+	AccBrkDecel_B_Rq = 1
+	% gateway all other signals
+	
+end
+	
+** May need to set AccDeny_B_Rq and AccCancl_B_Rq both to zero as well to avoid not being able to turn on ACC due to fault coded on the car.
