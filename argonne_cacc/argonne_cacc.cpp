@@ -54,7 +54,7 @@ void Initialization_task(int argc, char *argv[]) {
 	}
 	if (setjmp(exit_env) != 0) {
 		output_t output;
-		output.brake_level = 0; output.decel_request = 0; output.throttle_pct = 0;
+		output.torque_level = 0; output.accel_decel_request = 0;
 		db_clt_write(pclt,DB_OUTPUT_VAR, sizeof(output_t), &output);
 		db_list_done(pclt, (db_id_t *)NULL, (int)0, (int *)NULL, (int)0);
 		delete sProfile;
@@ -82,7 +82,7 @@ void Initialization_task(int argc, char *argv[]) {
 	char* file_name;
 	config = new setup_struct(ego_vehicle_id);
 	comm_verbosity = false;
-	taurus_verbosity = false;
+	camry_verbosity = false;
 	fuel_verbosity = false;
 	gps_verbosity = false;
 	enable_flag_from_hmi = 0;
@@ -166,11 +166,12 @@ void Initialization_task(int argc, char *argv[]) {
 				if(verbosity == 1)
 					comm_verbosity = true;
 				if(verbosity == 2)
-					taurus_verbosity = true;
+					camry_verbosity = true;
 				if(verbosity == 3)
 					fuel_verbosity = true;
 				if(verbosity == 4)
 					gps_verbosity = true;
+				printf("verbosity %d\n", verbosity);
 				break;
 			default:
 				printf("Not recognized: %s %s\n", argv[0], opt);
@@ -285,8 +286,11 @@ bool Read_inputs() {
 			switch (ego_vehicle_id) {
 				case(PRIUS):
 				case(ACCORD):
-				case(TAURUS):
 					get_prius_targets();
+					nb_radar_objectives=1;
+					break;
+				case(CAMRY):
+					get_camry_targets();
 					nb_radar_objectives=1;
 					break;
 			}
@@ -304,8 +308,11 @@ bool Read_inputs() {
 			switch (ego_vehicle_id) {
 				case(PRIUS):
 				case(ACCORD):
-				case(TAURUS):
 					get_prius_targets();
+					nb_radar_objectives = 1;
+					break;
+				case(CAMRY):
+					get_camry_targets();
 					nb_radar_objectives = 1;
 					break;
 			}
@@ -323,8 +330,11 @@ bool Read_inputs() {
 			switch (ego_vehicle_id) {
 				case(PRIUS):
 				case(ACCORD):
-				case(TAURUS):
 					get_prius_targets();
+					nb_radar_objectives = 1;
+					break;
+				case(CAMRY):
+					get_camry_targets();
 					nb_radar_objectives = 1;
 					break;
 			}
@@ -342,11 +352,11 @@ bool Process_data() {
 	switch (ego_vehicle_id) {
 		case(PRIUS):
 		case(ACCORD):
-		case(TAURUS):
+		case(CAMRY):
 			o_deceleration_command = control_structure->Get_deceleration_command();
 			o_throttle_command = fmax(0, control_structure->desired_acceleration);
 			break;
-//		case(TAURUS):
+//		case(CAMRY):
 //			o_deceleration_command = control_structure->Get_deceleration_command();
 //			o_throttle_command = (o_deceleration_command > -0.00001) ? control_structure->Get_throttle_command() : 0.0000;
 //			break;
@@ -362,8 +372,8 @@ bool Write_outputs() {
 
 	get_current_timestamp(&ts);
 
-	(ego_vehicle_id == ACCORD) ? output.brake_level = o_brake_command : output.brake_level = o_deceleration_command;
-	output.throttle_pct = o_throttle_command;
+	(ego_vehicle_id == ACCORD) ? output.accel_decel_request = o_brake_command : output.accel_decel_request = o_deceleration_command;
+	output.accel_decel_request = o_throttle_command;
 
 	db_clt_write(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 	db_clt_read(pclt, DB_COMM_TX_VAR, sizeof(comm_pkt), &comm_pkt);
@@ -458,24 +468,26 @@ int get_accord_targets() {
 	return 0;
 }
 
-int get_taurus_targets(){
-	leddar_t a;
-	db_clt_read(pclt, DB_LEDDAR_2_VAR, sizeof(leddar_t), &a);
-	for(int i=0; i<16; i++){
-		control_structure->targets[i].relative_distance = a.distance[i];
-		control_structure->targets[i].relative_speed = 0.;
-		control_structure->targets[i].relative_position = 0.;
-		control_structure->targets[i].ID = i;
-		if(taurus_verbosity){
-			printf("%d d:%.2f | ",i, a.distance[i]);
+int get_camry_targets(){
+	camry_radar_forward_vehicle_t a;
+
+	for(int i=0; i<1; i++){
+	db_clt_read(pclt, DB_CAMRY_MSG680_VAR + i, sizeof(camry_radar_forward_vehicle_t), &a);
+	control_structure->targets[i].relative_distance = a.LONG_DIST_CAN1__m;
+	control_structure->targets[i].relative_speed = a.LONG_SPEED_CAN1__mps;
+	control_structure->targets[i].relative_position = a.LAT_DIST_CAN1__m;
+	control_structure->targets[i].ID = i;
+		if(camry_verbosity){
+			printf("%d d:%.5f | ",i, a.LONG_DIST_CAN1__m);
 			fprintf(fp_t,"%d ", i);
-			fprintf(fp_t,"%.3f ", a.distance[i]);
+			fprintf(fp_t,"%.5f ", a.LONG_SPEED_CAN1__mps);
 		}
 
-	}
-	if(taurus_verbosity){
+
+	if(camry_verbosity){
 		fprintf(fp_t,"\n");
 		printf("\n");
+	}
 	}
 	return 1;
 }
@@ -579,16 +591,16 @@ void InitOutputFile(){
 
 	fp = fopen(file_name, "w");
 	usleep(100000);
-	if(ego_vehicle_id == TAURUS && taurus_verbosity){
+	if(ego_vehicle_id == CAMRY && camry_verbosity){
 		char file_name_t[200]={0};
 		printf("Trying to create file \n");
 		sprintf(file_name_t,"/home/qnxuser/path_can_bin/data/targets%02d%02d%d__%02d_%02d_%02d.dat", tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);//%s_targets_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 		printf("\nFile name %s \n", file_name_t);
 		fp_t = fopen(file_name_t, "w");
 		if (fp_t == NULL) {
-			printf("Open Taurus targets file failed \n");
+			printf("Open camry targets file failed \n");
 		} else{
-			printf("\nTaurus file created\n");
+			printf("\ncamry file created\n");
 		}
 	}
 
@@ -1085,12 +1097,12 @@ bool Fill_config_structure(setup_struct* ss, char* name, float value){
 		ss->ACCORD_DAMPING_FACTOR = value;
 		return true;
 	}
-	if (!strcmp(name, "TAURUS_DAMPING_FACTOR")) {
-		ss->TAURUS_DAMPING_FACTOR = value;
+	if (!strcmp(name, "CAMRY_DAMPING_FACTOR")) {
+		ss->CAMRY_DAMPING_FACTOR = value;
 		return true;
 	}
-	if (!strcmp(name, "TAURUS_BANDWIDTH")) {
-		ss->TAURUS_BANDWIDTH = value;
+	if (!strcmp(name, "CAMRY_BANDWIDTH")) {
+		ss->CAMRY_BANDWIDTH = value;
 		return true;
 	}
 	return false;

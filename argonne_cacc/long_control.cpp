@@ -106,9 +106,9 @@ long_control::long_control(setup_struct* ss, int _veh_id, int _control_mode, dou
 			ego_wn = cfg->ACCORD_BANDWIDTH;
 			ego_df = cfg->ACCORD_DAMPING_FACTOR;
 		break;
-		case(TAURUS):
-			ego_wn = cfg->TAURUS_BANDWIDTH;
-			ego_df = cfg->TAURUS_DAMPING_FACTOR;
+		case(CAMRY):
+			ego_wn = cfg->CAMRY_BANDWIDTH;
+			ego_df = cfg->CAMRY_DAMPING_FACTOR;
 		break;
 
 	}
@@ -121,9 +121,9 @@ long_control::long_control(setup_struct* ss, int _veh_id, int _control_mode, dou
 			prec_wn = cfg->ACCORD_BANDWIDTH;
 			prec_df = cfg->ACCORD_DAMPING_FACTOR;
 		break;
-		case(TAURUS):
-			prec_wn = cfg->TAURUS_BANDWIDTH;
-			prec_df = cfg->TAURUS_DAMPING_FACTOR;
+		case(CAMRY):
+			prec_wn = cfg->CAMRY_BANDWIDTH;
+			prec_df = cfg->CAMRY_DAMPING_FACTOR;
 		break;
 
 	}
@@ -131,7 +131,7 @@ long_control::long_control(setup_struct* ss, int _veh_id, int _control_mode, dou
 	// LPF-FF variables
 	this->ego_prec_FF_dynamics_filter = new signal_filter(this->Ts, ego_df, ego_wn, prec_df, prec_wn, 0);
 	this->ego_prec_CACC_FF_1_H = new signal_filter(this->Ts, 1, cfg->CACC_FF_EGO_PREC_FILTER_FREQ/this->cooperative_ACC_time_gap, 0);
-	this->ego_leader_FF_dynamics_filter = new signal_filter(this->Ts, ego_df, ego_wn, cfg->TAURUS_DAMPING_FACTOR, cfg->TAURUS_BANDWIDTH, 0);
+	this->ego_leader_FF_dynamics_filter = new signal_filter(this->Ts, ego_df, ego_wn, cfg->CAMRY_DAMPING_FACTOR, cfg->CAMRY_BANDWIDTH, 0);
 	this->ego_leader_CACC_FF_1_H = new signal_filter(this->Ts, 1, cfg->CACC_FF_EGO_LEADER_FILTER_FREQ/this->cooperative_ACC_time_gap, 0);
 	this->is_LPF_active= false;
 	this->LPF_ego_preceding_gain = cfg->LPF_EGO_PRECEDING_FF_GAIN;
@@ -203,8 +203,8 @@ void long_control::Update_ACC_inputs(double i_long_speed, double i_long_accelera
 		case(PRIUS):
 			Update_preceding_vehicle_from_prius_target(this->long_speed);
 		break;
-		case(TAURUS):
-			// Get_preceding_vehicle_from_taurus_list(nb_targets, this->long_speed);
+		case(CAMRY):
+			 Get_preceding_vehicle_from_camry_list(nb_targets, this->long_speed);
 		break;
 	}
 
@@ -272,8 +272,8 @@ void long_control::Update_CACC_inputs(double i_long_speed, double i_long_acceler
 			this->long_speed = i_long_speed;
 			Update_preceding_vehicle_from_prius_target(this->long_speed);
 		break;
-		case(TAURUS):
-		// Get_preceding_vehicle_from_taurus_list(nb_targets, this->long_speed);
+		case(CAMRY):
+		 Get_preceding_vehicle_from_camry_list(nb_targets, this->long_speed);
 		break;
 	}
 
@@ -324,8 +324,8 @@ void long_control::Update_Emergency_braking_inputs(double i_long_speed, int nb_t
 			this->long_speed = fmax(0.000001,this->ego_speed_filter->low_pass_order_1(i_long_speed/0.992));
 			Update_preceding_vehicle_from_prius_target(this->long_speed);
 		break;
-		case(TAURUS):
-			// Get_preceding_vehicle_from_taurus_list(nb_targets, this->long_speed);
+		case(CAMRY):
+			 Get_preceding_vehicle_from_camry_list(nb_targets, this->long_speed);
 		break;
 	}
 	this->v2v_fault_timer = this->preceding_comm_data.v2v_fault_timer;
@@ -389,7 +389,7 @@ void long_control::Update_preceding_vehicle_from_prius_target(double ego_speed){
 	}
 }
 
-void long_control::Get_preceding_vehicle_from_taurus_list(int nb_targets, double ego_speed){
+void long_control::Get_preceding_vehicle_from_camry_list(int nb_targets, double ego_speed){
 	double closest_distance = 120;
 	for(int i=0; i <nb_targets; i++){
 		if (targets[i].relative_distance < closest_distance &&
@@ -974,16 +974,16 @@ double long_control::Throttle_map_search(double _veh_speed, double _desired_acce
 				out = (accord_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + accord_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex)) * (accelerationIndex - accel_floor) +
 				(accord_throttle_map[speed_ceil][accel_floor] * (speedIndex - speed_floor) + accord_throttle_map[speed_floor][accel_floor] * (speed_ceil - speedIndex)) * (accel_ceil - accelerationIndex);
 			break;
-		case(TAURUS):
+		case(CAMRY):
 			if (speed_floor == speed_ceil && accel_floor == accel_ceil)
-				out = taurus_throttle_map[speed_ceil][accel_floor];
+				out = camry_throttle_map[speed_ceil][accel_floor];
 			else if (speed_floor == speed_ceil && accel_floor != accel_ceil)
-				out = taurus_throttle_map[speed_ceil][accel_ceil] * (accelerationIndex - accel_floor) + taurus_throttle_map[speed_ceil][accel_floor] * (accel_ceil - accelerationIndex);
+				out = camry_throttle_map[speed_ceil][accel_ceil] * (accelerationIndex - accel_floor) + camry_throttle_map[speed_ceil][accel_floor] * (accel_ceil - accelerationIndex);
 			else if (speed_floor != speed_ceil && accel_floor == accel_ceil)
-				out = taurus_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + taurus_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex);
+				out = camry_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + camry_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex);
 			else
-				out = (taurus_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + taurus_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex)) * (accelerationIndex - accel_floor) +
-				(taurus_throttle_map[speed_ceil][accel_floor] * (speedIndex - speed_floor) + taurus_throttle_map[speed_floor][accel_floor] * (speed_ceil - speedIndex)) * (accel_ceil - accelerationIndex);
+				out = (camry_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + camry_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex)) * (accelerationIndex - accel_floor) +
+				(camry_throttle_map[speed_ceil][accel_floor] * (speedIndex - speed_floor) + camry_throttle_map[speed_floor][accel_floor] * (speed_ceil - speedIndex)) * (accel_ceil - accelerationIndex);
 			break;
 		default:
 			break;
@@ -1028,7 +1028,7 @@ void long_control::print_monitoring_data(int desired_control_mode, int vehicle_i
 	if(vehicle_id==PRIUS){
 		printf("a=%2.2f P-",this->desired_acceleration);
 	}
-	if(vehicle_id==TAURUS){
+	if(vehicle_id==CAMRY){
 		printf("a=%2.1f b=%2.2f T-", this->throttle_level_command, this->deceleration_command);
 	}
 	switch(desired_control_mode){
@@ -1230,8 +1230,8 @@ void long_control::print_cfg_parameters(){
 	printf("%.2f \n", cfg->PRIUS_BANDWIDTH);
 	printf("%.2f \n", cfg->ACCORD_DAMPING_FACTOR);
 	printf("%.2f \n", cfg->ACCORD_BANDWIDTH);
-	printf("%.2f \n", cfg->TAURUS_DAMPING_FACTOR);
-	printf("%.2f \n", cfg->TAURUS_BANDWIDTH);
+	printf("%.2f \n", cfg->CAMRY_DAMPING_FACTOR);
+	printf("%.2f \n", cfg->CAMRY_BANDWIDTH);
 
 	return;
 }

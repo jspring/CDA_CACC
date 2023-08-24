@@ -3,10 +3,11 @@
 extern "C" {
 #include "db_include.h"
 #include "long_comm.h"
-#include <clt_vars_accord.h>
-#include <clt_vars_taurus.h>
-#include <clt_vars_prius.h>
 #include "can_dbvars.h"
+#include <clt_vars_camry.h>
+#include <clt_vars_leaf.h>
+#include <clt_vars_prius.h>
+#include <clt_vars_accord.h>
 #include "Leddar.h"
 #include "path_gps_lib.h"
 }
@@ -30,7 +31,7 @@ bool Write_outputs();
 void End_tasks();
 int get_accord_targets();
 int get_prius_targets();
-int get_taurus_targets();
+int get_camry_targets();
 void Read_db_v2x_comm_data();
 void UpdateStandardLogFile();
 void InitOutputFile();
@@ -96,7 +97,7 @@ FILE* fp;
 FILE* fp_t;
 bool trigger_EB;
 int enable_flag_from_hmi;
-bool taurus_verbosity;
+bool camry_verbosity;
 bool fuel_verbosity;
 bool gps_verbosity;
 

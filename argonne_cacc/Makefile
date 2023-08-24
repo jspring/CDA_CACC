@@ -7,7 +7,7 @@
 include capath_qnx.mk
 
 PATH_OBJS += $(OBJDIR)/long_control.o
-PATH_CFLAGS += -g -O0 -finstrument-functions -I../../common -I../include -fPIC -I../prius/can/src -I../taurus/can/src -I../accord/can/src -I../steinhoff -I../vehcomm -I../hmi/hmi_server
+PATH_CFLAGS += -g -O0 -finstrument-functions -I../../common -I../include -fPIC -I../prius/can/src -I../camry/can/src -I../leaf/can/src -I../steinhoff -I../vehcomm -I../hmi/hmi_server
 PATH_LDFLAGS += -fPIC -L../lib
 PATH_LIBS += -lprofilingS
 
