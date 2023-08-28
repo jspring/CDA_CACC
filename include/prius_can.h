@@ -80,7 +80,7 @@ static inline void set_prius_accel_cmd(unsigned char data[], prius_accel_cmd_t *
  */
 
 #define WHEEL_SPEED_RES		0.01
-#define WHEEL_SPEED_OFFSET	6767
+#define WHEEL_SPEED_OFFSET	67.67
 #define KPH_TO_MPS		1.0/3.6
 
 typedef struct {
@@ -91,18 +91,13 @@ typedef struct {
 	float veh_wheel_spd_FL_CAN1_mps;
 	float veh_wheel_spd_RR_CAN1_mps;
 	float veh_wheel_spd_RL_CAN1_mps;
-	float veh_wheel_spd_average;
 } prius_wheel_speed_t;
 
 static inline void get_prius_wheel_speed(unsigned char *data, prius_wheel_speed_t *p) {
-	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-	p->veh_wheel_spd_RR_CAN1_mps = (float)((short)(((data[4] << 8) + data[5]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-	p->veh_wheel_spd_RL_CAN1_mps = (float)((short)(((data[6] << 8) + data[7]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-//	p->veh_wheel_spd_average = ((p->veh_wheel_spd_FR_CAN1_mps + p->veh_wheel_spd_FL_CAN1_mps + p->veh_wheel_spd_RR_CAN1_mps + p->veh_wheel_spd_RL_CAN1_mps) / 4.0) -0.094;
-	p->veh_wheel_spd_average = ((p->veh_wheel_spd_FR_CAN1_mps + p->veh_wheel_spd_FL_CAN1_mps + p->veh_wheel_spd_RR_CAN1_mps + p->veh_wheel_spd_RL_CAN1_mps) / 4.0);
-
-	//printf("library wheel speed: p->veh_wheel_spd_FR_CAN1_mps %.2f data[0] %#hhx data[1] %#hhx\n", p->veh_wheel_spd_FR_CAN1_mps, data[0], data[1]);
+	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
+	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
+	p->veh_wheel_spd_RR_CAN1_mps = (float)((short)(((data[4] << 8) + data[5]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
+	p->veh_wheel_spd_RL_CAN1_mps = (float)((short)(((data[6] << 8) + data[7]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
 }
 
 /*******************************************************************************
@@ -375,61 +370,13 @@ typedef struct {
 
 static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_radar_forward_vehicle_t *p) {
 	short short_temp;
-	short short_temp1;
-	unsigned char char0 = data[0];
-	unsigned char char1 = data[1];
-	unsigned char char2 = data[2];
-	unsigned char char3 = data[3];
-	short_temp = ((short)( ((char0 << 8) & 0x7F00)  + char1))/2; //dividing by 2 shifts the short int to the right by 1
+	short_temp = (short)( (data[0] << 8) + data[1])/2; //dividing by 2 shifts the short int to the right by 1
 													   //bit. It should also drag the msb sign bit to the right.
 	p->Radar_forward_veh_distance_CAN1__m = short_temp * RADAR_DIST_RES;
 
-//	short_temp1 = ((short)((char2 << 8) + (char3 << 4)))/16; //dividing by 16 shifts the short int to the right by 4
-	short_temp1 = (short)((char2 << 4) + (char3 >> 4)); //dividing by 16 shifts the short int to the right by 4
-	if( (short_temp1 & 0x800) != 0)
-		short_temp1 |= 0xF000;							//bits. It should also drag the msb sign bit to the right.
-	p->Radar_forward_veh_relative_spd_CAN1__mps  = short_temp1 * RADAR_SPEED_MPS_RES;
-
-	/*printf("library targets: dist %.2f d[0] %#hhx d[1] %#hhx short_temp %04hx speed %.2f d[2] %#hhx d[3] %#hhx short_temp1 %04hx\n",
-	p->Radar_forward_veh_distance_CAN1__m,
-	data[0],
-	data[1],
-	short_temp,
-	p->Radar_forward_veh_relative_spd_CAN1__mps,
-	data[2],
-	data[3],
-	short_temp1
-	);
-*/
-}
-/*******************************************************************************
- *      prius_fuel_rate
- *      Message ID 0x7E8
-********************************************************************************/
-typedef struct {
-	int ts_ms;
-	unsigned char two_message_periods;
-	unsigned int message_timeout_counter;
-	char size;
-	char mode;
-	char id;
-	float fuel_rate;
-}prius_fuel_rate_t;
-
-static inline void get_prius_fuel_rate(unsigned char *data, prius_fuel_rate_t *p) {
-
-	p->size = data[0];
-	p->mode = data[1];
-	p->id = data[2];
-	p->fuel_rate = ((data[3] * 256) + data[4]) / 100.0/14.7;
-//printf("library: prius fuel rate %.3f g/sec %#hhx %#hhx size %#hhx mode %#hhx id %#hhx\n",
-//		p->fuel_rate,
-//		data[3],
-///		data[4],
-//		data[0],
-//		data[1],
-//		data[2]
-//);
+	short_temp = (short)( (data[2] << 8) + data[3])/16; //dividing by 16 shifts the short int to the right by 4
+													   //bits. It should also drag the msb sign bit to the right.
+	p->Radar_forward_veh_relative_spd_CAN1__mps  = short_temp * RADAR_SPEED_MPS_RES;
 }
 
 

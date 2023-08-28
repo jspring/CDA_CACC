@@ -314,7 +314,7 @@ static inline void get_accord_target_object(unsigned char *data, accord_target_o
 */
 int printcan(db_steinhoff_msg_t *steinhoff_msg);
 
-int print_vehicle_speed(accord_vehicle_speed_t *accord_vehicle_speed);
+int print_vehicle_speed_accord(accord_vehicle_speed_t *accord_vehicle_speed);
 
 void check_msg_timeout(int curr_ts_ms, int *prev_ts_ms,
         unsigned char *two_message_periods,

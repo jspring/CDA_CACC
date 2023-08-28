@@ -18,9 +18,8 @@ typedef struct {
 } input_t;
 
 typedef struct {
-	float throttle_pct;	// Throttle percentage
-	float decel_request;	// Desired deceleration (for braking) 
-	float brake_level;	// Brake level (applies only for Accord)
+	float torque_level;	// Throttle percentage
+	float accel_decel_request;	// Desired deceleration (for braking) 
 	float steering_angle_request;	// Steering angle desired
 } output_t;
 
