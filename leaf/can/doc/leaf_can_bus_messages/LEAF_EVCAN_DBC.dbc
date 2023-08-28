@@ -1,0 +1,82 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: 
+
+
+BO_ 644 Wheel_Speed_Sens_CAN5: 8 Vector__XXX
+ SG_ wheel_speed_R_CAN5__kph : 7|16@0+ (0.005,0) [0|327.675] "kph" Vector__XXX
+ SG_ wheel_speed_L_CAN5__kph : 23|16@0+ (0.005,0) [0|327.675] "kph" Vector__XXX
+ SG_ AverageRearSpeedSensor : 39|16@0+ (1,0) [0|65535] "pulses" Vector__XXX
+ SG_ Counter1 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Counter2 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1291 Pedal_Accel_CAN5: 1 Vector__XXX
+ SG_ pedal_accel_pos_CAN5__per : 7|8@0+ (0.392157,0) [0|100.000035] "%" Vector__XXX
+
+BO_ 1370 Motor_Temp: 2 Vector__XXX
+ SG_ Motor_Temp_CAN5__C : 15|8@0+ (1,-40) [-40|215] "C" Vector__XXX
+
+BO_ 474 Motor_Speed_TRQ_VOLT: 6 Vector__XXX
+ SG_ Motor_Speed_CAN5__rpm : 39|15@0- (1,0) [-16384|16383] "rpm" Vector__XXX
+ SG_ Motor_Torque_CAN5__Nm : 18|11@0- (0.5,0) [-512|511.5] "Nm" Vector__XXX
+ SG_ motor_inverter_input_voltage_CAN : 7|8@0+ (2,0) [0|510] "V" Vector__XXX
+
+BO_ 1356 HVAC_Temps: 7 Vector__XXX
+ SG_ Veh_ambient_temp_CAN5__C : 40|9@0+ (0.5,-40) [-40|215.5] "C" Vector__XXX
+ SG_ HVAC_int_temp_sensor_CAN5__C : 7|8@0+ (0.333,-30) [-30|54.91500000000001] "C" Vector__XXX
+ SG_ HVAC_fan_duty_cycle_CAN5__per : 47|7@0+ (1,0) [0|127] "%" Vector__XXX
+
+BO_ 475 HVBatt_Volt: 7 Vector__XXX
+ SG_ HVBatt_voltage_CAN5__V : 23|10@0+ (0.5,0) [0|511.5] "V" Vector__XXX
+ SG_ HVBatt_current_wide_CAN5__A : 47|12@0- (0.5,0) [-1024|1023.5] "A" Vector__XXX
+ SG_ HVBatt_current2_CAN5__A : 7|11@0- (0.5,0) [-512|511.5] "A" Vector__XXX
+
+BO_ 1371 HVBatt_SOC: 2 Vector__XXX
+ SG_ HVBatt_SOC_CAN5__per : 7|10@0+ (0.1,0) [0|102.3] "%" Vector__XXX
+
+BO_ 1290 HVAC_refrigerant_press: 4 Vector__XXX
+ SG_ HVAC_refrigerant_press_CAN5__MPa : 30|7@0+ (0.02,0) [0|2.54] "MPa" Vector__XXX
+
+BO_ 1359 HVAC_PWR: 8 Vector__XXX
+ SG_ HVAC_power_consumption_AC_comp_C : 22|7@0+ (0.05,0) [0|6.350000000000001] "kW" Vector__XXX
+ SG_ veh_interior_temp_CAN5__C : 7|8@0+ (0.5,-40) [-40|87.5] "C" Vector__XXX
+ SG_ HVAC_PTC_heater_output_temp_CAN5 : 63|8@0+ (0.5,-20) [-20|107.5] "C" Vector__XXX
+
+BO_ 1477 Veh_ODO: 4 Vector__XXX
+ SG_ veh_ODO_CAN5__mi : 9|18@0+ (1,0) [0|262143] "" Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+
