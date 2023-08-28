@@ -479,6 +479,9 @@ int get_camry_targets(){
 	control_structure->targets[i].ID = i;
 		if(camry_verbosity){
 			printf("%d d:%.5f | ",i, a.LONG_DIST_CAN1__m);
+			printf("%d ", i);
+			printf("%.5f ", a.LONG_SPEED_CAN1__mps);
+			fprintf(fp_t, "%d d:%.5f | ",i, a.LONG_DIST_CAN1__m);
 			fprintf(fp_t,"%d ", i);
 			fprintf(fp_t,"%.5f ", a.LONG_SPEED_CAN1__mps);
 		}
@@ -625,58 +628,58 @@ void UpdateStandardLogFile(){
 	timeinfo = localtime( &rawtime );
 	timestamp_t ts;
 	get_current_timestamp(&ts);
-	fprintf(fp,"%02d", tm.tm_mon+1);
+	fprintf(fp,"%02d", tm.tm_mon+1);//1
 	fprintf(fp," %02d", tm.tm_mday);
 	fprintf(fp," %02d", tm.tm_year+1900);
 	fprintf(fp," %02d", ts.hour);
-	fprintf(fp," %02d", ts.min);
+	fprintf(fp," %02d", ts.min);			//5
 
 	fprintf(fp," %02d", ts.sec);
 	fprintf(fp," %03d", ts.millisec);
 	fprintf(fp," %.6f", current_time);
 	if(manual_control_requested)
-		fprintf(fp," %d", 1);
+		fprintf(fp," %d", 1);				//9
 	else{
 		switch(control_structure->current_control_mode){
 			case(CRUISE):
-				fprintf(fp," %d", 2);
+				fprintf(fp," %d", 2);		//9
 				break;
 			case(ACC):
-				fprintf(fp," %d", 3);
+				fprintf(fp," %d", 3);		//9
 				break;
 			case(CACC):
-				fprintf(fp," %d", 4);
+				fprintf(fp," %d", 4);		//9
 				break;
 			case(ACC_2_CRUISE):
-				fprintf(fp," %d", 2);
+				fprintf(fp," %d", 2);		//9
 				break;
 			case(CRUISE_2_ACC):
-				fprintf(fp," %d", 3);
+				fprintf(fp," %d", 3);		//9
 				break;
 			case(CACC_2_ACC):
-				fprintf(fp," %d", 3);
+				fprintf(fp," %d", 3);		//9
 				break;
 			case(ACC_2_CACC):
-				fprintf(fp," %d", 4);
+				fprintf(fp," %d", 4);		//9
 				break;
 			case(EMERGENCY_BRAKING):
-				fprintf(fp," %d", 0);
+				fprintf(fp," %d", 0);		//9
 				break;
 		}
 	}
-	fprintf(fp," %d",   v2i_engaged);
+	fprintf(fp," %d",   v2i_engaged);		//10
 
 	fprintf(fp," %d", control_structure->current_control_mode);  // 11
 	fprintf(fp," %d", control_structure->my_pip);
 	fprintf(fp," %d", ego_vehicle_id);
 	fprintf(fp," %.3f", control_structure->long_speed);
-	fprintf(fp," %.3f", i_fuel_rate);
+	fprintf(fp," %.3f", i_fuel_rate);		//15
 
 	fprintf(fp," %.4f", control_structure->long_acceleration);
 	fprintf(fp," %.4f", gps_data.latitude);
 	fprintf(fp," %.4f", gps_data.longitude);
 	fprintf(fp," %.4f", gps_data.altitude);
-	fprintf(fp," %d",   control_structure->is_preceding_valid ? 1 : 0);
+	fprintf(fp," %d",   control_structure->is_preceding_valid ? 1 : 0); //20
 
 	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_distance); // 21
 	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_speed);
