@@ -1,0 +1,287 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: 
+
+
+BO_ 180 HS_CAN5__B4: 8 Vector__XXX
+
+BO_ 2002 HS_CAN5__7D2: 8 Vector__XXX
+
+BO_ 467 HS_CAN5__1D3: 8 Vector__XXX
+
+BO_ 743 HS_CAN5__2E7: 8 Vector__XXX
+
+BO_ 170 HS_CAN5__AA: 8 Vector__XXX
+
+BO_ 166 HS_CAN5__A6: 8 Vector__XXX
+
+BO_ 295 HS_CAN5__127: 8 Vector__XXX
+
+BO_ 581 HS_CAN5__245: 5 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 830 HS_CAN5__33E: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2010 HS_CAN5__7DA: 8 Vector__XXX
+
+BO_ 1998 HS_CAN5__7CE: 8 Vector__XXX
+
+BO_ 452 HS_CAN5__1C4: 8 Vector__XXX
+
+BO_ 643 HS_CAN5__283: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 37 HS_CAN5__25: 8 Vector__XXX
+
+BO_ 742 HS_CAN5__2E6: 8 Vector__XXX
+
+BO_ 36 HS_CAN5__24: 8 Vector__XXX
+
+BO_ 296 HS_CAN5__128: 8 Vector__XXX
+
+BO_ 608 HS_CAN5__260: 8 Vector__XXX
+
+BO_ 562 HS_CAN5__232: 6 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 824 HS_CAN5__338: 2 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 560 HS_CAN5__230: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 610 HS_CAN5__262: 8 Vector__XXX
+
+BO_ 1990 HS_CAN5__7C6: 8 Vector__XXX
+
+BO_ 836 HS_CAN5__344: 8 Vector__XXX
+
+BO_ 740 HS_CAN5__2E4: 5 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 713 HS_CAN5__2C9: 8 Vector__XXX
+
+BO_ 552 HS_CAN5__228: 4 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1568 HS_CAN5__620: 8 Vector__XXX
+
+BO_ 550 HS_CAN5__226: 8 Vector__XXX
+
+BO_ 614 HS_CAN5__266: 2 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 835 HS_CAN5__343: 8 Vector__XXX
+ SG_ ACCEL_CMD : 7|16@0- (0.001,0) [-20|20] "m/s2" HCU
+ SG_ SET_ME_X01 : 23|2@0+ (1,0) [0|3] "" HCU
+ SG_ DISTANCE : 20|1@0+ (1,0) [0|1] "" XXX
+ SG_ MINI_CAR : 21|1@0+ (1,0) [0|1] "" XXX
+ SG_ SET_ME_X3 : 19|4@0+ (1,0) [0|15] "" XXX
+ SG_ SET_ME_1 : 30|1@0+ (1,0) [0|1] "" HCU
+ SG_ RELEASE_STANDSTILL : 31|1@0+ (1,0) [0|1] "" HCU
+ SG_ CANCEL_REQ : 24|1@0+ (1,0) [0|1] "" HCU
+ SG_ CHECKSUM : 63|8@0+ (1,0) [0|255] "" XXX
+
+BO_ 1114 HS_CAN5__45A: 8 Vector__XXX
+
+BO_ 1164 HS_CAN5__48C: 8 Vector__XXX
+
+BO_ 658 HS_CAN5__292: 8 Vector__XXX
+
+BO_ 975 HS_CAN5__3CF: 5 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 466 HS_CAN5__1D2: 8 Vector__XXX
+
+BO_ 426 HS_CAN5__1AA: 6 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 870 HS_CAN5__366: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 800 HS_CAN5__320: 8 Vector__XXX
+
+BO_ 1165 HS_CAN5__48D: 8 Vector__XXX
+
+BO_ 1020 HS_CAN5__3FC: 8 Vector__XXX
+
+BO_ 810 HS_CAN5__32A: 2 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1166 HS_CAN5__48E: 8 Vector__XXX
+
+BO_ 1167 HS_CAN5__48F: 8 Vector__XXX
+
+BO_ 814 HS_CAN5__32E: 8 Vector__XXX
+
+BO_ 900 HS_CAN5__384: 6 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 902 HS_CAN5__386: 6 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 998 HS_CAN5__3E6: 5 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1017 HS_CAN5__3F9: 8 Vector__XXX
+
+BO_ 898 HS_CAN5__382: 8 Vector__XXX
+
+BO_ 999 HS_CAN5__3E7: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1000 HS_CAN5__3E8: 8 Vector__XXX
+
+BO_ 1556 HS_CAN5__614: 8 Vector__XXX
+
+BO_ 1001 HS_CAN5__3E9: 8 Vector__XXX
+
+BO_ 971 HS_CAN5__3CB: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1057 HS_CAN5__421: 8 Vector__XXX
+
+BO_ 863 HS_CAN5__35F: 8 Vector__XXX
+
+BO_ 1132 HS_CAN5__46C: 8 Vector__XXX
+
+BO_ 951 HS_CAN5__3B7: 8 Vector__XXX
+
+BO_ 1059 HS_CAN5__423: 8 Vector__XXX
+
+BO_ 869 HS_CAN5__365: 7 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 956 HS_CAN5__3BC: 8 Vector__XXX
+
+BO_ 829 HS_CAN5__33D: 8 Vector__XXX
+
+BO_ 950 HS_CAN5__3B6: 8 Vector__XXX
+
+BO_ 1595 HS_CAN5__63B: 8 Vector__XXX
+
+BO_ 1085 HS_CAN5__43D: 8 Vector__XXX
+
+BO_ 953 HS_CAN5__3B9: 8 Vector__XXX
+
+BO_ 1552 HS_CAN5__610: 8 Vector__XXX
+
+BO_ 871 HS_CAN5__367: 2 Vector__XXX
+ SG_ Signal_0 : 7|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1904 HS_CAN5__770: 8 Vector__XXX
+
+BO_ 1077 HS_CAN5__435: 8 Vector__XXX
+
+BO_ 1912 HS_CAN5__778: 8 Vector__XXX
+
+BO_ 974 HS_CAN5__3CE: 8 Vector__XXX
+
+BO_ 913 HS_CAN5__391: 8 Vector__XXX
+
+BO_ 1161 HS_CAN5__489: 8 Vector__XXX
+
+BO_ 1162 HS_CAN5__48A: 8 Vector__XXX
+
+BO_ 1163 HS_CAN5__48B: 8 Vector__XXX
+
+BO_ 1086 HS_CAN5__43E: 8 Vector__XXX
+
+BO_ 933 HS_CAN5__3A5: 8 Vector__XXX
+
+BO_ 993 HS_CAN5__3E1: 8 Vector__XXX
+
+BO_ 1071 HS_CAN5__42F: 8 Vector__XXX
+
+BO_ 1076 HS_CAN5__434: 8 Vector__XXX
+
+BO_ 1227 HS_CAN5__4CB: 8 Vector__XXX
+
+BO_ 1235 HS_CAN5__4D3: 8 Vector__XXX
+
+BO_ 921 HS_CAN5__399: 8 Vector__XXX
+
+BO_ 1044 HS_CAN5__414: 8 Vector__XXX
+
+BO_ 1228 HS_CAN5__4CC: 8 Vector__XXX
+
+BO_ 945 HS_CAN5__3B1: 8 Vector__XXX
+
+BO_ 1056 HS_CAN5__420: 8 Vector__XXX
+
+BO_ 1014 HS_CAN5__3F6: 8 Vector__XXX
+
+BO_ 1571 HS_CAN5__623: 8 Vector__XXX
+
+BO_ 1083 HS_CAN5__43B: 8 Vector__XXX
+
+BO_ 1572 HS_CAN5__624: 8 Vector__XXX
+
+BO_ 1084 HS_CAN5__43C: 8 Vector__XXX
+
+BO_ 1779 HS_CAN5__6F3: 8 Vector__XXX
+
+BO_ 1279 HS_CAN5__4FF: 8 Vector__XXX
+
+BO_ 1553 HS_CAN5__611: 8 Vector__XXX
+
+BO_ 1041 HS_CAN5__411: 8 Vector__XXX
+
+BO_ 955 HS_CAN5__3BB: 8 Vector__XXX
+
+BO_ 1570 HS_CAN5__622: 8 Vector__XXX
+
+BO_ 944 HS_CAN5__3B0: 8 Vector__XXX
+
+BO_ 1042 HS_CAN5__412: 8 Vector__XXX
+
+BO_ 905 HS_CAN5__389: 8 Vector__XXX
+
+BO_ 918 HS_CAN5__396: 8 Vector__XXX
+
+BO_ 1082 HS_CAN5__43A: 8 Vector__XXX
+
+BO_ 1175 HS_CAN5__497: 8 Vector__XXX
+
+BO_ 1237 HS_CAN5__4D5: 8 Vector__XXX
+
+BO_ 1777 HS_CAN5__6F1: 8 Vector__XXX
+
+BO_ 1557 HS_CAN5__615: 8 Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+

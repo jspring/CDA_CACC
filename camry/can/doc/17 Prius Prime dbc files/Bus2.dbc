@@ -1,0 +1,284 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: FCAM 
+VAL_TABLE_ Veh_PRNDL_state_CAN2 0 "park" 3 "drive" 4 "brake" 1 "reverse" 2 "neutral" ;
+VAL_TABLE_ Veh_drive_mode_CAN2 0 "normal" 1 "power" 2 "eco" ;
+VAL_TABLE_ Veh_HV_EV_mode_CAN2 7 "Charge" 1 "EV" 0 "Hybrid" 9 "Charge Transition" 10 "EV Auto" ;
+
+
+BO_ 581 HS_CAN2__neoVI_3G___245: 3 Vector__XXX
+ SG_ Pedal_accel_CAN2__per : 23|8@0+ (0.5,0) [0|127.5] "" Vector__XXX
+
+BO_ 295 HS_CAN2__neoVI_3G___127: 6 Vector__XXX
+ SG_ Veh_PRNDL_state_CAN2 : 46|3@0+ (1,0) [0|4] "" Vector__XXX
+
+BO_ 1179 HS_CAN2__neoVI_3G___49B: 5 Vector__XXX
+ SG_ Veh_drive_mode_CAN2 : 35|2@0+ (1,0) [0|2] "" Vector__XXX
+
+BO_ 805 HS_CAN2__neoVI_3G___325: 1 Vector__XXX
+ SG_ Veh_HV_EV_mode_CAN2 : 7|4@0+ (1,0) [0|10] "" Vector__XXX
+
+BO_ 614 HS_CAN2__neoVI_3G___266: 2 Vector__XXX
+ SG_ Veh_steerinig_angle_CAN2 : 3|12@0- (1,0) [-2048|2047] "" Vector__XXX
+
+BO_ 50 HS_CAN2__neoVI_3G___32: 4 Vector__XXX
+ SG_ Eng_spd_CAN2__rpm : 23|12@0+ (1,0) [0|4095] "rpm" Vector__XXX
+
+BO_ 166 HS_CAN2__neoVI_3G___A6: 3 Vector__XXX
+ SG_ Pedal_brake_regen_CAN2 : 23|8@0+ (0.392157,0) [0|255] "" Vector__XXX
+
+BO_ 580 HS_CAN2__neoVI_3G___244: 7 Vector__XXX
+ SG_ Motor_spd_CAN2__rpm : 39|16@0- (1,0) [-32768|32767] "rpm" Vector__XXX
+ SG_ Motor_torque_demand_unk_CAN2 : 55|8@0+ (0.391,0) [0|99.705] "" Vector__XXX
+
+BO_ 1595 HS_CAN2__neoVI_3G___63B: 8 Vector__XXX
+ SG_ Veh_run_time_CAN2__s : 55|16@0+ (0.25,0) [0|16383.75] "s" Vector__XXX
+
+BO_ 183 HS_CAN2__neoVI_3G___B7: 8 Vector__XXX
+ SG_ Wheel_spd_1_CAN2__kph : 7|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+ SG_ Wheel_spd_2_CAN2__kph : 23|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+ SG_ Wheel_spd_3_CAN2__kph : 39|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+ SG_ Wheel_spd_4_CAN2__kph : 55|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+
+BO_ 180 HS_CAN2__neoVI_3G___B4: 7 Vector__XXX
+ SG_ Veh_spd_CAN2__kph : 47|16@0+ (0.01,0) [0|655.35] "kph" Vector__XXX
+
+BO_ 953 HS_CAN2__neoVI_3G___3B9: 1 Vector__XXX
+ SG_ Eng_coolant_temp_CAN2__C : 7|8@0+ (0.5,0) [0|127.5] "C" Vector__XXX
+
+BO_ 975 HS_CAN2__neoVI_3G___3CF: 3 Vector__XXX
+ SG_ Eng_intake_air_temp_CAN2__C : 23|8@0- (1,0) [-128|127] "C" Vector__XXX
+
+BO_ 298 HS_CAN2__neoVI_3G___12A: 4 Vector__XXX
+ SG_ Brake_Regen_Act_CAN2__Nm : 19|12@0+ (0.5,0) [0|2047.5] "Nm" Vector__XXX
+
+BO_ 713 HS_CAN2__neoVI_3G___2C9: 7 Vector__XXX
+ SG_ Drive_Torq_CAN2__Nm : 47|16@0- (0.612,0) [-32768|32767] "Nm" Vector__XXX
+
+BO_ 840 HS_CAN2__neoVI_3G___348: 5 Vector__XXX
+ SG_ Eng_torque_actual_CAN2__Nm : 26|11@0- (1,0) [-1024|1023] "Nm" Vector__XXX
+
+BO_ 974 HS_CAN2__neoVI_3G___3CE: 6 Vector__XXX
+ SG_ Veh_remaining_range_unk_CAN2__km : 35|12@0+ (0.1,0) [0|409.5] "km" Vector__XXX
+
+BO_ 1074 HS_CAN2__neoVI_3G___432: 7 Vector__XXX
+ SG_ Veh_range_1_unk_CAN2__km : 15|8@0+ (1,0) [0|255] "km" Vector__XXX
+ SG_ Veh_range_2_unk_CAN2__km : 47|8@0+ (1,0) [0|255] "km" Vector__XXX
+ SG_ Veh_range_3_unk_CAN2__km : 55|8@0+ (1,0) [0|255] "km" Vector__XXX
+
+BO_ 55 HS_CAN2__neoVI_3G___37: 0 Vector__XXX
+
+BO_ 188 HS_CAN2__neoVI_3G___BC: 0 Vector__XXX
+
+BO_ 968 HS_CAN2__neoVI_3G___3C8: 0 Vector__XXX
+
+BO_ 971 HS_CAN2__neoVI_3G___3CB: 0 Vector__XXX
+
+BO_ 1086 HS_CAN2__neoVI_3G___43E: 0 Vector__XXX
+
+BO_ 1566 HS_CAN2__neoVI_3G___61E: 0 Vector__XXX
+
+BO_ 1012 HS_CAN2__neoVI_3G___3F4: 0 Vector__XXX
+
+BO_ 1156 HS_CAN2__neoVI_3G___484: 0 Vector__XXX
+
+BO_ 1784 HS_CAN2__neoVI_3G___6F8: 0 Vector__XXX
+
+BO_ 1732 HS_CAN2__neoVI_3G___6C4: 0 Vector__XXX
+
+BO_ 1778 HS_CAN2__neoVI_3G___6F2: 0 Vector__XXX
+
+BO_ 1190 HS_CAN2__neoVI_3G___4A6: 0 Vector__XXX
+
+BO_ 1031 HS_CAN2__neoVI_3G___407: 0 Vector__XXX
+
+BO_ 1060 HS_CAN2__neoVI_3G___424: 0 Vector__XXX
+
+BO_ 1061 HS_CAN2__neoVI_3G___425: 0 Vector__XXX
+
+BO_ 1728 Bus_2__6C0: 3 Vector__XXX
+ SG_ Veh_on_power_button_state_CAN2 : 17|1@0+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 649 Bus_2__289: 0 Vector__XXX
+
+BO_ 296 Bus_2__128: 0 Vector__XXX
+
+BO_ 466 Bus_2__1D2: 0 Vector__XXX
+
+BO_ 63 Bus_2__3F: 0 Vector__XXX
+
+BO_ 293 Bus_2__125: 0 Vector__XXX
+
+BO_ 467 Bus_2__1D3: 0 Vector__XXX
+
+BO_ 928 Bus_2__3A0: 0 Vector__XXX
+
+BO_ 164 Bus_2__A4: 0 Vector__XXX
+
+BO_ 752 Bus_2__2F0: 0 Vector__XXX
+
+BO_ 566 Bus_2__236: 0 Vector__XXX
+
+BO_ 301 Bus_2__12D: 0 Vector__XXX
+
+BO_ 302 Bus_2__12E: 0 Vector__XXX
+
+BO_ 303 Bus_2__12F: 0 Vector__XXX
+
+BO_ 993 Bus_2__3E1: 0 Vector__XXX
+
+BO_ 813 Bus_2__32D: 0 Vector__XXX
+
+BO_ 583 Bus_2__247: 0 Vector__XXX
+
+BO_ 715 Bus_2__2CB: 0 Vector__XXX
+
+BO_ 1177 Bus_2__499: 0 Vector__XXX
+
+BO_ 1138 Bus_2__472: 0 Vector__XXX
+
+BO_ 1178 Bus_2__49A: 0 Vector__XXX
+
+BO_ 1018 Bus_2__3FA: 0 Vector__XXX
+
+BO_ 1217 Bus_2__4C1: 0 Vector__XXX
+
+BO_ 860 Bus_2__35C: 0 Vector__XXX
+
+BO_ 970 Bus_2__3CA: 0 Vector__XXX
+
+BO_ 1017 Bus_2__3F9: 0 Vector__XXX
+
+BO_ 1032 Bus_2__408: 0 Vector__XXX
+
+BO_ 1035 Bus_2__40B: 0 Vector__XXX
+
+BO_ 1114 Bus_2__45A: 0 Vector__XXX
+
+BO_ 1219 Bus_2__4C3: 0 Vector__XXX
+
+BO_ 1176 Bus_2__498: 0 Vector__XXX
+
+BO_ 979 Bus_2__3D3: 0 Vector__XXX
+
+BO_ 997 Bus_2__3E5: 0 Vector__XXX
+
+BO_ 1180 Bus_2__49C: 0 Vector__XXX
+
+BO_ 1568 Bus_2__620: 0 Vector__XXX
+
+BO_ 1191 Bus_2__4A7: 0 Vector__XXX
+
+BO_ 1552 Bus_2__610: 0 Vector__XXX
+
+BO_ 829 Bus_2__33D: 0 Vector__XXX
+
+BO_ 1057 Bus_2__421: 0 Vector__XXX
+
+BO_ 1197 Bus_2__4AD: 0 Vector__XXX
+
+BO_ 1123 Bus_2__463: 0 Vector__XXX
+
+BO_ 1085 Bus_2__43D: 0 Vector__XXX
+
+BO_ 1192 Bus_2__4A8: 0 Vector__XXX
+
+BO_ 1181 Bus_2__49D: 0 Vector__XXX
+
+BO_ 1198 Bus_2__4AE: 0 Vector__XXX
+
+BO_ 923 Bus_2__39B: 0 Vector__XXX
+
+BO_ 1199 Bus_2__4AF: 0 Vector__XXX
+
+BO_ 955 Bus_2__3BB: 0 Vector__XXX
+
+BO_ 1572 Bus_2__624: 0 Vector__XXX
+
+BO_ 1033 Bus_2__409: 0 Vector__XXX
+
+BO_ 957 Bus_2__3BD: 0 Vector__XXX
+
+BO_ 1589 Bus_2__635: 0 Vector__XXX
+
+BO_ 1567 Bus_2__61F: 0 Vector__XXX
+
+BO_ 907 Bus_2__38B: 0 Vector__XXX
+
+BO_ 1071 Bus_2__42F: 0 Vector__XXX
+
+BO_ 1592 Bus_2__638: 0 Vector__XXX
+
+BO_ 1058 Bus_2__422: 0 Vector__XXX
+
+BO_ 1233 Bus_2__4D1: 0 Vector__XXX
+
+BO_ 945 Bus_2__3B1: 0 Vector__XXX
+
+BO_ 921 Bus_2__399: 0 Vector__XXX
+
+BO_ 1084 Bus_2__43C: 0 Vector__XXX
+
+BO_ 1272 Bus_2__4F8: 0 Vector__XXX
+
+BO_ 950 Bus_2__3B6: 0 Vector__XXX
+
+BO_ 1553 Bus_2__611: 0 Vector__XXX
+
+BO_ 248 Bus_2__F8: 0 Vector__XXX
+
+BO_ 900 Bus_2__384: 0 Vector__XXX
+
+BO_ 902 Bus_2__386: 0 Vector__XXX
+
+BO_ 1408 Bus_2__580: 0 Vector__XXX
+
+BO_ 1409 Bus_2__581: 0 Vector__XXX
+
+BO_ 1410 Bus_2__582: 0 Vector__XXX
+
+BO_ 828 Bus_2__33C: 0 Vector__XXX
+
+BO_ 1554 Bus_2__612: 0 Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+BA_ "SignalType" SG_ 295 Veh_PRNDL_state_CAN2 "ENM";
+BA_ "SignalType" SG_ 1179 Veh_drive_mode_CAN2 "ENM";
+BA_ "SignalType" SG_ 805 Veh_HV_EV_mode_CAN2 "ENM";
+VAL_ 295 Veh_PRNDL_state_CAN2 0 "park" 3 "drive" 4 "brake" 1 "reverse" 2 "neutral" ;
+VAL_ 1179 Veh_drive_mode_CAN2 0 "normal" 1 "power" 2 "eco" ;
+VAL_ 805 Veh_HV_EV_mode_CAN2 7 "Charge" 1 "EV" 0 "Hybrid" 9 "Charge Transition" 10 "EV Auto" ;
+

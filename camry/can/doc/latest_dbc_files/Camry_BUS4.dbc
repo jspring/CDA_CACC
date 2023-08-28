@@ -1,0 +1,83 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+
+BS_:
+
+BU_: XXX EPS DSU 
+VAL_TABLE_ Veh_light_switch_pos_CCAN 1 "DRL Off" 2 "Auto" 8 "Parking" 16 "Headlight On" ;
+
+
+BO_ 37 HS_CAN4__25: 6 Vector__XXX
+ SG_ Veh_steering_pos_CAN4_pos : 3|12@0- (1,0) [-2048|2047] "" Vector__XXX
+ SG_ Veh_steering_velocity_CAN4 : 35|12@0- (1,0) [-2048|2047] "" Vector__XXX
+
+BO_ 550 HS_CAN4__226: 5 Vector__XXX
+ SG_ Brake_switch_light_CAN4 : 37|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Brake_pressure_unscaled_CAN4 : 1|10@0+ (1,0) [0|1023] "" Vector__XXX
+
+BO_ 180 HS_CAN4__B4: 8 Vector__XXX
+ SG_ Wheel_spd_1_CAN2__kph : 7|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+ SG_ Wheel_spd_2_CAN2__kph : 23|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+ SG_ Wheel_spd_3_CAN2__kph : 39|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+ SG_ Wheel_spd_4_CAN2__kph : 55|16@0- (0.01,0) [-32768|32767] "" Vector__XXX
+
+BO_ 1570 HS_CAN4__622: 4 Vector__XXX
+ SG_ Veh_lights_brights_on_CAN4 : 30|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_parking_lights_on_CAN4 : 28|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_headlights_on_CAN4 : 29|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 728 HS_CAN4__2D8: 6 Vector__XXX
+ SG_ Veh_light_switch_pos_CCAN : 12|5@0+ (1,0) [0|16] "" Vector__XXX
+ SG_ Veh_light_bright_switch_pos_CCAN : 20|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_light_right_turn_switch_pos_ : 40|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_light_left_turn_switch_pos_C : 41|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_light_bright_momentary_switc : 21|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 871 HS_CAN4__367: 2 Vector__XXX
+ SG_ Veh_turn_signal_left_on_CAN4 : 15|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_turn_signal_right_on_CAN4 : 14|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 755 HS_CAN4__2F3: 3 Vector__XXX
+ SG_ Veh_wiper_momentary_on_CAN4 : 20|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_wiper_high_CAN4 : 18|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_wiper_intermittent_CAN4 : 21|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_wiper_low_CAN4 : 17|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Veh_wiper_delay_CAN4 : 13|2@0+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 1556 HS_CAN4__614: 4 Vector__XXX
+ SG_ Veh_hazard_on_CAN4 : 27|1@0+ (1,0) [0|0] "" Vector__XXX
+
+
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_DEF_  "SignalType" "";
+BA_ "SignalType" SG_ 728 Veh_light_switch_pos_CCAN "ENM";
+VAL_ 728 Veh_light_switch_pos_CCAN 1 "DRL Off" 2 "Auto" 8 "Parking" 16 "Headlight On" ;
+
