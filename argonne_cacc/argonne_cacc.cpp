@@ -372,8 +372,10 @@ bool Write_outputs() {
 
 	get_current_timestamp(&ts);
 
-	(ego_vehicle_id == ACCORD) ? output.accel_decel_request = o_brake_command : output.accel_decel_request = o_deceleration_command;
-	output.accel_decel_request = o_throttle_command;
+//	(ego_vehicle_id == ACCORD) ? output.accel_decel_request = o_brake_command : output.accel_decel_request = o_deceleration_command;
+//	output.accel_decel_request = o_throttle_command;
+	(ego_vehicle_id == ACCORD) ? output.brake_level = o_brake_command : output.brake_level = o_deceleration_command;
+	output.throttle_pct = o_throttle_command;
 
 	db_clt_write(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 	db_clt_read(pclt, DB_COMM_TX_VAR, sizeof(comm_pkt), &comm_pkt);
