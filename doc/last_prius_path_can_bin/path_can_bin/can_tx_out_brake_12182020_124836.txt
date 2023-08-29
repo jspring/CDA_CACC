@@ -1,6 +1,0 @@
-db_steinhoff_out.data 0xb0 0x9f 0x4 0x8 0 0 0 0 
-Valid channel number 1.  Mapping to channel number 1, device name CANDRV1 
-
-can_open: status: 001c
-program ./can_tx, device name 1, fd: 136683664, extended 0
-interval 20 ms, 1 repetitions

@@ -1,3 +1,0 @@
-veh_snd: Vehicle priu
-Initialized socket from 172.16.1.127 to 172.16.0.127 on port 1516
-Sent 3 messages

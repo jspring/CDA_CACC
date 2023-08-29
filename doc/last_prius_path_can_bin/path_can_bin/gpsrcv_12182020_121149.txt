@@ -1,2 +1,0 @@
-Receiving GPS point for DB variable 8001
-writing output to stdout

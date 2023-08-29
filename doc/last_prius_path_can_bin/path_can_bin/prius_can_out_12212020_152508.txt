@@ -1,2 +1,0 @@
-prius_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR 3000
-./prius_can: received 592321 CAN messages 0 IPC message errors

@@ -1,2 +1,0 @@
-./veh_rcv: vehicle_str priu:./veh_rcv: Succeeded in initializing socket descriptor 3 from 172.16.1.127 to 172.16.0.127 on port 15000
-./veh_rcv: Received 0 messages
