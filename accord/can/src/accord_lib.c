@@ -25,7 +25,7 @@ int print_accel_cmd(accord_accel_cmd_t *accord_accel_cmd) {
 	return 0;
 }
 
-int print_vehicle_speed(accord_vehicle_speed_t *accord_vehicle_speed) {
+int print_vehicle_speed_accord(accord_vehicle_speed_t *accord_vehicle_speed) {
 	printf("accord_vehicle_speed:  vehicle speed %.3f\n",
 		accord_vehicle_speed->vehicle_speed_CAN2_MPS
 	);

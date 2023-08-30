@@ -12,16 +12,17 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <NativeInteger.h>
+#include <OCTET_STRING.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* TemporaryID */
-typedef long	 TemporaryID_t;
+typedef OCTET_STRING_t	 TemporaryID_t;
 
 /* Implementation */
+extern asn_per_constraints_t asn_PER_type_TemporaryID_constr_1;
 extern asn_TYPE_descriptor_t asn_DEF_TemporaryID;
 asn_struct_free_f TemporaryID_free;
 asn_struct_print_f TemporaryID_print;

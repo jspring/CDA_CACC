@@ -16,7 +16,7 @@ void Init_database(int argc, char const *argv[]){
 			case 'e':
 				ego_id = atoi(optarg);
 				if(ego_id < 0 || ego_id > 2){
-					printf("Ego ID must be between 0 and 2 (0=Accord/Camry, 1=Prius, 2=Taurus/Leaf");
+					printf("Ego ID must be between 0 and 2 (0=Accord/Leaf, 1=Prius, 2=Taurus/Camry");
 					exit(EXIT_FAILURE);
 				}
 				break;

@@ -9,10 +9,9 @@ from matplotlib.collections import PatchCollection
 
 
 
-ACCORD = 0
+LEAF = 0
 PRIUS = 1
-
-TAURUS = 2
+CAMRY = 2
 
 CRUISE = 0
 ACC = 1
@@ -23,7 +22,7 @@ CACC_2_ACC = 6
 ACC_2_CACC = 7
 
 ####### THESE PARAMETERS HAVE TO BE DEFINED BEFORE RUNNING
-ego_veh_id = TAURUS
+ego_veh_id = PRIUS
 setPointSpeedValue = 68.24  # In mph
 selectedTimeGap = 1.35  # In sec
 desired_control_mode = ACC
@@ -235,14 +234,12 @@ print("ego_veh_id: " + str(ego_veh_id))
 if ego_veh_id == PRIUS:
     veh_id = './img/prius.png'
     ip_address = '172.16.0.127'
-elif ego_veh_id == ACCORD:
+elif ego_veh_id == LEAF:
     veh_id = './img/accord.png'
     ip_address = '172.16.0.120'
-elif ego_veh_id == TAURUS:
+elif ego_veh_id == CAMRY:
     veh_id = './img/prius.png'
     ip_address = '172.16.0.128'
-
-ip_address = '172.16.0.120'
 
 print("ip_address: " + str(ip_address))
 

@@ -13,10 +13,11 @@
 
 /* Including external dependencies */
 #include "CACCFlags.h"
+#include "EgoFlags.h"
 #include "Velocity.h"
 #include "ThrottlePosition.h"
-#include <OCTET_STRING.h>
 #include <NativeInteger.h>
+#include <OCTET_STRING.h>
 #include "DDateTime.h"
 #include <BOOLEAN.h>
 #include <constr_SEQUENCE.h>
@@ -27,24 +28,10 @@ extern "C" {
 
 /* CaccData */
 typedef struct CaccData {
-	CACCFlags_t	 flags;
+	CACCFlags_t	 caccFlags;
+	EgoFlags_t	 egoFlags;
 	Velocity_t	 setSpeed;
 	ThrottlePosition_t	 throtPos;
-	OCTET_STRING_t	*lclPN	/* OPTIONAL */;
-	OCTET_STRING_t	*lclPE	/* OPTIONAL */;
-	OCTET_STRING_t	*lclPD	/* OPTIONAL */;
-	OCTET_STRING_t	*roll	/* OPTIONAL */;
-	OCTET_STRING_t	*pitch	/* OPTIONAL */;
-	OCTET_STRING_t	*yaw	/* OPTIONAL */;
-	OCTET_STRING_t	*hPosAcry	/* OPTIONAL */;
-	OCTET_STRING_t	*vPosAcry	/* OPTIONAL */;
-	OCTET_STRING_t	*fwrdVel	/* OPTIONAL */;
-	OCTET_STRING_t	*rightVel	/* OPTIONAL */;
-	OCTET_STRING_t	*downVel	/* OPTIONAL */;
-	OCTET_STRING_t	*velAcc	/* OPTIONAL */;
-	OCTET_STRING_t	*fwrdAcc	/* OPTIONAL */;
-	OCTET_STRING_t	*rightAcc	/* OPTIONAL */;
-	OCTET_STRING_t	*dwnAcc	/* OPTIONAL */;
 	long	 grpID;
 	long	 grpSize;
 	long	 grpMode;
@@ -78,9 +65,9 @@ typedef struct CaccData {
 	BOOLEAN_t	 userBit2;
 	BOOLEAN_t	 userBit3;
 	BOOLEAN_t	 userBit4;
-	long	 desDGapPVeh;
-	long	 desDGapLVeh;
-	long	 ctlMode;
+	BOOLEAN_t	 laneDepartWarnRt;
+	BOOLEAN_t	 laneDepartWarnLt;
+	long	 handShake;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -89,7 +76,7 @@ typedef struct CaccData {
 /* Implementation */
 extern asn_TYPE_descriptor_t asn_DEF_CaccData;
 extern asn_SEQUENCE_specifics_t asn_SPC_CaccData_specs_1;
-extern asn_TYPE_member_t asn_MBR_CaccData_1[54];
+extern asn_TYPE_member_t asn_MBR_CaccData_1[40];
 
 #ifdef __cplusplus
 }

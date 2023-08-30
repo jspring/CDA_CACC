@@ -23,7 +23,7 @@
 #define MASK_b7	 0x80
 
 /*******************************************************************************
- *      prius_accel_cmd
+ *      camry_accel_cmd
  *      Message ID      0x99
  *      Transmitted every 20 ms
  *
@@ -40,9 +40,9 @@ typedef struct {
 	unsigned char two_message_periods;
 	unsigned int message_timeout_counter;
 	float accel_cmd;
-} prius_accel_cmd_t;
+} camry_accel_cmd_t;
 
-static inline void set_prius_accel_cmd(unsigned char data[], prius_accel_cmd_t *p) {
+static inline void set_camry_accel_cmd(unsigned char data[], camry_accel_cmd_t *p) {
 	short accel_cmd_short;
 
 	accel_cmd_short =  (short)(p->accel_cmd / ACCEL_RES);
@@ -51,11 +51,11 @@ static inline void set_prius_accel_cmd(unsigned char data[], prius_accel_cmd_t *
 }
 
 /*******************************************************************************
- *      prius_wheel_speed
+ *      camry_wheel_speed
  *      Message ID      0xAA
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_PRIUS_MSGAA_VAR
+ *	dbvar = DB_CAMRY_MSGAA_VAR
  *
  *	veh_wheel_spd_FR_CAN1_kph
  *      Byte Position   0-1
@@ -80,7 +80,7 @@ static inline void set_prius_accel_cmd(unsigned char data[], prius_accel_cmd_t *
  */
 
 #define WHEEL_SPEED_RES		0.01
-#define WHEEL_SPEED_OFFSET	67.67
+#define WHEEL_SPEED_OFFSET	6767
 #define KPH_TO_MPS		1.0/3.6
 
 typedef struct {
@@ -91,21 +91,40 @@ typedef struct {
 	float veh_wheel_spd_FL_CAN1_mps;
 	float veh_wheel_spd_RR_CAN1_mps;
 	float veh_wheel_spd_RL_CAN1_mps;
-} prius_wheel_speed_t;
+	float veh_wheel_spd_average;
+	float instantaneous_acceleration;
+} camry_wheel_speed_t;
 
-static inline void get_prius_wheel_speed(unsigned char *data, prius_wheel_speed_t *p) {
-	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
-	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
-	p->veh_wheel_spd_RR_CAN1_mps = (float)((short)(((data[4] << 8) + data[5]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
-	p->veh_wheel_spd_RL_CAN1_mps = (float)((short)(((data[6] << 8) + data[7]) * WHEEL_SPEED_RES) - WHEEL_SPEED_OFFSET) * KPH_TO_MPS;
+static inline void get_camry_wheel_speed(unsigned char *data, camry_wheel_speed_t *p) {
+	static float previous_wheel_speed;
+	struct timespec ts;
+	static struct timespec ts_sav;
+
+	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+	p->veh_wheel_spd_RR_CAN1_mps = (float)((short)(((data[4] << 8) + data[5]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+	p->veh_wheel_spd_RL_CAN1_mps = (float)((short)(((data[6] << 8) + data[7]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+//	p->veh_wheel_spd_average = ((p->veh_wheel_spd_FR_CAN1_mps + p->veh_wheel_spd_FL_CAN1_mps + p->veh_wheel_spd_RR_CAN1_mps + p->veh_wheel_spd_RL_CAN1_mps) / 4.0) -0.094;
+	p->veh_wheel_spd_average = p->veh_wheel_spd_FR_CAN1_mps;
+//	clock_gettime(CLOCK_REALTIME, &ts);
+//	p->instantaneous_acceleration = (p->veh_wheel_spd_FR_CAN1_mps = previous_wheel_speed)/(ts.tv_nsec - ts_sav.tv_nsec)/1e9;
+//	ts_sav = ts;
+
+
+//	printf("library wheel speed: p->veh_wheel_spd_FR_CAN1_mps %.2f data[0] %#hhx data[1] %#hhx inst accel %.4f \n",
+//			p->veh_wheel_spd_FR_CAN1_mps,
+//			data[0],
+//			data[1],
+//			p->instantaneous_acceleration
+//			);
 }
 
 /*******************************************************************************
- *      prius_vehicle_speed
+ *      camry_vehicle_speed
  *      Message ID      0xB4
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_PRIUS_MSGB4_VAR
+ *	dbvar = DB_CAMRY_MSGB4_VAR
  *
  *	veh_spd_CAN1_kph
  *      Byte Position   6-7
@@ -121,19 +140,19 @@ typedef struct {
 	unsigned char two_message_periods;
 	unsigned int message_timeout_counter;
 	float veh_spd_CAN1_kph;
-} prius_vehicle_speed_t;
+} camry_vehicle_speed_t;
 
-static inline void get_prius_vehicle_speed(unsigned char *data, prius_vehicle_speed_t *p) { 
+static inline void get_camry_vehicle_speed(unsigned char *data, camry_vehicle_speed_t *p) { 
 	p->veh_spd_CAN1_kph = (float)((short)(((data[6] << 8) + data[7]) * VEH_SPEED_RES));
 }
 
 
 /*******************************************************************************
- *      prius_steering_angle
+ *      camry_steering_angle
  *      Message ID      37
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_PRIUS_MSG228_VAR
+ *	dbvar = DB_CAMRY_MSG228_VAR
  *
  *	Veh_steer_angle_CAN1__deg
  *      Byte Position   0-1
@@ -171,9 +190,9 @@ typedef struct {
 	float steering_angle_deg;
 	float steering_angle_rate_degps;
 	float steering_angle_fraction_deg;
-} prius_steering_angle_t;
+} camry_steering_angle_t;
 
-static inline void get_prius_steering_angle(unsigned char *data, prius_steering_angle_t *p) {
+static inline void get_camry_steering_angle(unsigned char *data, camry_steering_angle_t *p) {
 	short short_temp;
 
 	short_temp = ((data[0] << 12) + (data[1] << 4)) / 16; //Put the sign bit at the MSb of the short int
@@ -186,11 +205,11 @@ static inline void get_prius_steering_angle(unsigned char *data, prius_steering_
 
 
 /*******************************************************************************
- *      prius_long_lat_accel
+ *      camry_long_lat_accel
  *      Message ID      0x228
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_PRIUS_MSG228_VAR
+ *	dbvar = DB_CAMRY_MSG228_VAR
  *
  *	long_accel
  *      Byte Position   1-2
@@ -221,9 +240,9 @@ typedef struct {
 	unsigned int message_timeout_counter;
 	float long_accel;
 	float lat_accel;
-} prius_long_lat_accel_t;
+} camry_long_lat_accel_t;
 
-static inline void get_prius_long_lat_accel(unsigned char *data, prius_long_lat_accel_t *p) {
+static inline void get_camry_long_lat_accel(unsigned char *data, camry_long_lat_accel_t *p) {
 	short short_temp;
 
 	if( (data[0] & 0x40) != 0)
@@ -235,14 +254,24 @@ static inline void get_prius_long_lat_accel(unsigned char *data, prius_long_lat_
 		data[2] |= 0xC0;
 	short_temp = (data[2] << 8) + data[3];
 	p->lat_accel = (float)(short_temp * LONG_LAT_ACCEL_RES);
+/*
+	printf("library: long accel: data[0] %#hhx data[1] %#hhx %.2f lat accel: data[2] %#hhx data[3] %#hhx %.2f\n",
+			data[0],
+			data[1],
+			p->long_accel,
+			data[2],
+			data[3],
+			p->lat_accel
+			);
+*/
 }
 
 /*******************************************************************************
- *      prius_accel_cmd_status
+ *      camry_accel_cmd_status
  *      Message ID      0x343
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_PRIUS_MSG343_VAR
+ *	dbvar = DB_CAMRY_MSG343_VAR
  *
  *	message_counter
  *      Byte Position   0
@@ -281,9 +310,9 @@ typedef struct {
 	unsigned char release_standstill;
 	unsigned char checksum;
 	unsigned char checksum_check;
-} prius_accel_cmd_status_t;
+} camry_accel_cmd_status_t;
 
-static inline void get_prius_accel_cmd_status(unsigned char *data, prius_accel_cmd_status_t *p) {
+static inline void get_camry_accel_cmd_status(unsigned char *data, camry_accel_cmd_status_t *p) {
 	p->accel_cmd_status = (float)((short)((data[0] << 8) + data[1]) * ACCEL_RES);
 	p->set_me_x3 = (data[2] & MASK_b03);
 	p->distance = (data[2] & MASK_b4) >> 4;
@@ -297,11 +326,11 @@ static inline void get_prius_accel_cmd_status(unsigned char *data, prius_accel_c
 }
 
 /*******************************************************************************
- *      prius_cruise_state
+ *      camry_cruise_state
  *      Message ID      0x399
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_PRIUS_MSG399_VAR
+ *	dbvar = DB_CAMRY_MSG399_VAR
  *
  *	cruise_main_on_CAN1
  *      Byte Position   0
@@ -327,9 +356,9 @@ typedef struct {
 	unsigned char	cruise_main_on_CAN1;
 	unsigned char	cruise_control_state_CAN1;
 	unsigned char	cruise_dash_set_speed_CAN1;
-} prius_cruise_control_state_t;
+} camry_cruise_control_state_t;
 
-static inline void get_prius_cruise_control_state(unsigned char *data, prius_cruise_control_state_t *p) {
+static inline void get_camry_cruise_control_state(unsigned char *data, camry_cruise_control_state_t *p) {
 	p->cruise_main_on_CAN1 = (data[0] >> 4) & 0x01;
 	p->cruise_control_state_CAN1 = data[1] & 0x0F;
 	p->cruise_dash_set_speed_CAN1 = data[3] & 0xFF;
@@ -337,15 +366,15 @@ static inline void get_prius_cruise_control_state(unsigned char *data, prius_cru
 
 
 /*******************************************************************************
- *      prius_radar_forward_vehicle
- *      Message ID      0x2E6
+ *      camry_radar_forward_vehicle
+ *      Message ID      0x680
  *      Transmitted every 20 ms
  *
- *	dbvar = DB_PRIUS_MSG2E6_VAR
+ *	dbvar = DB_CAMRY_MSG680_VAR
  *
  *
  *
- *BO_ 742 Bus_1_DAS__2E6: 4 Vector__XXX
+ *BO_ 742 Bus_1_DAS__680: 4 Vector__XXX
  SG_ Radar_forward_veh_relative_spd_CAN1__kph : 23|12@0- (0.09,0) [-204.8|204.7] "kph" Vector__XXX
  SG_ Radar_forward_veh_distance_CAN1__m : 7|15@0+ (0.01,0) [0|327.67] "m" Vector__XXX
  SG_ Radar_forward_veh_relative_spd_CAN1__mps : 23|12@0- (0.025,0) [-100|100] "m/s" HCU
@@ -355,8 +384,8 @@ static inline void get_prius_cruise_control_state(unsigned char *data, prius_cru
  39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
  *
  */
-#define RADAR_DIST_RES		0.01
-#define RADAR_SPEED_MPS_RES	0.025
+#define RADAR_DIST_RES		0.03
+#define RADAR_SPEED_MPS_RES	0.06944444444
 #define RADAR_SPEED_KPH_RES	0.09
 
 typedef struct {
@@ -366,17 +395,74 @@ typedef struct {
 	float Radar_forward_veh_distance_CAN1__m;
 	float Radar_forward_veh_relative_spd_CAN1__kph;
 	float Radar_forward_veh_relative_spd_CAN1__mps;
-}prius_radar_forward_vehicle_t;
+}camry_radar_forward_vehicle_t;
 
-static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_radar_forward_vehicle_t *p) {
+static inline void get_camry_radar_forward_vehicle(unsigned char *data, camry_radar_forward_vehicle_t *p) {
 	short short_temp;
-	short_temp = (short)( (data[0] << 8) + data[1])/2; //dividing by 2 shifts the short int to the right by 1
-													   //bit. It should also drag the msb sign bit to the right.
+	short short_temp1;
+	unsigned char char0 = data[0];
+	unsigned char char1 = data[1];
+	unsigned char char2 = data[2];
+	unsigned char char3 = data[3];
+	unsigned char char4 = data[4];
+	unsigned char char5 = data[5];
+
+	short_temp = (short)(((char0 >> 7) & 1) + ((char1 << 1) & 0x1FE) + ((char2 << 9 ) & 0XE00));
 	p->Radar_forward_veh_distance_CAN1__m = short_temp * RADAR_DIST_RES;
 
-	short_temp = (short)( (data[2] << 8) + data[3])/16; //dividing by 16 shifts the short int to the right by 4
-													   //bits. It should also drag the msb sign bit to the right.
-	p->Radar_forward_veh_relative_spd_CAN1__mps  = short_temp * RADAR_SPEED_MPS_RES;
+//	short_temp1 = (short)(((char2 << 6) & 0x0300) + (char3)); //dividing by 16 shifts the short int to the right by 4
+	short_temp1 = (short)(((char3 >> 7) & 1) + ((char4 << 1) & 0x1FE) + ((char5 << 9 ) & 0x200));
+
+	if( (short_temp1 & 0x0200) != 0)
+		short_temp1 |= 0xC000;							//bits. It should also drag the msb sign bit to the right.
+	p->Radar_forward_veh_relative_spd_CAN1__mps  = short_temp1 * RADAR_SPEED_MPS_RES;
+
+	printf("library 0X680 targets: dist %.5f speed %.5f\n",
+			p->Radar_forward_veh_distance_CAN1__m,
+			p->Radar_forward_veh_relative_spd_CAN1__mps
+			);
+//	printf("library 0X680 targets: dist %.2f d[0] %#hhx d[1] %#hhx d[2] %#hhx short_temp %04hx speed %.2f d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx short_temp1 %04hx\n",
+//	p->Radar_forward_veh_distance_CAN1__m,
+//	data[0],
+//	data[1],
+//	data[2],
+//	short_temp,
+//	p->Radar_forward_veh_relative_spd_CAN1__mps,
+//	data[3],
+//	data[4],
+//	data[5],
+//	short_temp1
+//	);
+
+}
+/*******************************************************************************
+ *      camry_fuel_rate
+ *      Message ID 0x7E8
+********************************************************************************/
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	char size;
+	char mode;
+	char id;
+	float fuel_rate;
+}camry_fuel_rate_t;
+
+static inline void get_camry_fuel_rate(unsigned char *data, camry_fuel_rate_t *p) {
+
+	p->size = data[0];
+	p->mode = data[1];
+	p->id = data[2];
+	p->fuel_rate = ((data[3] * 256) + data[4]) / 100.0/14.7;
+//printf("library: camry fuel rate %.3f g/sec %#hhx %#hhx size %#hhx mode %#hhx id %#hhx\n",
+//		p->fuel_rate,
+//		data[3],
+///		data[4],
+//		data[0],
+//		data[1],
+//		data[2]
+//);
 }
 
 
@@ -386,7 +472,7 @@ static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_ra
 int printcan(db_komodo_t *db_kom);
 */
 /* TODO
-** printmsg - prints parsed contents of PRIUS CAN message to stdout
+** printmsg - prints parsed contents of CAMRY CAN message to stdout
 int printmsg(db_komodo_t *db_kom);
 */
 
@@ -394,9 +480,9 @@ void check_msg_timeout(int curr_ts_ms, int *prev_ts_ms,
         unsigned char *two_message_periods,
         unsigned int *message_timeout_counter);
 
-extern int print_wheel_speed(prius_wheel_speed_t *prius_wheel_speed);
-//extern int print_vehicle_speed(prius_vehicle_speed_t *prius_vehicle_speed);
-extern int print_long_lat_accel(prius_long_lat_accel_t *prius_long_lat_accel);
-extern int print_accel_cmd_status(prius_accel_cmd_status_t *prius_accel_cmd_status);
-extern int print_cruise_control_state(prius_cruise_control_state_t *prius_cruise_control_state);
+extern int print_wheel_speed(camry_wheel_speed_t *camry_wheel_speed);
+//extern int print_vehicle_speed(camry_vehicle_speed_t *camry_vehicle_speed);
+extern int print_long_lat_accel(camry_long_lat_accel_t *camry_long_lat_accel);
+extern int print_accel_cmd_status(camry_accel_cmd_status_t *camry_accel_cmd_status);
+extern int print_cruise_control_state(camry_cruise_control_state_t *camry_cruise_control_state);
 

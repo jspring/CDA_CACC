@@ -21,6 +21,9 @@ typedef struct {
 	float torque_level;	// Throttle percentage
 	float accel_decel_request;	// Desired deceleration (for braking) 
 	float steering_angle_request;	// Steering angle desired
+	float brake_level;
+	float throttle_pct;
+
 } output_t;
 
 //System status flags

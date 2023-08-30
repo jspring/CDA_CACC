@@ -11,7 +11,8 @@ PATH_OBJS += $(OBJDIR)/prius_lib.o
 PATH_INCLUDES = prius_can.h
 PATH_CFLAGS += -I../../../steinhoff -I../../../vehcomm -I../../../include -fPIC
 
-EXEC = $(OBJDIR)/prius_can_set $(OBJDIR)/prius_can $(OBJDIR)/clt_vars_prius
+#EXEC = $(OBJDIR)/prius_can_set $(OBJDIR)/prius_can $(OBJDIR)/clt_vars_prius
+EXEC = $(OBJDIR)/prius_can $(OBJDIR)/clt_vars_prius
 
 all: $(OBJDIR) $(PATH_INCLUDES) $(PATH_OBJS) $(EXEC)
 

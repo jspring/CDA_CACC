@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
 	int ts_now = 0;
 	int ts_sav = 0;
 	char obd2_ctr = 0;
+	int index = 0;
 
 	prius_accel_cmd_status_t prius_accel_cmd_status;
 	prius_accel_cmd_t prius_accel_cmd;
@@ -65,6 +66,7 @@ int main(int argc, char *argv[]) {
 	prius_wheel_speed_t prius_wheel_speed;
 	prius_long_lat_accel_t prius_long_lat_accel;
 	prius_radar_forward_vehicle_t prius_radar_forward_vehicle;
+	camry_radar_forward_vehicle_t camry_radar_forward_vehicle[12];
 
         while ((option = getopt(argc, argv, "va:")) != EOF) {
                 switch(option) {
@@ -89,9 +91,19 @@ int main(int argc, char *argv[]) {
     			exit(EXIT_FAILURE);
     	}
 
-    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG_VAR, DB_STEINHOFF_MSG_TYPE) == FALSE )
+    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG_VAR, DB_STEINHOFF_MSG_TYPE) == FALSE ){
+    		printf("Could not set trigger for DB_STEINHOFF_MSG_VAR %d\n ", DB_STEINHOFF_MSG_VAR);
     		exit(EXIT_FAILURE);
-    	printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_MSG_VAR);
+    	}
+    	else
+    		printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_MSG_VAR);
+
+//    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG2_VAR, DB_STEINHOFF_MSG2_TYPE) == FALSE ){
+//    		printf("Could not set trigger for DB_STEINHOFF_MSG2_VAR %d\n ", DB_STEINHOFF_MSG2_VAR);
+//    		exit(EXIT_FAILURE);
+//    	}
+//    	else
+//    		printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG2_VAR %d\n", DB_STEINHOFF_MSG2_VAR);
 
 //    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG2_VAR, DB_STEINHOFF_MSG2_TYPE) == FALSE )
 //    		exit(EXIT_FAILURE);
@@ -207,28 +219,79 @@ int main(int argc, char *argv[]) {
 					check_msg_timeout(ts_ms, &prius_radar_forward_vehicle.ts_ms,
 						&prius_radar_forward_vehicle.two_message_periods,
 						&prius_radar_forward_vehicle.message_timeout_counter);
-						db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
-						db_clt_write(pclt, DB_PRIUS_MSG2E6_VAR, sizeof(prius_radar_forward_vehicle_t), &prius_radar_forward_vehicle);
+					db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
+					db_clt_write(pclt, DB_PRIUS_MSG2E6_VAR, sizeof(prius_radar_forward_vehicle_t), &prius_radar_forward_vehicle);
 						if(verbose){
-//						     print_timestamp(stdout, &ts);
-//						     printf("Prius 0x2E6 target: dist %.2f speed %.2f d[0] %#hhx d[1] %#hhx\n",
-//						               prius_radar_forward_vehicle.Radar_forward_veh_distance_CAN1__m,
-//						               prius_radar_forward_vehicle.Radar_forward_veh_relative_spd_CAN1__mps,
-//						               db_steinhoff_msg.data[0],
-//						               db_steinhoff_msg.data[1]
-//						    );
+						     print_timestamp(stdout, &ts);
+						     printf("Prius 0x2E6 target: dist %.2f speed %.2f d[0] %#hhx d[1] %#hhx\n",
+						               prius_radar_forward_vehicle.Radar_forward_veh_distance_CAN1__m,
+						               prius_radar_forward_vehicle.Radar_forward_veh_relative_spd_CAN1__mps,
+						               db_steinhoff_msg.data[0],
+						               db_steinhoff_msg.data[1]
+						    );
 						}
-						break;
-				case 0x680: //742
-					get_prius_radar_forward_vehicle(db_steinhoff_msg.data, &prius_radar_forward_vehicle);
-					check_msg_timeout(ts_ms, &prius_radar_forward_vehicle.ts_ms,
-						&prius_radar_forward_vehicle.two_message_periods,
-						&prius_radar_forward_vehicle.message_timeout_counter);
-						db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
-						db_clt_write(pclt, DB_PRIUS_MSG680_VAR, sizeof(prius_radar_forward_vehicle_t), &prius_radar_forward_vehicle);
+					break;
+//				case 0x301: //769
+//				case 0x303: //771
+//				case 0x305: //769
+//				case 0x307: //769
+//				case 0x309: //769
+//				case 0x30B: //769
+//				case 0x30D: //769
+//				case 0x30F: //769
+//				case 0x311: //769
+//				case 0x313: //769
+//				case 0x315: //769
+//				case 0x317: //769
+				case 0x680: //769
+//				case 0x681: //769
+//				case 0x682: //769
+//				case 0x683: //769
+//				case 0x684: //769				case 0x683: //769
+//				case 0x685: //769
+//					if(index < 0x680)
+//					index = (db_steinhoff_msg.id - 0x301) / 2;
+//					if(index >= 0x680)
+//						index = db_steinhoff_msg.id - 0x680;
+					index=0;
+					printf("ID %d index %d\n", db_steinhoff_msg.id, index);
+					get_camry_radar_forward_vehicle(db_steinhoff_msg.data, &camry_radar_forward_vehicle[index], db_steinhoff_msg.id);
+					check_msg_timeout(ts_ms, &camry_radar_forward_vehicle[index].ts_ms,
+						&camry_radar_forward_vehicle[index].two_message_periods,
+						&camry_radar_forward_vehicle[index].message_timeout_counter);
+					db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
+//						char ID;
+//						float LONG_DIST_CAN1__m;
+//						float LAT_DIST_CAN1__m;
+//						float LONG_SPEED_CAN1__kph;
+//						float LONG_SPEED_CAN1__mps;
+//						float LAT_SPEED_CAN1__mps;
+//						int RCS;
+					db_clt_write(pclt, DB_CAMRY_MSG680_VAR + index, sizeof(camry_radar_forward_vehicle_t), &camry_radar_forward_vehicle[index]);
+					if(verbose){
+						print_timestamp(stdout, &ts);
+						printf("Camry %d target: dist %.5f  d[0] %#hhx d[1] %#hhx speed %.5f d[2] %#hhx d[3] %#hhx\n",
+							db_steinhoff_msg.id,
+							camry_radar_forward_vehicle[index].LONG_DIST_CAN1__m,
+							db_steinhoff_msg.data[0],
+							db_steinhoff_msg.data[1],
+							camry_radar_forward_vehicle[index].LONG_SPEED_CAN1__mps,
+							db_steinhoff_msg.data[2],
+							db_steinhoff_msg.data[3]
+
+						);
+					}
+					break;
+//				case 0x680: //742
+//					get_prius_radar_forward_vehicle(db_steinhoff_msg.data, &prius_radar_forward_vehicle);
+//					check_msg_timeout(ts_ms, &prius_radar_forward_vehicle.ts_ms,
+//						&prius_radar_forward_vehicle.two_message_periods,
+//						&prius_radar_forward_vehicle.message_timeout_counter);
+//						db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
+//						db_clt_write(pclt, DB_PRIUS_MSG680_VAR, sizeof(prius_radar_forward_vehicle_t), &prius_radar_forward_vehicle);
 //						if(verbose){
 //						     print_timestamp(stdout, &ts);
-//						     printf("Prius 0x680 target: dist %.2f  d[0] %#hhx d[1] %#hhx speed %.2f d[2] %#hhx d[3] %#hhx\n",
+//						     printf("Prius 0x680 target: dist %.5f  d[0] %#hhx d[1] %#hhx speed %.5f d[2] %#hhx d[3] %#hhx\n",
 //						               prius_radar_forward_vehicle.Radar_forward_veh_distance_CAN1__m,
 //						               db_steinhoff_msg.data[0],
 //						               db_steinhoff_msg.data[1],
@@ -238,7 +301,7 @@ int main(int argc, char *argv[]) {
 //
 //						    );
 //						}
-						break;
+//						break;
 
 				case 0x7E8:
 					get_prius_fuel_rate(db_steinhoff_msg.data, &prius_fuel_rate);
@@ -266,41 +329,30 @@ int main(int argc, char *argv[]) {
 		get_current_timestamp(&ts);
 		ts_now = TS_TO_MS(&ts);
 
+
 		if(ts_now - ts_sav >= 20){
 			ts_sav = ts_now;
 
-                        db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
-                        db_clt_read(pclt, DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t), &virtual_car_comm_packet);
-/*
-                        printf("Virtual car message: seq no %d rate %.2f range %.2f accel %.2f distance from start %.4f\n",
-                                virtual_car_comm_packet.sequence_no,
-                                virtual_car_comm_packet.rate,
-                                virtual_car_comm_packet.range,
-                                virtual_car_comm_packet.accel,
-                                virtual_car_comm_packet.user_float
-                        );
-*/
-                        input.distance_from_start = virtual_car_comm_packet.user_float;
-                        db_clt_write(pclt, DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t), &virtual_car_comm_packet);
+			db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 
 			memset(&db_steinhoff_brake_out, 0, sizeof(db_steinhoff_out_t));
 			if(acceleration < 0)
 				prius_brake_cmd.accel_cmd = acceleration;
 			else
 				prius_brake_cmd.accel_cmd = output.brake_level;
-			if(prius_brake_cmd.accel_cmd <= 0){
-//				output.throttle_pct = 0;		//if braking is requested, set throttle to 0
-				db_steinhoff_brake_out.port = BRAKE_PORT;
-				db_steinhoff_brake_out.id = 0x99;
-				db_steinhoff_brake_out.size = 2;
-				set_prius_accel_cmd(db_steinhoff_brake_out.data, &prius_brake_cmd);
-				if(verbose)
-					printf("prius_can: brake %hhx %#hhx %.2f\n",
-							db_steinhoff_brake_out.data[0],
-							db_steinhoff_brake_out.data[1],
-							prius_brake_cmd.accel_cmd
-					);
-				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_brake_out);
+			if(prius_brake_cmd.accel_cmd < 0){
+				output.throttle_pct = 0;		//if braking is requested, set throttle to 0
+			db_steinhoff_brake_out.port = BRAKE_PORT;
+			db_steinhoff_brake_out.id = 0x99;
+			db_steinhoff_brake_out.size = 2;
+			set_prius_accel_cmd(db_steinhoff_brake_out.data, &prius_brake_cmd);
+			if(verbose)
+				printf("prius_can: brake %hhx %#hhx %.2f\n",
+					db_steinhoff_brake_out.data[0],
+					db_steinhoff_brake_out.data[1],
+					prius_brake_cmd.accel_cmd
+				);
+			db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_brake_out);
 			}
 
 			memset(&db_steinhoff_accel_out, 0, sizeof(db_steinhoff_out_t));
@@ -317,33 +369,92 @@ int main(int argc, char *argv[]) {
 				set_prius_accel_cmd(db_steinhoff_accel_out.data, &prius_accel_cmd);
 				if(verbose)
 					printf("prius_can: accel %hhx %#hhx %.2f\n", 
-						db_steinhoff_accel_out.data[0],
-						db_steinhoff_accel_out.data[1],
+						db_steinhoff_brake_out.data[0],
+						db_steinhoff_brake_out.data[1],
 						prius_accel_cmd.accel_cmd
 					);
 				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
 			}
-				if((++obd2_ctr % 3) == 0) { //Send OBD2 fuel level poll
-					db_steinhoff_obd2.port = ACCEL_PORT;
-					db_steinhoff_obd2.id = 0x7DF;
-					db_steinhoff_obd2.size = 8;
-					db_steinhoff_obd2.data[0] = 2;
-					db_steinhoff_obd2.data[1] = 1;
-					db_steinhoff_obd2.data[2] = 0x10;
-					db_steinhoff_obd2.data[3] = 0xCC;
-					db_steinhoff_obd2.data[4] = 0xCC;
-					db_steinhoff_obd2.data[5] = 0xCC;
-					db_steinhoff_obd2.data[6] = 0xCC;
-					db_steinhoff_obd2.data[7] = 0xCC;
-					db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
-//					if(verbose)
-//						print_timestamp(stdout, &ts);
-//					if(verbose)
-//						printf("Sending OBD2 fuel poll\n");
-					usleep(1000);
-					usleep(1000);
-			}
 		}
+
+//		if(ts_now - ts_sav >= 20){
+//			ts_sav = ts_now;
+//
+//                        db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
+//                        db_clt_read(pclt, DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t), &virtual_car_comm_packet);
+///*
+//                        printf("Virtual car message: seq no %d rate %.2f range %.2f accel %.2f distance from start %.4f\n",
+//                                virtual_car_comm_packet.sequence_no,
+//                                virtual_car_comm_packet.rate,
+//                                virtual_car_comm_packet.range,
+//                                virtual_car_comm_packet.accel,
+//                                virtual_car_comm_packet.user_float
+//                        );
+//*/
+//                        input.distance_from_start = virtual_car_comm_packet.user_float;
+//                        db_clt_write(pclt, DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t), &virtual_car_comm_packet);
+//
+//			memset(&db_steinhoff_brake_out, 0, sizeof(db_steinhoff_out_t));
+//			if(acceleration < 0)
+//				prius_brake_cmd.accel_cmd = acceleration;
+//			else
+//				prius_brake_cmd.accel_cmd = output.accel_decel_request;
+//			if(prius_brake_cmd.accel_cmd <= 0){
+////				output.throttle_pct = 0;		//if braking is requested, set throttle to 0
+//				db_steinhoff_brake_out.port = BRAKE_PORT;
+//				db_steinhoff_brake_out.id = 0x99;
+//				db_steinhoff_brake_out.size = 2;
+//				set_prius_accel_cmd(db_steinhoff_brake_out.data, &prius_brake_cmd);
+//				if(verbose)
+//					printf("prius_can: brake %hhx %#hhx %.2f\n",
+//							db_steinhoff_brake_out.data[0],
+//							db_steinhoff_brake_out.data[1],
+//							prius_brake_cmd.accel_cmd
+//					);
+//				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_brake_out);
+//			}
+//
+//			memset(&db_steinhoff_accel_out, 0, sizeof(db_steinhoff_out_t));
+//			if(acceleration > 0) {
+//				prius_accel_cmd.accel_cmd = acceleration;
+//				prius_brake_cmd.accel_cmd = 0;
+//			}
+//			else
+//				prius_accel_cmd.accel_cmd = output.accel_decel_request;
+//			if(prius_accel_cmd.accel_cmd > 0) {
+//				db_steinhoff_accel_out.port = BRAKE_PORT;
+//				db_steinhoff_accel_out.id = 0x99;
+//				db_steinhoff_accel_out.size = 2;
+//				set_prius_accel_cmd(db_steinhoff_accel_out.data, &prius_accel_cmd);
+//				if(verbose)
+//					printf("prius_can: accel %hhx %#hhx %.2f\n",
+//						db_steinhoff_accel_out.data[0],
+//						db_steinhoff_accel_out.data[1],
+//						prius_accel_cmd.accel_cmd
+//					);
+//				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
+//			}
+//				if((++obd2_ctr % 3) == 0) { //Send OBD2 fuel level poll
+//					db_steinhoff_obd2.port = ACCEL_PORT;
+//					db_steinhoff_obd2.id = 0x7DF;
+//					db_steinhoff_obd2.size = 8;
+//					db_steinhoff_obd2.data[0] = 2;
+//					db_steinhoff_obd2.data[1] = 1;
+//					db_steinhoff_obd2.data[2] = 0x10;
+//					db_steinhoff_obd2.data[3] = 0xCC;
+//					db_steinhoff_obd2.data[4] = 0xCC;
+//					db_steinhoff_obd2.data[5] = 0xCC;
+//					db_steinhoff_obd2.data[6] = 0xCC;
+//					db_steinhoff_obd2.data[7] = 0xCC;
+//					db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+////					if(verbose)
+////						print_timestamp(stdout, &ts);
+////					if(verbose)
+////						printf("Sending OBD2 fuel poll\n");
+//					usleep(1000);
+//					usleep(1000);
+//			}
+//		}
 	}
 	return 0;
 }

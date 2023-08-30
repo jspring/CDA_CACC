@@ -6,4 +6,4 @@
 mkdir -p include
 cd include
 rm -f *.h make_includes.err
-cp `find .. -name *.h` . 2>make_includes.err
+cp `find .. -name *.h | grep -v Leddar` . 2>make_includes.err
