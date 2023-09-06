@@ -101,9 +101,9 @@ typedef struct {
 } prius_wheel_speed_t;
 
 static inline void get_prius_wheel_speed(unsigned char *data, prius_wheel_speed_t *p) {
-	static float previous_wheel_speed;
-	struct timespec ts;
-	static struct timespec ts_sav;
+//	static float previous_wheel_speed;
+//	struct timespec ts;
+//	static struct timespec ts_sav;
 
 	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
 	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
@@ -389,9 +389,9 @@ static inline void get_prius_cruise_control_state(unsigned char *data, prius_cru
  39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
  *
  */
-#define RADAR_DIST_RES		0.01
-#define RADAR_SPEED_MPS_RES	0.025
-#define RADAR_SPEED_KPH_RES	0.09
+#define PRIUS_RADAR_DIST_RES		0.01
+#define PRIUS_RADAR_SPEED_MPS_RES	0.025
+#define PRIUS_RADAR_SPEED_KPH_RES	0.09
 
 typedef struct {
 	int ts_ms;
@@ -407,7 +407,6 @@ static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_ra
 	short short_temp1;
 	unsigned char char0 = data[0];
 	unsigned char char1 = data[1];
-	unsigned char char2 = data[2];
 	unsigned char char3 = data[3];
 	unsigned char char4 = data[4];
 //	short_temp = ((short)( ((char0 << 8) & 0x7F00)  + char1)); //dividing by 2 shifts the short int to the right by 1
@@ -416,7 +415,7 @@ static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_ra
 	short_temp = (short)( ((char0 << 7) & 0x7F80)  + ((char1 >> 1) & 0x7F)); //dividing by 2 shifts the short int to the right by 1
 
 	//bit. It should also drag the msb sign bit to the right.
-	p->Radar_forward_veh_distance_CAN1__m = short_temp * RADAR_DIST_RES;
+	p->Radar_forward_veh_distance_CAN1__m = short_temp * PRIUS_RADAR_DIST_RES;
 
 //	short_temp1 = ((short)((char2 << 8) + (char3 << 4)))/16; //dividing by 16 shifts the short int to the right by 4
 //	short_temp1 = (short)((char2 << 4) + (char3 >> 4)); //dividing by 16 shifts the short int to the right by 4
@@ -424,19 +423,19 @@ static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_ra
 
 	if( (short_temp1 & 0x800) != 0)
 		short_temp1 |= 0xF000;							//bits. It should also drag the msb sign bit to the right.
-	p->Radar_forward_veh_relative_spd_CAN1__mps  = short_temp1 * RADAR_SPEED_MPS_RES;
-	printf("library targets: dist: %.3f speed: %.2f 0:%#2.2hhx 1:%#2.2hhx 2:%#2.2hhx 3:%#2.2hhx 4:%#2.2hhx 5:%#2.2hhx 6:%#2.2hhx 7:%#2.2hhx\n",
-			p->Radar_forward_veh_distance_CAN1__m,
-			p->Radar_forward_veh_relative_spd_CAN1__mps,
-		data[0],
-		data[1],
-		data[2],
-		data[3],
-		data[4],
-		data[5],
-		data[6],
-		data[7]
-		);
+	p->Radar_forward_veh_relative_spd_CAN1__mps  = short_temp1 * PRIUS_RADAR_SPEED_MPS_RES;
+//	printf("library targets: dist: %.3f speed: %.2f 0:%#2.2hhx 1:%#2.2hhx 2:%#2.2hhx 3:%#2.2hhx 4:%#2.2hhx 5:%#2.2hhx 6:%#2.2hhx 7:%#2.2hhx\n",
+//			p->Radar_forward_veh_distance_CAN1__m,
+//			p->Radar_forward_veh_relative_spd_CAN1__mps,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[4],
+//		data[5],
+//		data[6],
+//		data[7]
+//		);
 }
 
 /*******************************************************************************
@@ -447,11 +446,11 @@ static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_ra
  *	dbvar = DB_CAMRY_MSG680_VAR
  *
  *
- *BO_ 769 OBJECT_0: 8 RADAR
- SG_ ID : 5|6@0+ (1,0) [0|255] "" XXX
- SG_ LONG_DIST : 7|13@1+ (0.03,0) [0|65535] "m" XXX
- SG_ LAT_DIST : 20|11@1- (0.018,0) [0|15] "" XXX
+BO_ 1664 CLUSTER_F: 8 RADAR
+ SG_ LONG_DIST : 7|13@1+ (0.03,0) [0|255] "m" XXX
+ SG_ LAT_DIST : 20|11@1- (0.015,0) [-20|20] "m" XXX
  SG_ SPEED : 31|10@1- (0.06944444444,0) [0|71] "m/s" XXX
+ SG_ ID : 0|6@1+ (1,0) [0|63] "" XXX
  SG_ LAT_SPEED : 48|7@1- (0.1,0) [0|127] "m/s" XXX
  SG_ RCS : 63|8@0+ (1,0) [0|255] "" XXX
  *
@@ -459,10 +458,10 @@ static inline void get_prius_radar_forward_vehicle(unsigned char *data, prius_ra
  39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
  *
  */
-#define RADAR_LONG_DIST_RES	0.03
-#define RADAR_LAT_DIST_RES	0.018
-#define RADAR_SPEED_MPS_RES	0.06944444444
-#define RADAR_SPEED_KPH_RES	0.09
+#define CAMRY_LONG_DIST_RES	0.03
+#define CAMRY_LAT_DIST_RES	0.018
+#define CAMRY_SPEED_MPS_RES	0.06944444444
+#define CAMRY_SPEED_KPH_RES	0.09
 
 typedef struct {
 	int ts_ms;
@@ -495,22 +494,22 @@ static inline void get_camry_prius_radar_forward_vehicle(unsigned char *data, ca
 
 //	SG_ LONG_DIST : 7|13@1+ (0.03,0) [0|65535] "m" XXX
 	short_temp = (short)(((char0 >> 7) & 1) + ((char1 << 1) & 0x1FE) + ((char2 << 9 ) & 0X1E00));
-	p->LONG_DIST_CAN1__m = short_temp * RADAR_LONG_DIST_RES;
+	p->LONG_DIST_CAN1__m = short_temp * CAMRY_LONG_DIST_RES;
 
 //	SG_ LAT_DIST : 20|11@1- (0.018,0) [0|15] "" XXX
 	short_temp = ((char2 >> 4) & 0x0F) + ((char3 << 4) & 0x07F0);
 	if( (short_temp & 0x0400) != 0)
 		short_temp |= 0xC000;							//bits. It should also drag the msb sign bit to the right.
-	p->LAT_DIST_CAN1__m = short_temp * RADAR_LAT_DIST_RES;
+	p->LAT_DIST_CAN1__m = short_temp * CAMRY_LAT_DIST_RES;
 
 //  SG_ SPEED : 31|10@1- (0.06944444444,0) [0|71] "m/s" XXX
 	short_temp = (short)(((char3 >> 7) & 1) + ((char4 << 1) & 0x1FE) + ((char5 << 9 ) & 0x200));
 	if( (short_temp & 0x0200) != 0)
 		short_temp |= 0xE000;							//bits. It should also drag the msb sign bit to the right.
-	p->LONG_SPEED_CAN1__mps  = short_temp * RADAR_SPEED_MPS_RES;
+	p->LONG_SPEED_CAN1__mps  = short_temp * CAMRY_SPEED_MPS_RES;
 
 //	SG_ LAT_SPEED : 48|7@1- (0.1,0) [0|127] "m/s" XXX
-	p->LAT_SPEED_CAN1__mps = (int)(char6 & 0x3F)* RADAR_LAT_DIST_RES;
+	p->LAT_SPEED_CAN1__mps = (int)(char6 & 0x3F)* CAMRY_LAT_DIST_RES;
 
 //	SG_ RCS : 63|8@0+ (1,0) [0|255] "" XXX
 	p->RCS = (int)(char7);
