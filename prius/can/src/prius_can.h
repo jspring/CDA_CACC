@@ -475,9 +475,9 @@ typedef struct {
 	float LONG_SPEED_CAN1__mps;
 	float LAT_SPEED_CAN1__mps;
 	int RCS;
-}camry_radar_forward_vehicle_t;
+}camry_prius_radar_forward_vehicle_t;
 
-static inline void get_camry_radar_forward_vehicle(unsigned char *data, camry_radar_forward_vehicle_t *p, int msgid) {
+static inline void get_camry_prius_radar_forward_vehicle(unsigned char *data, camry_prius_radar_forward_vehicle_t *p, int msgid) {
 	int i;
 	short short_temp;
 	timestamp_t ts;

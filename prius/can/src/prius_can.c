@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	prius_wheel_speed_t prius_wheel_speed;
 	prius_long_lat_accel_t prius_long_lat_accel;
 	prius_radar_forward_vehicle_t prius_radar_forward_vehicle;
-	camry_radar_forward_vehicle_t camry_radar_forward_vehicle[12];
+	camry_prius_radar_forward_vehicle_t camry_prius_radar_forward_vehicle[12];
 
         while ((option = getopt(argc, argv, "va:")) != EOF) {
                 switch(option) {
@@ -98,16 +98,14 @@ int main(int argc, char *argv[]) {
     	else
     		printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_MSG_VAR);
 
-//    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG2_VAR, DB_STEINHOFF_MSG2_TYPE) == FALSE ){
-//    		printf("Could not set trigger for DB_STEINHOFF_MSG2_VAR %d\n ", DB_STEINHOFF_MSG2_VAR);
-//    		exit(EXIT_FAILURE);
-//    	}
-//    	else
-//    		printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG2_VAR %d\n", DB_STEINHOFF_MSG2_VAR);
+    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG2_VAR, DB_STEINHOFF_MSG2_TYPE) == FALSE ){
+    		printf("Could not set trigger for DB_STEINHOFF_MSG2_VAR %d\n ", DB_STEINHOFF_MSG2_VAR);
+    		exit(EXIT_FAILURE);
+    	}
+    	else
+    		printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG2_VAR %d\n", DB_STEINHOFF_MSG2_VAR);
 
-//    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG2_VAR, DB_STEINHOFF_MSG2_TYPE) == FALSE )
-//    		exit(EXIT_FAILURE);
-//    	printf("prius_can: clt_trig_set OK for DB_STEINHOFF_MSG2_VAR %d\n", DB_STEINHOFF_MSG2_VAR);
+
 
     	if (setjmp(exit_env) != 0) {
     		memset(&db_steinhoff_brake_out, 0, sizeof(db_steinhoff_out_t));
@@ -255,10 +253,10 @@ int main(int argc, char *argv[]) {
 //						index = db_steinhoff_msg.id - 0x680;
 					index=0;
 					printf("ID %d index %d\n", db_steinhoff_msg.id, index);
-					get_camry_radar_forward_vehicle(db_steinhoff_msg.data, &camry_radar_forward_vehicle[index], db_steinhoff_msg.id);
-					check_msg_timeout(ts_ms, &camry_radar_forward_vehicle[index].ts_ms,
-						&camry_radar_forward_vehicle[index].two_message_periods,
-						&camry_radar_forward_vehicle[index].message_timeout_counter);
+					get_camry_prius_radar_forward_vehicle(db_steinhoff_msg.data, &camry_prius_radar_forward_vehicle[index], db_steinhoff_msg.id);
+					check_msg_timeout(ts_ms, &camry_prius_radar_forward_vehicle[index].ts_ms,
+						&camry_prius_radar_forward_vehicle[index].two_message_periods,
+						&camry_prius_radar_forward_vehicle[index].message_timeout_counter);
 					db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 //						char ID;
 //						float LONG_DIST_CAN1__m;
@@ -267,15 +265,15 @@ int main(int argc, char *argv[]) {
 //						float LONG_SPEED_CAN1__mps;
 //						float LAT_SPEED_CAN1__mps;
 //						int RCS;
-					db_clt_write(pclt, DB_CAMRY_MSG680_VAR + index, sizeof(camry_radar_forward_vehicle_t), &camry_radar_forward_vehicle[index]);
+					db_clt_write(pclt, DB_CAMRY_MSG680_VAR + index, sizeof(camry_prius_radar_forward_vehicle_t), &camry_prius_radar_forward_vehicle[index]);
 					if(verbose){
 						print_timestamp(stdout, &ts);
 						printf("Camry %d target: dist %.5f  d[0] %#hhx d[1] %#hhx speed %.5f d[2] %#hhx d[3] %#hhx\n",
 							db_steinhoff_msg.id,
-							camry_radar_forward_vehicle[index].LONG_DIST_CAN1__m,
+							camry_prius_radar_forward_vehicle[index].LONG_DIST_CAN1__m,
 							db_steinhoff_msg.data[0],
 							db_steinhoff_msg.data[1],
-							camry_radar_forward_vehicle[index].LONG_SPEED_CAN1__mps,
+							camry_prius_radar_forward_vehicle[index].LONG_SPEED_CAN1__mps,
 							db_steinhoff_msg.data[2],
 							db_steinhoff_msg.data[3]
 

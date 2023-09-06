@@ -33,7 +33,7 @@ db_id_t db_vars_list_prius[] =  {
 	{DB_PRIUS_MSG2E6_VAR, sizeof(prius_radar_forward_vehicle_t)},
 	{DB_PRIUS_MSG343_VAR, sizeof(prius_accel_cmd_status_t)},
 	{DB_PRIUS_MSG399_VAR, sizeof(prius_cruise_control_state_t)},
-	{DB_CAMRY_MSG680_VAR, sizeof(camry_radar_forward_vehicle_t)},
+	{DB_CAMRY_MSG680_VAR, sizeof(camry_prius_radar_forward_vehicle_t)},
 	{DB_INPUT_VAR, sizeof(input_t)},
 	{DB_OUTPUT_VAR, sizeof(output_t)},
 	{DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t)},
