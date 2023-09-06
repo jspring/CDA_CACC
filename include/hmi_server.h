@@ -21,9 +21,9 @@
 #define ACC_2_CACC 7
 #define EMERGENCY_BRAKING 8
 
-#define ACCORD 0
-#define PRIUS  1
-#define TAURUS 2
+#define LEAF	0
+#define PRIUS  	1
+#define CAMRY	2
 
 #define PORT 4000
 #define MAX_BUFFER_SIZE
@@ -43,7 +43,7 @@
 #define NB_DATA_FROM_HMI 5
 #define BUFF_SIZE 4096
 
-static char VEHICLE_NAMES[3][5] = {"acco", "priu", "taur"};
+static char VEHICLE_NAMES[3][5] = {"leaf", "priu", "camr"};
 
 typedef struct rx_data{
 	int desired_control_mode;
