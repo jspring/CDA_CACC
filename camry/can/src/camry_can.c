@@ -322,19 +322,35 @@ printf("ID %d index %d\n", db_steinhoff_msg.id, index);
 //						    );
 //						}
 //						break;
-
-				case 0x7E8:
-					get_camry_fuel_rate(db_steinhoff_msg.data, &camry_fuel_rate);
-					check_msg_timeout(ts_ms, &camry_fuel_rate.ts_ms,
-						&camry_fuel_rate.two_message_periods,
-						&camry_fuel_rate.message_timeout_counter);
-					input.fuel_rate = camry_fuel_rate.fuel_rate;
-					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input);
+				case 0x7E9:
+//					get_camry_fuel_rate(db_steinhoff_msg.data, &camry_fuel_rate);
+//					check_msg_timeout(ts_ms, &camry_fuel_rate.ts_ms,
+//						&camry_fuel_rate.two_message_periods,
+//						&camry_fuel_rate.message_timeout_counter);
+//					input.fuel_rate = camry_fuel_rate.fuel_rate;
+//					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input);
 					if(verbose)
 						print_timestamp(stdout, &ts);
-					if(verbose)
-						printf("camry_fuel_rate %.3f\n", camry_fuel_rate.fuel_rate);
+					if(verbose){
+						printf("camry OBD2 targets: ");
+						for(int i=0; i<8; i++)
+							printf("%#2.2hhX", db_steinhoff_msg.data[i]);
+						printf("\n");
+					}
 					break;
+
+//				case 0x7E8:
+//					get_camry_fuel_rate(db_steinhoff_msg.data, &camry_fuel_rate);
+//					check_msg_timeout(ts_ms, &camry_fuel_rate.ts_ms,
+//						&camry_fuel_rate.two_message_periods,
+//						&camry_fuel_rate.message_timeout_counter);
+//					input.fuel_rate = camry_fuel_rate.fuel_rate;
+//					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input);
+//					if(verbose)
+//						print_timestamp(stdout, &ts);
+//					if(verbose)
+//						printf("camry_fuel_rate %.3f\n", camry_fuel_rate.fuel_rate);
+//					break;
 				default:
 //					printf("Unknown message %#hX received\n", db_steinhoff_msg);
 					break;
@@ -406,19 +422,32 @@ printf("ID %d index %d\n", db_steinhoff_msg.id, index);
 					);
 				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
 			}
-				if((++obd2_ctr % 3) == 0) { //Send OBD2 fuel level poll
-					db_steinhoff_obd2.port = ACCEL_PORT;
-					db_steinhoff_obd2.id = 0x7DF;
-					db_steinhoff_obd2.size = 8;
-					db_steinhoff_obd2.data[0] = 2;
-					db_steinhoff_obd2.data[1] = 1;
-					db_steinhoff_obd2.data[2] = 0x10;
-					db_steinhoff_obd2.data[3] = 0xCC;
-					db_steinhoff_obd2.data[4] = 0xCC;
-					db_steinhoff_obd2.data[5] = 0xCC;
-					db_steinhoff_obd2.data[6] = 0xCC;
-					db_steinhoff_obd2.data[7] = 0xCC;
-					db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+			if((++obd2_ctr % 3) == 0) { //Send OBD2 targets poll
+				db_steinhoff_obd2.port = ACCEL_PORT;
+				db_steinhoff_obd2.id = 0x790;
+				db_steinhoff_obd2.size = 8;
+				db_steinhoff_obd2.data[0] = 2;
+				db_steinhoff_obd2.data[1] = 0x21;
+				db_steinhoff_obd2.data[2] = 0x0B;
+				db_steinhoff_obd2.data[3] = 0x00;
+				db_steinhoff_obd2.data[4] = 0x00;
+				db_steinhoff_obd2.data[5] = 0x00;
+				db_steinhoff_obd2.data[6] = 0x00;
+				db_steinhoff_obd2.data[7] = 0x00;
+				db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+//				if((++obd2_ctr % 3) == 0) { //Send OBD2 fuel level poll
+//					db_steinhoff_obd2.port = ACCEL_PORT;
+//					db_steinhoff_obd2.id = 0x7DF;
+//					db_steinhoff_obd2.size = 8;
+//					db_steinhoff_obd2.data[0] = 2;
+//					db_steinhoff_obd2.data[1] = 1;
+//					db_steinhoff_obd2.data[2] = 0x10;
+//					db_steinhoff_obd2.data[3] = 0xCC;
+//					db_steinhoff_obd2.data[4] = 0xCC;
+//					db_steinhoff_obd2.data[5] = 0xCC;
+//					db_steinhoff_obd2.data[6] = 0xCC;
+//					db_steinhoff_obd2.data[7] = 0xCC;
+//					db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
 //					if(verbose)
 //						print_timestamp(stdout, &ts);
 //					if(verbose)
