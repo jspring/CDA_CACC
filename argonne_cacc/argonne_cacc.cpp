@@ -70,7 +70,7 @@ void Initialization_task(int argc, char *argv[]) {
 	int opt;
 
 	desired_control_mode = ACC;
-	ego_vehicle_id = ACCORD;
+	ego_vehicle_id = PRIUS;
 	preceding_vehicle_id = ACCORD;
 	my_pip = 1;
 	v2i_engaged = false;
@@ -471,17 +471,17 @@ int get_accord_targets() {
 }
 
 int get_camry_targets(){
-	camry_radar_forward_vehicle_t a;
+	camry_prius_radar_forward_vehicle_t a;
 
 	for(int i=0; i<1; i++){
-	db_clt_read(pclt, DB_CAMRY_MSG680_VAR + i, sizeof(camry_radar_forward_vehicle_t), &a);
+	db_clt_read(pclt, DB_CAMRY_MSG680_VAR + i, sizeof(camry_prius_radar_forward_vehicle_t), &a);
 	control_structure->targets[i].relative_distance = a.LONG_DIST_CAN1__m;
 	control_structure->targets[i].relative_speed = a.LONG_SPEED_CAN1__mps;
 	control_structure->targets[i].relative_position = a.LAT_DIST_CAN1__m;
 	control_structure->targets[i].ID = i;
 		if(camry_verbosity){
-			printf("%d d:%.5f | ",i, a.LONG_DIST_CAN1__m);
-			printf("%d ", i);
+			printf("Camry target %d distance:%.5f | ",i, a.LONG_DIST_CAN1__m);
+			printf("%d relative speed ", i);
 			printf("%.5f ", a.LONG_SPEED_CAN1__mps);
 			fprintf(fp_t, "%d d:%.5f | ",i, a.LONG_DIST_CAN1__m);
 			fprintf(fp_t,"%d ", i);

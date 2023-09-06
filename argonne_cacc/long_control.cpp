@@ -391,20 +391,12 @@ void long_control::Update_preceding_vehicle_from_prius_target(double ego_speed){
 
 void long_control::Get_preceding_vehicle_from_camry_list(int nb_targets, double ego_speed){
 	double closest_distance = 120;
-	for(int i=0; i <nb_targets; i++){
-		if (targets[i].relative_distance < closest_distance &&
-				targets[i].relative_distance > 0.1 &&
-					targets[i].relative_distance <= (fmax(25, this->long_speed * cfg->MAXIMUM_ACC_TIME_GAP_HORIZON + this->standstill_distance)) &&
-						this->targets[i].relative_speed > fmin(-0.8*ego_speed,-2) &&
-							fabs(this->targets[i].relative_position) < cfg->LATERAL_LANE_TARGET_SPACE){
-			this->preceding_vehicle.relative_speed = this->targets[i].relative_speed;
-			this->preceding_vehicle.relative_position = this->targets[i].relative_position;
-			this->preceding_vehicle.relative_distance = this->targets[i].relative_distance;
-			this->preceding_vehicle.ID = this->targets[i].ID;
-			closest_distance = this->preceding_vehicle.relative_distance;
-			this->missing_target_elapsed_time = 0.;
-			this->is_preceding_valid = true;
-		}
+	if (targets[0].relative_distance > 0.01 && targets[0].relative_distance <= fmax(25,(this->long_speed * cfg->MAXIMUM_ACC_TIME_GAP_HORIZON + this->standstill_distance))){
+		this->preceding_vehicle.relative_speed = this->targets[0].relative_speed;
+		this->preceding_vehicle.relative_distance = this->targets[0].relative_distance;
+		closest_distance = this->preceding_vehicle.relative_distance;
+		this->missing_target_elapsed_time = 0.;
+		this->is_preceding_valid = true;
 	}
 	if(closest_distance == 120){
 		this->missing_target_elapsed_time += this->Ts;
