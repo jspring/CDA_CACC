@@ -81,14 +81,14 @@ int main(int argc, char const *argv[]){
 
 	address.sin_family = AF_INET;
 	switch(ego_id){
-		case(ACCORD):
-			address.sin_addr.s_addr = inet_addr("172.16.0.120"); // ACCORD
+		case(LEAF):
+			address.sin_addr.s_addr = inet_addr("172.16.0.120"); // LEAF
 			break;
 		case(PRIUS):
 			address.sin_addr.s_addr = inet_addr("172.16.0.127"); // PRIUS
 			break;
-		case(TAURUS):
-			address.sin_addr.s_addr = inet_addr("172.16.0.128"); // TAURUS
+		case(CAMRY):
+			address.sin_addr.s_addr = inet_addr("172.16.0.128"); // CAMRY
 			break;
 	}
 	printf("ip_address %#X\n", address.sin_addr.s_addr);

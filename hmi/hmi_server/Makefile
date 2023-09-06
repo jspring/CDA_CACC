@@ -6,7 +6,7 @@
 
 include capath_qnx.mk
 
-PATH_CFLAGS += -g -O0 -finstrument-functions -I../../path/db -I../../path/local -I../../../common -I../../include -fPIC -I../../prius/can/src -I../../taurus/can/src -I../../accord/can/src -I../../steinhoff -I../../path/sens/gps/src -I../../vehcomm
+PATH_CFLAGS += -g -O0 -finstrument-functions -I../../path/db -I../../path/local -I../../../common -I../../include -fPIC -I../../prius/can/src -I../../leaf/can/src -I../../camry/can/src -I../../steinhoff -I../../path/sens/gps/src -I../../vehcomm
 PATH_LDFLAGS += -fPIC -L../lib
 PATH_LIBS += -lprofilingS
 

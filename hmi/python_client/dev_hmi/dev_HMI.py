@@ -22,7 +22,7 @@ CACC_2_ACC = 6
 ACC_2_CACC = 7
 
 ####### THESE PARAMETERS HAVE TO BE DEFINED BEFORE RUNNING
-ego_veh_id = PRIUS
+ego_veh_id = CAMRY
 setPointSpeedValue = 68.24  # In mph
 selectedTimeGap = 1.35  # In sec
 desired_control_mode = ACC
@@ -235,10 +235,10 @@ if ego_veh_id == PRIUS:
     veh_id = './img/prius.png'
     ip_address = '172.16.0.127'
 elif ego_veh_id == LEAF:
-    veh_id = './img/accord.png'
+    veh_id = './img/leaf.jpg'
     ip_address = '172.16.0.120'
 elif ego_veh_id == CAMRY:
-    veh_id = './img/prius.png'
+    veh_id = './img/camry.jpg'
     ip_address = '172.16.0.128'
 
 print("ip_address: " + str(ip_address))

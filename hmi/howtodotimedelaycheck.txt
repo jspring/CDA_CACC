@@ -1,6 +1,6 @@
 1. cd /windows/Linux/Argonne_CACC/hmi/python_client/dev_hmi
 2. Start matlab
-3. scp qnxuser@taurus:path_can_bin/<anything with a timestamp in the first row, e.g can2_rx_out_* or data control_test_taur_log_*> .
+3. scp qnxuser@pci-camry:path_can_bin/<anything with a timestamp in the first row, e.g can2_rx_out_* or data control_test_taur_log_*> .
 4. In matlab, open ShowDeltaTime.m
-5. In ShowDeltaTime.m, substitute file='control_test_taur_log_09172020__18_27_02.dat'; with file=<mydatafile>
+5. In ShowDeltaTime.m, substitute file='control_test_camr_log_09172020__18_27_02.dat'; with file=<mydatafile>
 6. Hit Run in matlab

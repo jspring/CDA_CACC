@@ -13,8 +13,8 @@ import matplotlib.lines as lines
 from matplotlib.collections import PatchCollection
 
 PRIUS = 0
-TAURUS = 1
-ACCORD = 2
+CAMRY = 1
+LEAF = 2
 
 CRUISE = 0
 ACC = 1
@@ -25,7 +25,7 @@ CACC_2_ACC = 6
 ACC_2_CACC = 7
 
 ####### THESE PARAMETERS HAVE TO BE DEFINED BEFORE RUNNING
-ego_veh_id = ACCORD
+ego_veh_id = PRIUS 
 setPointSpeedValue = 68.24
 desired_control_mode = CACC
 gap_choice = 3
@@ -214,11 +214,11 @@ fig = plt.figure()
 if ego_veh_id == PRIUS:
     veh_id = './img/prius.png'
     ip_address = '172.16.0.127'
-elif ego_veh_id == ACCORD:
-    veh_id = './img/accord.png'
+elif ego_veh_id == LEAF:
+    veh_id = './img/leaf.jpg'
     ip_address = '172.16.0.120'
-elif ego_veh_id == TAURUS:
-    veh_id = './img/taurus.png'
+elif ego_veh_id == CAMRY:
+    veh_id = './img/camry.jpg'
     ip_address = '172.16.0.128'
 
 targV, targV_far, targVCACC_ax, GapLevel_ax, Cruise_2_ACC_ax, ACC_2_Cruise_ax, ACC_2_CACC_ax, CACC_2_ACC_ax, v2v_ax = setupFixedImages(veh_id)
