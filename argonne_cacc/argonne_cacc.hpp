@@ -4,7 +4,7 @@ extern "C" {
 #include "db_include.h"
 #include "long_comm.h"
 #include "can_dbvars.h"
-#include <clt_vars_camry.h>
+//#include <clt_vars_camry.h>
 #include <clt_vars_leaf.h>
 #include <clt_vars_prius.h>
 #include <clt_vars_accord.h>
