@@ -27,7 +27,7 @@ int print_accel_cmd(leaf_accel_cmd_t *leaf_accel_cmd) {
 
 int print_vehicle_speed(leaf_vehicle_speed_t *leaf_vehicle_speed) {
 	printf("leaf_vehicle_speed:  vehicle speed %.3f\n",
-		leaf_vehicle_speed->vehicle_speed_CAN2_MPS
+		leaf_vehicle_speed->veh_speed1_CAN6__mps
 	);
 	return 0;
 }

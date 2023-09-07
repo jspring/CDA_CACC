@@ -172,12 +172,12 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					check_msg_timeout(ts_ms, &leaf_vehicle_speed.ts_ms, 
 						&leaf_vehicle_speed.two_message_periods, 
 						&leaf_vehicle_speed.message_timeout_counter); 
-					input.vehicle_speed_mps = leaf_vehicle_speed.vehicle_speed_CAN2_MPS;
+					input.vehicle_speed_mps = leaf_vehicle_speed.veh_speed1_CAN6__mps;
 					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input); 
 					db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 
 					if(veryverbose)
-						printf("Accord vehicle speed %.2f output.torque_level %.2f output.accel_decel_request %.2f\n",
+						printf("Leaf vehicle speed %.2f output.torque_level %.2f output.accel_decel_request %.2f\n",
 								input.vehicle_speed_mps,
 								output.torque_level,
 								output.accel_decel_request
@@ -188,12 +188,11 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					check_msg_timeout(ts_ms, &leaf_torque.ts_ms, 
 						&leaf_torque.two_message_periods, 
 						&leaf_torque.message_timeout_counter); 
-					input.torque = leaf_torque.generator_torque_CAN2_nm;
+					input.torque = leaf_torque.Motor_Torque_CAN5__Nm;
 					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input); 
 					if(veryverbose)
-						printf("Accord generator torque %.2f motor torque %.2f\n",
-							leaf_torque.generator_torque_CAN2_nm,
-							leaf_torque.motor_torque_CAN2_nm
+						printf("Leaf motor torque %.3f\n",
+							leaf_torque.Motor_Torque_CAN5__Nm
 						);
 					break;
 				case 342:
@@ -204,7 +203,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					input.steering_angle_deg = leaf_steering.Steering_Wheel_Pos_CAN_deg;
 					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input); 
 					if(veryverbose)
-						printf("Accord steering position %.2f rate %.2f\n",
+						printf("Leaf steering position %.2f rate %.2f\n",
 							leaf_steering.Steering_Wheel_Pos_CAN_deg,
 							leaf_steering.Steering_Wheel_Rate_CAN_degps
 						);
@@ -234,7 +233,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					db_clt_write(pclt,DB_LEAF_MSG804_VAR, sizeof(leaf_fuel_rate_t), &leaf_fuel_rate); 
 //					if(veryverbose)
 //print_timestamp(stdout, &ts);
-//printf("Accord fuel rate %.2f\n",
+//printf("Leaf fuel rate %.2f\n",
 //	leaf_fuel_rate.fuel_integrated_flow
 //);
 					break;
@@ -285,7 +284,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 			db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_torque_out);
 
 			// N.B. No delay is necessary between sending torque & acceleration commands because
-			// on the Accord, these two ECUs are on different CAN buses.
+			// on the Leaf, these two ECUs are on different CAN buses.
 			memset(&db_steinhoff_accel_out, 0, sizeof(db_steinhoff_out_t));
 			if(acceleration > 0) {
 				leaf_accel_cmd.accel_cmd = acceleration;

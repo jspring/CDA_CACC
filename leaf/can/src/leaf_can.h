@@ -66,60 +66,85 @@ static inline void set_leaf_torque_cmd(unsigned char data[], leaf_torque_cmd_t *
 
 
 /*******************************************************************************
- *      Vehicle_Speed_CAN2_MPH
- *      Message ID      0x158
+ *      Vehicle_Speed_CAN6_MPH
+ *      Message ID      0x355 (853)
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_LEAF_MSG158_VAR
+ *	dbvar = DB_LEAF_MSG853_VAR
  *
- *	Vehicle_Speed_CAN2_MPH
+ *	Vehicle_Speed_CAN6_MPH
  *      Byte Position   0-1
  *      Bit Position    0
  *      Bit Length      16
  *
+BO_ 853 Veh_Spd_CAN6: 4 Vector__XXX
+ SG_ veh_speed1_CAN6__kph : 7|16@0+ (0.01,0) [0|655.35] "kph" Vector__XXX
+ SG_ veh_speed2_CAN6__kph : 23|16@0+ (0.01,0) [0|655.35] "kph" Vector__XXX
+
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
  */
 
-#define WHEEL_SPEED_RES		0.00624
-#define MPH_2_MPS		0.44704 
+#define VEHICLE_SPEED_RES	0.01
+#define KPH_2_MPS		3.6 
 
 typedef struct {
 	int ts_ms;
 	unsigned char two_message_periods;
 	unsigned int message_timeout_counter;
-	float vehicle_speed_CAN2_MPS;
+	float veh_speed1_CAN6__mps;
+	float veh_speed2_CAN6__mps;
 } leaf_vehicle_speed_t;
 
 static inline void get_leaf_vehicle_speed(unsigned char *data, leaf_vehicle_speed_t *p) {
-	p->vehicle_speed_CAN2_MPS = (float)(((data[0] << 8) + data[1]) * WHEEL_SPEED_RES * MPH_2_MPS);
+	p->veh_speed1_CAN6__mps = (float)(((data[0] << 8) + data[1]) * VEHICLE_SPEED_RES * KPH_2_MPS);
+	p->veh_speed2_CAN6__mps = (float)(((data[2] << 8) + data[3]) * VEHICLE_SPEED_RES * KPH_2_MPS);
+	printf("library: vehicle speed 1 %.3f vehicle speed 2 %.3f\n",
+		p->veh_speed1_CAN6__mps,
+		p->veh_speed2_CAN6__mps
+	);
 }
 
 /*******************************************************************************
  *      Torque_CAN2_NM
- *      Message ID      0x530
+ *      Message ID      0x1DA (474)
  *      Transmitted every 40 ms
  *
  *	dbvar = DB_LEAF_MSG530_VAR
  *
- *	Torque_CAN2_NM
+ *	Torque_CAN5_NM
  *      Byte Position   0-1
  *      Bit Position    0
  *      Bit Length      16
  *
+ *   BO_ 474 Motor_Speed_TRQ_VOLT: 6 Vector__XXX
+ SG_ motor_inverter_input_voltage_CAN : 7|8@0+ (2,0) [0|510] "V" Vector__XXX
+ SG_ Motor_Torque_CAN5__Nm : 18|11@0- (0.5,0) [-512|511.5] "Nm" Vector__XXX
+ SG_ Motor_Speed_CAN5__rpm : 39|15@0- (1,0) [-16384|16383] "rpm" Vector__XXX
+ *
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56 *
  */
 
-#define TORQUE_RES		0.02
+#define VOLTAGE_RES		2.0
+#define TORQUE_RES		0.500
 
 typedef struct {
 	int ts_ms;
 	unsigned char two_message_periods;
 	unsigned int message_timeout_counter;
-	float generator_torque_CAN2_nm;
-	float motor_torque_CAN2_nm;
+	float motor_inverter_input_voltage_CAN5;
+	float Motor_Torque_CAN5__Nm;
+	float Motor_Speed_CAN5__rpm;
 } leaf_torque_t;
 
 static inline void get_leaf_torque(unsigned char *data, leaf_torque_t *p) {
-	p->generator_torque_CAN2_nm = (float)(((data[0] << 8) + data[1]) * TORQUE_RES);
-	p->motor_torque_CAN2_nm = (float)(((data[2] << 8) + data[3]) * TORQUE_RES);
+	short short_temp;
+
+	p->motor_inverter_input_voltage_CAN5 = (float)(data[0] * VOLTAGE_RES);
+
+	short_temp = (short)( ((data[2] << 8) & 0x700) + data[3]);
+	p->Motor_Torque_CAN5__Nm = (float)(((data[2] << 8) + data[3]) * TORQUE_RES);
 }
 
 /*******************************************************************************
@@ -223,21 +248,10 @@ static inline void get_leaf_PRNDL_Pos(unsigned char *data, leaf_PRNDL_Pos_t *p) 
 
 /*******************************************************************************
  *	leaf_target_object
- *      Message ID      0x410,411,412,413,414,415,416,417,420,421,422,423,424
+ *      Message ID      0x107
  *      Transmitted every 40 ms
  *
- *	dbvar = DB_LEAF_MSG410_VAR
- *			DB_LEAF_MSG411_VAR
- *			DB_LEAF_MSG412_VAR
- *			DB_LEAF_MSG413_VAR
- *			DB_LEAF_MSG415_VAR
- *			DB_LEAF_MSG416_VAR
- *			DB_LEAF_MSG417_VAR
- *			DB_LEAF_MSG420_VAR
- *			DB_LEAF_MSG421_VAR
- *			DB_LEAF_MSG422_VAR
- *			DB_LEAF_MSG423_VAR
- *			DB_LEAF_MSG424_VAR
+ *	dbvar = DB_LEAF_MSG107_VAR
  *
  *      Byte Position   0-1
  *      Bit Position    0
@@ -245,67 +259,80 @@ static inline void get_leaf_PRNDL_Pos(unsigned char *data, leaf_PRNDL_Pos_t *p) 
  *
 
 
-BO_ 1040 HS_CAN5__410: 8 Vector__XXX
- SG_ ACC_relative_position_obj1_CAN5__ : 20|13@0- (1,0) [-4095|4095] "" Vector__XXX
- SG_ ACC_relative_distance_obj1_CAN5__ : 7|16@0+ (0.00775,0) [0|4095.9375] "m" Vector__XXX
- SG_ ACC_relative_velocity_obj1_CAN5_kph_ : 37|14@0- (0.056,0) [-8191|8191] "kph" Vector__XXX
- SG_ ACC_obj_1_counter_CAN5__ : 61|2@0+ (1,0) [0|3] "" Vector__XXX
- SG_ ACC_obj_1_checksum_CAN5__ : 59|4@0+ (1,0) [0|15] "" Vector__XXX
+BO_ 263 HS_CAN5__107: 8 Vector__XXX
+ SG_object_distance_Radar: 7|16@0+ (0.1,0) [0|4095.9375] "m" Vector__XXX
 
  7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
  39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
 */
 
-#define OBJ_REL_DIST_RES	0.00775
-#define OBJ_REL_DIST_OFFSET	4095.9375
-#define OBJ_REL_POS_OFFSET	4095
-#define OBJ_REL_VEL_OFFSET	8191
-#define OBJ_REL_VEL_RES		0.056
-#define KPH_TO_MPS		(1.0/3.6)
+#define OBJ_REL_DIST_RES	0.1
+
 typedef struct {
 	int ts_ms;
 	unsigned char two_message_periods;
 	unsigned int message_timeout_counter;
-	float object_relative_position_CAN5_M;
-	float object_relative_distance_CAN5_M;
-	float object_relative_velocity_CAN5_MPS;
-	unsigned char data_valid;
-	unsigned char object_counter_CAN5;
+	float object_distance_Radar;
 } leaf_target_object_t;
 
 static inline void get_leaf_target_object(unsigned char *data, leaf_target_object_t *p) {
 	short short_temp;
 	float float_temp;
 
-	if( (data[2] & 0x10) != 0)
-		data[2] |= 0xE0;
-
-	if( (data[4] & 0x20) != 0)
-		data[4] |= 0xC0;
 	//Calculate relative distance
 	short_temp = (short)((data[0] << 8) + data[1]);
-	float_temp = short_temp * 0.00775;
-	if(float_temp > 250.0)
-		p->data_valid = 0;
-	else
-		p->data_valid = 1;
-	p->object_relative_distance_CAN5_M = float_temp;
+	float_temp = short_temp * OBJ_REL_DIST_RES;
+	p->object_distance_Radar = float_temp;
+	printf("library: target distance %.3f\n",
+		p->object_distance_Radar
+	);
+}
 
-	short_temp = (short)((data[2] << 8) + data[3]);
-	float_temp = short_temp / 1.0;
-	p->object_relative_position_CAN5_M = float_temp;
+/*******************************************************************************
+ *	leaf_target_speed_mps
+ *      Message ID      0x108
+ *      Transmitted every 40 ms
+ *
+ *	dbvar = DB_LEAF_MSG108_VAR
+ *
+ *      Byte Position   0-1
+ *      Bit Position    0
+ *      Bit Length      16
+ *
 
-	//Calculate relative speed
-	short_temp = (short)((data[4] << 8) + data[5]);
-	float_temp = short_temp * 0.056;
-	p->object_relative_velocity_CAN5_MPS = float_temp * KPH_TO_MPS;
 
-	p->object_counter_CAN5 = (data[7] >> 4) & 0x03;
+BO_ 263 HS_CAN5__108: 8 Vector__XXX
+ SG_object_relative_spd_Radar: 7|16@0+ (0.1,0) [0|4095.9375] "m" Vector__XXX
+
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+*/
+
+#define OBJ_REL_SPEED_RES	0.1
+
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	float object_relative_spd_Radar__mps;
+} leaf_target_speed_mps_t;
+
+static inline void get_leaf_target_speed(unsigned char *data, leaf_target_speed_mps_t *p) {
+	short short_temp;
+	float float_temp;
+
+	//Calculate relative distance
+	short_temp = (short)((data[0] << 8) + data[1]);
+	float_temp = short_temp * OBJ_REL_DIST_RES;
+	p->object_relative_spd_Radar__mps = float_temp;
+	printf("library: target relative speed %.3f\n",
+		p->object_relative_spd_Radar__mps
+	);
 }
 
 /*******************************************************************************
  *	Veh_Accel_CAN4
- *      Message ID      0x292
+ *      Message ID      0x292 (658)
  *      Transmitted every 40 ms
  *
  *	dbvar = DB_LEAF_MSG392_VAR
@@ -313,8 +340,8 @@ static inline void get_leaf_target_object(unsigned char *data, leaf_target_objec
  *      Byte Position   0-1
  *      Bit Position    7
  *      Bit Length      12
- *      BO_ 658 Veh_Accel_CAN4: 7 Vector__XXX^M
  *
+ *      BO_ 658 Veh_Accel_CAN4: 7 Vector__XXX^M
  *	SG_ Veh_brake_press_CAN4__bar : 55|8@0+ (1,0) [0|255] "" Vector__XXX^M
  *	SG_ Yaw_Rate_CAN4__degps : 30|11@0- (0.1,0) [-102.4|102.3] "deg/s" Vector__XXX^M
  *	SG_ Long_Accel_CAN4__G : 7|12@0+ (0.001,-2) [-2|2.095] "G" Vector__XXX^M
