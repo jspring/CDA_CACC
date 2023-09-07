@@ -13,10 +13,12 @@
 
 /* Including external dependencies */
 #include "CACCFlags.h"
+#include "EgoFlags.h"
 #include "Velocity.h"
 #include "ThrottlePosition.h"
-#include <OCTET_STRING.h>
 #include <NativeInteger.h>
+#include <OCTET_STRING.h>
+#include "DDateTime.h"
 #include <BOOLEAN.h>
 #include <constr_SEQUENCE.h>
 
@@ -24,62 +26,48 @@
 extern "C" {
 #endif
 
-/* Forward declarations */
-struct DDateTime;
-
 /* CaccData */
 typedef struct CaccData {
-	CACCFlags_t	*flags	/* OPTIONAL */;
-	Velocity_t	*setSpeed	/* OPTIONAL */;
-	ThrottlePosition_t	*throtPos	/* OPTIONAL */;
-	OCTET_STRING_t	*lclPN	/* OPTIONAL */;
-	OCTET_STRING_t	*lclPE	/* OPTIONAL */;
-	OCTET_STRING_t	*lclPD	/* OPTIONAL */;
-	OCTET_STRING_t	*roll	/* OPTIONAL */;
-	OCTET_STRING_t	*pitch	/* OPTIONAL */;
-	OCTET_STRING_t	*yaw	/* OPTIONAL */;
-	OCTET_STRING_t	*hPosAcry	/* OPTIONAL */;
-	OCTET_STRING_t	*vPosAcry	/* OPTIONAL */;
-	OCTET_STRING_t	*fwrdVel	/* OPTIONAL */;
-	OCTET_STRING_t	*rightVel	/* OPTIONAL */;
-	OCTET_STRING_t	*downVel	/* OPTIONAL */;
-	OCTET_STRING_t	*velAcc	/* OPTIONAL */;
-	OCTET_STRING_t	*fwrdAcc	/* OPTIONAL */;
-	OCTET_STRING_t	*rightAcc	/* OPTIONAL */;
-	OCTET_STRING_t	*dwnAcc	/* OPTIONAL */;
-	long	*grpID	/* OPTIONAL */;
-	long	*grpSize	/* OPTIONAL */;
-	long	*grpMode	/* OPTIONAL */;
-	long	*grpManDes	/* OPTIONAL */;
-	long	*grpManID	/* OPTIONAL */;
-	OCTET_STRING_t	*vehID	/* OPTIONAL */;
-	long	*frntCutIn	/* OPTIONAL */;
-	long	*vehGrpPos	/* OPTIONAL */;
-	long	*vehFltMode	/* OPTIONAL */;
-	long	*vehManDes	/* OPTIONAL */;
-	long	*vehManID	/* OPTIONAL */;
-	long	*distToPVeh	/* OPTIONAL */;
-	long	*relSpdPVeh	/* OPTIONAL */;
-	long	*disToLVeh	/* OPTIONAL */;
-	long	*relSpdLVeh	/* OPTIONAL */;
-	long	*desTGapPVeh	/* OPTIONAL */;
-	long	*desTGapLVeh	/* OPTIONAL */;
-	long	*estDisPVeh	/* OPTIONAL */;
-	long	*estDisLVeh	/* OPTIONAL */;
-	long	*desSpd	/* OPTIONAL */;
-	long	*desTrq	/* OPTIONAL */;
-	long	*desAcc	/* OPTIONAL */;
-	long	*userDI1	/* OPTIONAL */;
-	long	*userDI2	/* OPTIONAL */;
-	long	*userDF1	/* OPTIONAL */;
-	long	*userDF2	/* OPTIONAL */;
-	long	*userDF3	/* OPTIONAL */;
-	struct DDateTime	*utcTime	/* OPTIONAL */;
-	long	*globalTime	/* OPTIONAL */;
-	BOOLEAN_t	*userBit1	/* OPTIONAL */;
-	BOOLEAN_t	*userBit2	/* OPTIONAL */;
-	BOOLEAN_t	*userBit3	/* OPTIONAL */;
-	BOOLEAN_t	*userBit4	/* OPTIONAL */;
+	CACCFlags_t	 caccFlags;
+	EgoFlags_t	 egoFlags;
+	Velocity_t	 setSpeed;
+	ThrottlePosition_t	 throtPos;
+	long	 grpID;
+	long	 grpSize;
+	long	 grpMode;
+	long	 grpManDes;
+	long	 grpManID;
+	OCTET_STRING_t	 vehID;
+	long	 frntCutIn;
+	long	 vehGrpPos;
+	long	 vehFltMode;
+	long	 vehManDes;
+	long	 vehManID;
+	long	 distToPVeh;
+	long	 relSpdPVeh;
+	long	 disToLVeh;
+	long	 relSpdLVeh;
+	long	 desTGapPVeh;
+	long	 desTGapLVeh;
+	long	 estDisPVeh;
+	long	 estDisLVeh;
+	long	 desSpd;
+	long	 desTrq;
+	long	 desAcc;
+	long	 userDI1;
+	long	 userDI2;
+	long	 userDF1;
+	long	 userDF2;
+	long	 userDF3;
+	DDateTime_t	 utcTime;
+	long	 globalTime;
+	BOOLEAN_t	 userBit1;
+	BOOLEAN_t	 userBit2;
+	BOOLEAN_t	 userBit3;
+	BOOLEAN_t	 userBit4;
+	BOOLEAN_t	 laneDepartWarnRt;
+	BOOLEAN_t	 laneDepartWarnLt;
+	long	 handShake;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -88,14 +76,11 @@ typedef struct CaccData {
 /* Implementation */
 extern asn_TYPE_descriptor_t asn_DEF_CaccData;
 extern asn_SEQUENCE_specifics_t asn_SPC_CaccData_specs_1;
-extern asn_TYPE_member_t asn_MBR_CaccData_1[51];
+extern asn_TYPE_member_t asn_MBR_CaccData_1[40];
 
 #ifdef __cplusplus
 }
 #endif
-
-/* Referred external types */
-#include "DDateTime.h"
 
 #endif	/* _CaccData_H_ */
 #include <asn_internal.h>

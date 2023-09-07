@@ -22,33 +22,33 @@
 #define MASK_b67 0xC0
 #define MASK_b7	 0x80
 
-/*******************************************************************************
- *      camry_accel_cmd
- *      Message ID      0x99
- *      Transmitted every 20 ms
- *
- *	accel_cmd
- *      Byte Position   0-1
- *      Bit Position    0
- *      Bit Length      16
- *
- */
-#define ACCEL_RES  0.001
-
-typedef struct {
-	int ts_ms;
-	unsigned char two_message_periods;
-	unsigned int message_timeout_counter;
-	float accel_cmd;
-} camry_accel_cmd_t;
-
-static inline void set_camry_accel_cmd(unsigned char data[], camry_accel_cmd_t *p) {
-	short accel_cmd_short;
-
-	accel_cmd_short =  (short)(p->accel_cmd / ACCEL_RES);
-	data[0] = (accel_cmd_short & 0xFF00) >> 8;
-	data[1] = accel_cmd_short & 0xFF;
-}
+///*******************************************************************************
+// *      camry_accel_cmd
+// *      Message ID      0x99
+// *      Transmitted every 20 ms
+// *
+// *	accel_cmd
+// *      Byte Position   0-1
+// *      Bit Position    0
+// *      Bit Length      16
+// *
+// */
+//#define ACCEL_RES  0.001
+//
+//typedef struct {
+//	int ts_ms;
+//	unsigned char two_message_periods;
+//	unsigned int message_timeout_counter;
+//	float accel_cmd;
+//} camry_accel_cmd_t;
+//
+//static inline void set_camry_accel_cmd(unsigned char data[], camry_accel_cmd_t *p) {
+//	short accel_cmd_short;
+//
+//	accel_cmd_short =  (short)(p->accel_cmd / ACCEL_RES);
+//	data[0] = (accel_cmd_short & 0xFF00) >> 8;
+//	data[1] = accel_cmd_short & 0xFF;
+//}
 
 /*******************************************************************************
  *      camry_wheel_speed
@@ -83,29 +83,29 @@ static inline void set_camry_accel_cmd(unsigned char data[], camry_accel_cmd_t *
 #define WHEEL_SPEED_OFFSET	6767
 #define KPH_TO_MPS		1.0/3.6
 
-typedef struct {
-	int ts_ms;
-	unsigned char two_message_periods;
-	unsigned int message_timeout_counter;
-	float veh_wheel_spd_FR_CAN1_mps;
-	float veh_wheel_spd_FL_CAN1_mps;
-	float veh_wheel_spd_RR_CAN1_mps;
-	float veh_wheel_spd_RL_CAN1_mps;
-	float veh_wheel_spd_average;
-	float instantaneous_acceleration;
-} camry_wheel_speed_t;
+//typedef struct {
+//	int ts_ms;
+//	unsigned char two_message_periods;
+//	unsigned int message_timeout_counter;
+//	float veh_wheel_spd_FR_CAN1_mps;
+//	float veh_wheel_spd_FL_CAN1_mps;
+//	float veh_wheel_spd_RR_CAN1_mps;
+//	float veh_wheel_spd_RL_CAN1_mps;
+//	float veh_wheel_spd_average;
+//	float instantaneous_acceleration;
+//} camry_wheel_speed_t;
 
-static inline void get_camry_wheel_speed(unsigned char *data, camry_wheel_speed_t *p) {
-	static float previous_wheel_speed;
-	struct timespec ts;
-	static struct timespec ts_sav;
-
-	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-	p->veh_wheel_spd_RR_CAN1_mps = (float)((short)(((data[4] << 8) + data[5]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
-	p->veh_wheel_spd_RL_CAN1_mps = (float)((short)(((data[6] << 8) + data[7]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+//static inline void get_camry_wheel_speed(unsigned char *data, camry_wheel_speed_t *p) {
+//	static float previous_wheel_speed;
+//	struct timespec ts;
+//	static struct timespec ts_sav;
+//
+//	p->veh_wheel_spd_FR_CAN1_mps = (float)((short)(((data[0] << 8) + data[1]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+//	p->veh_wheel_spd_FL_CAN1_mps = (float)((short)(((data[2] << 8) + data[3]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+//	p->veh_wheel_spd_RR_CAN1_mps = (float)((short)(((data[4] << 8) + data[5]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
+//	p->veh_wheel_spd_RL_CAN1_mps = (float)((short)(((data[6] << 8) + data[7]) - WHEEL_SPEED_OFFSET) * WHEEL_SPEED_RES * KPH_TO_MPS);
 //	p->veh_wheel_spd_average = ((p->veh_wheel_spd_FR_CAN1_mps + p->veh_wheel_spd_FL_CAN1_mps + p->veh_wheel_spd_RR_CAN1_mps + p->veh_wheel_spd_RL_CAN1_mps) / 4.0) -0.094;
-	p->veh_wheel_spd_average = p->veh_wheel_spd_FR_CAN1_mps;
+//////	p->veh_wheel_spd_average = p->veh_wheel_spd_FR_CAN1_mps;
 //	clock_gettime(CLOCK_REALTIME, &ts);
 //	p->instantaneous_acceleration = (p->veh_wheel_spd_FR_CAN1_mps = previous_wheel_speed)/(ts.tv_nsec - ts_sav.tv_nsec)/1e9;
 //	ts_sav = ts;
@@ -117,7 +117,7 @@ static inline void get_camry_wheel_speed(unsigned char *data, camry_wheel_speed_
 //			data[1],
 //			p->instantaneous_acceleration
 //			);
-}
+//}
 
 /*******************************************************************************
  *      camry_vehicle_speed
@@ -133,18 +133,18 @@ static inline void get_camry_wheel_speed(unsigned char *data, camry_wheel_speed_
  *
  */
 
-#define VEH_SPEED_RES		0.01
+//#define VEH_SPEED_RES		0.01
 
-typedef struct {
-	int ts_ms;
-	unsigned char two_message_periods;
-	unsigned int message_timeout_counter;
-	float veh_spd_CAN1_kph;
-} camry_vehicle_speed_t;
+//typedef struct {
+//	int ts_ms;
+//	unsigned char two_message_periods;
+//	unsigned int message_timeout_counter;
+//	float veh_spd_CAN1_kph;
+//} camry_vehicle_speed_t;
 
-static inline void get_camry_vehicle_speed(unsigned char *data, camry_vehicle_speed_t *p) { 
-	p->veh_spd_CAN1_kph = (float)((short)(((data[6] << 8) + data[7]) * VEH_SPEED_RES));
-}
+//static inline void get_camry_vehicle_speed(unsigned char *data, camry_vehicle_speed_t *p) { 
+//	p->veh_spd_CAN1_kph = (float)((short)(((data[6] << 8) + data[7]) * VEH_SPEED_RES));
+//}
 
 
 /*******************************************************************************
@@ -181,27 +181,27 @@ static inline void get_camry_vehicle_speed(unsigned char *data, camry_vehicle_sp
  *
  */
 
-#define STEER_ANGLE_RES 1.5
+//#define STEER_ANGLE_RES 1.5
 
-typedef struct {
-	int ts_ms;
-	unsigned char two_message_periods;
-	unsigned int message_timeout_counter;
-	float steering_angle_deg;
-	float steering_angle_rate_degps;
-	float steering_angle_fraction_deg;
-} camry_steering_angle_t;
+//typedef struct {
+//	int ts_ms;
+//	unsigned char two_message_periods;
+//	unsigned int message_timeout_counter;
+//	float steering_angle_deg;
+//	float steering_angle_rate_degps;
+//	float steering_angle_fraction_deg;
+//} camry_steering_angle_t;
 
-static inline void get_camry_steering_angle(unsigned char *data, camry_steering_angle_t *p) {
-	short short_temp;
+//static inline void get_camry_steering_angle(unsigned char *data, camry_steering_angle_t *p) {
+//	short short_temp;
 
-	short_temp = ((data[0] << 12) + (data[1] << 4)) / 16; //Put the sign bit at the MSb of the short int
-	p->steering_angle_deg = (float)(short_temp * STEER_ANGLE_RES);
+//	short_temp = ((data[0] << 12) + (data[1] << 4)) / 16; //Put the sign bit at the MSb of the short int
+//	p->steering_angle_deg = (float)(short_temp * STEER_ANGLE_RES);
 
-	short_temp = ((data[4] << 12) + (data[5] << 4)) / 16; //Put the sign bit at the MSb of the short int
-	p->steering_angle_rate_degps = (float)short_temp;
+//	short_temp = ((data[4] << 12) + (data[5] << 4)) / 16; //Put the sign bit at the MSb of the short int
+//	p->steering_angle_rate_degps = (float)short_temp;
 
-}
+//}
 
 
 /*******************************************************************************
@@ -234,13 +234,14 @@ static inline void get_camry_steering_angle(unsigned char *data, camry_steering_
 #define LONG_LAT_ACCEL_RES	0.001
 #define LONG_LAT_ACCEL_OFFSET	16.384
 
-typedef struct {
-	int ts_ms;
-	unsigned char two_message_periods;
-	unsigned int message_timeout_counter;
-	float long_accel;
-	float lat_accel;
-} camry_long_lat_accel_t;
+/*
+//typedef struct {
+//	int ts_ms;
+//	unsigned char two_message_periods;
+//	unsigned int message_timeout_counter;
+//	float long_accel;
+//	float lat_accel;
+//} camry_long_lat_accel_t;
 
 static inline void get_camry_long_lat_accel(unsigned char *data, camry_long_lat_accel_t *p) {
 	short short_temp;
@@ -254,7 +255,6 @@ static inline void get_camry_long_lat_accel(unsigned char *data, camry_long_lat_
 		data[2] |= 0xC0;
 	short_temp = (data[2] << 8) + data[3];
 	p->lat_accel = (float)(short_temp * LONG_LAT_ACCEL_RES);
-/*
 	printf("library: long accel: data[0] %#hhx data[1] %#hhx %.2f lat accel: data[2] %#hhx data[3] %#hhx %.2f\n",
 			data[0],
 			data[1],
@@ -263,8 +263,8 @@ static inline void get_camry_long_lat_accel(unsigned char *data, camry_long_lat_
 			data[3],
 			p->lat_accel
 			);
-*/
 }
+*/
 
 /*******************************************************************************
  *      camry_accel_cmd_status
@@ -295,6 +295,8 @@ static inline void get_camry_long_lat_accel(unsigned char *data, camry_long_lat_
  *
  *
  */
+/*
+#define ACCEL_RES  0.001
 
 typedef struct {
 	int ts_ms;
@@ -324,6 +326,7 @@ static inline void get_camry_accel_cmd_status(unsigned char *data, camry_accel_c
 	p->checksum = data[7];
 	p->checksum_check  = (data[0] + data[1] + data[2] + data[3] + data[4] + data[5] + data[6] + 0x4e) & 0xff;
 }
+*/
 
 /*******************************************************************************
  *      camry_cruise_state
@@ -348,7 +351,7 @@ static inline void get_camry_accel_cmd_status(unsigned char *data, camry_accel_c
  *      Bit Length      8
  *
  */
-
+/*
 typedef struct {
 	int ts_ms;
 	unsigned char two_message_periods;
@@ -363,7 +366,7 @@ static inline void get_camry_cruise_control_state(unsigned char *data, camry_cru
 	p->cruise_control_state_CAN1 = data[1] & 0x0F;
 	p->cruise_dash_set_speed_CAN1 = data[3] & 0xFF;
 }
-
+*/
 
 /*******************************************************************************
  *      camry_radar_forward_vehicle

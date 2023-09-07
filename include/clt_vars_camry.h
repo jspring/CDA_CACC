@@ -1,3 +1,5 @@
+#pragma once
+
 #include <db_include.h>
 #include <db_utils.h>
 #include <path_gps_lib.h>
