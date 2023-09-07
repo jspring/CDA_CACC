@@ -7,7 +7,6 @@ all:
 	make -C steinhoff
 	make -C leaf
 	make -C prius
-	make -C camry
 	make -C argonne_cacc
 	make -C vehcomm
 	make -C hmi
@@ -16,7 +15,6 @@ clean:
 	make -C steinhoff clean
 	make -C leaf clean
 	make -C prius clean
-	make -C camry clean
 	make -C argonne_cacc clean
 	make -C vehcomm clean
 	make -C hmi clean
