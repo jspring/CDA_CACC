@@ -43,7 +43,7 @@
 #define NB_DATA_FROM_HMI 5
 #define BUFF_SIZE 4096
 
-static char VEHICLE_NAMES[3][5] = {"leaf", "priu", "camr"};
+static char VEHICLE_NAMES[3][5] = {"camr", "priu", "leaf"};
 
 typedef struct rx_data{
 	int desired_control_mode;
