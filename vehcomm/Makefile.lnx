@@ -1,9 +1,10 @@
 # Makefile
 #
-# Assumes built linux path tree in /home/path
+# Copyright (c) 2008   Regents of the University of California
 #
 
-include /home/path/build/capath_lnx.mk
+include $(CAPATH_MK_DEFS)
+#include capath_qnx.mk
 
 TRUCK_DIR = $(DISTRIB_DIR)/truckcontrol
 ASNDIR = ./BSM_dir
@@ -15,12 +16,13 @@ PATH_LDFLAGS += -L$(ASNDIR)
 PATH_OBJS += $(ASNDIR)/*.o $(OBJDIR)/veh_lib.o
 PATH_LIBS = -lasncodec $(PATH_CORE_LIBS)
 
-EXEC =  $(OBJDIR)/dvi_snd $(OBJDIR)/dvi_rcv $(OBJDIR)/veh_rcv $(OBJDIR)/veh_snd $(OBJDIR)/veh_snd_test
+EXEC =  $(OBJDIR)/veh_rcv $(OBJDIR)/veh_snd $(OBJDIR)/veh_snd_test $(OBJDIR)/dvi_rcv $(OBJDIR)/dvi_snd $(OBJDIR)/dvi_snd_db_test $(OBJDIR)/settime2trucksignal $(OBJDIR)/msleep
 
 all:    $(OBJDIR) $(PATH_OBJS) $(EXEC)
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR)
+	mkdir $(OBJDIR)
+#	mkdir -p $(OBJDIR)
 
 $(ASNDIR)/*.o:
 	make -C $(ASNDIR) -f converter-example.mk
