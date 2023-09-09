@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 
 #define DB_DVI_RCV_TYPE		6543
 #define DB_DVI_RCV_VAR		DB_DVI_RCV_TYPE
@@ -16,6 +16,7 @@ struct VehicleStruct {
   quint8 hasIntruder; //0:false, 1:truck, 2:car, 3:MC (PATH: The graphical indication is the same for all intruders)
   quint8 isBraking; //0:false, 1:braking, 2:hard braking (PATH: same red indication for both 1 & 2)
   quint8 otherCACCState; //0:manual 2:CACC 4:ACC
+  quint8 statusFlag;//0: Grey, 1: green, 2: Orange, 3: Red
 };
 
 
@@ -72,4 +73,9 @@ typedef struct {
 
   unsigned char acc_cacc_request; // ACC/CACC control signal from DVI; No request=0, ACC=1, CACC=2
   unsigned char gap_request; // No request=0, else gap levels 1-5;
+  float CACC_tGap;
+  float ACC_tGap;
+  char driver_id;
+  char driver_pos;
+  char recording_status;
 } dvi_out_t;

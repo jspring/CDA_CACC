@@ -21,8 +21,8 @@
 #include "../avcs/clt_vars.h"
 #include "dvi.h"
 
-#include "../include_can/jbus_vars.h"
-#include "../include_can/jbus_extended.h"
+#include "../../../../can/jbus/include/jbus_vars.h"
+#include "../../../../can/jbus/include/jbus_extended.h"
 
 static int sig_list[]=
 {
@@ -115,6 +115,30 @@ int main(int argc, char *argv[])
 
 	memset(&dvi_out, 0, sizeof(struct SeretUdpStruct));
 	memset(&egodata, 0, sizeof(struct ExtraDataCACCStruct));
+//	egodata.CACCState = 2; //0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
+//	egodata.CACCTargetActive = 0; //0:false, 1:true (also used for target in ACC)
+//	egodata.CACCDegraded = 0;//0: false, 1:Overheated brakes (I guess you don't need this one)
+//	egodata.CACCActiveConnectionToTarget = 1;//0:no connection 1:connection (if this or ...fromFollower equals 1 the WIFI icon will appear)
+//	egodata.CACCActiveConnectionFromFollower = 0;//0:no connection, 1:connection
+//	egodata.CACCTimeGap = 0;//0-4
+//	egodata.ACCTimeGap = 0;//0-4
+//	egodata.CACCEvents = 0;//0:"No popup", 1:"FCW",2:"Brake Capacity",3:"LC Left",4:"LC Right",5:"Obstacle ahead",6:"Connection lost"
+//	egodata.platooningState = 0;//0:"Platooning",1:"Joining",2:"Leaving",3:"Left",4:"Dissolving",5:"Dissolved" (NOT CURRENTLY USED!)
+//	egodata.counter = 0; //Counter for dissolving, not implemented for the moment
+
+	egodata.CACCState = 2; //0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
+	egodata.CACCTargetActive = 1; //0:false, 1:true (also used for target in ACC)
+	egodata.CACCDegraded = 0;//0: false, 1:Overheated brakes (I guess you don't need this one)
+	egodata.CACCActiveConnectionToTarget = 1;//0:no connection 1:connection (if this or ...fromFollower equals 1 the WIFI icon will appear)
+	egodata.CACCActiveConnectionFromFollower = 0;//0:no connection, 1:connection
+	egodata.CACCTimeGap = 4;//0-4
+	egodata.ACCTimeGap = 0;//0-4
+	egodata.CACCEvents = 0;//0:"No popup", 1:"FCW",2:"Brake Capacity",3:"LC Left",4:"LC Right",5:"Obstacle ahead",6:"Connection lost"
+	egodata.platooningState = 0;//0:"Platooning",1:"Joining",2:"Leaving",3:"Left",4:"Dissolving",5:"Dissolved" (NOT CURRENTLY USED!)
+	egodata.counter = 0; //Counter for dissolving, not implemented for the moment
+
+//	-E "2 1 0 0 0 4 0 0 0 0" -P "0 2 0 0 0 1 0 0 0 1 0 0 4 1 0 0 2 "
+//	-E "2 1 0 0 0 4 0 0 0 0" -P "2 2 0 0 0 1 0 0 0 1 0 0 4 1 0 0 2 " brings up all buttons
 
         while ((ch = getopt(argc, argv, "A:a:i:C:cr:R:vP:E:d")) != EOF) {
                 switch (ch) {
@@ -130,38 +154,34 @@ int main(int argc, char *argv[])
 			  break;
 		case 'r': remote_port = atoi(optarg); 
 			  break;
-		case 'R': remote_port2 = atoi(optarg); 
+		case 'R': remote_port2 = atoi(optarg);
 			  break;
 		case 'v': verbose = 1; 
 			  break;
 		case 'P': send_test = 1; 
 			  send_test_str = strdup(optarg);
 			  no_send1 = 0;
-			  sscanf(send_test_str, "%hhu %hhu %hhu %hhu %u %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu ", 
-				&dvi_out.platooningState, //0=standby, 1=joining, 2=platooning, 3=leaving, 4=dissolve 
-							 //(PATH: I guess only 0 and 3 is used?)
-				&dvi_out.position, //-1:nothing (follower with no platoon), 0:leader, >0 Follower (Ego position of vehicle)
-				&dvi_out.TBD, //Not used for the moment
-				&dvi_out.popup,//0:no popup, 1:Platoon found - join?
-				&dvi_out.exitDistance, //value/10.0 km (PATH: Not currently used)
-				&dvi_out.vehicles[0].type, // 0=nothing 1=truck 2=truck with communication error
-				&dvi_out.vehicles[0].hasIntruder, // 0:false, 1:truck, 2:car, 3:MC 
-								  // (PATH: The graphical indication is the same for all intruders)
-				&dvi_out.vehicles[0].isBraking, // 0:false, 1:braking, 2:hard braking 
-								// (PATH: same red indication for both 1 & 2)
-    				&dvi_out.vehicles[0].otherCACCState, //0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
-				&dvi_out.vehicles[1].type, // 0=nothing 1=truck 2=truck with communication error
-				&dvi_out.vehicles[1].hasIntruder, // 0:false, 1:truck, 2:car, 3:MC 
-								  // (PATH: The graphical indication is the same for all intruders)
-				&dvi_out.vehicles[1].isBraking, // 0:false, 1:braking, 2:hard braking 
-								// (PATH: same red indication for both 1 & 2)
-    				&dvi_out.vehicles[1].otherCACCState, //0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
-				&dvi_out.vehicles[2].type, // 0=nothing 1=truck 2=truck with communication error
-				&dvi_out.vehicles[2].hasIntruder, // 0:false, 1:truck, 2:car, 3:MC 
-								  // (PATH: The graphical indication is the same for all intruders)
-				&dvi_out.vehicles[2].isBraking, // 0:false, 1:braking, 2:hard braking 
-								// (PATH: same red indication for both 1 & 2)
-    				&dvi_out.vehicles[2].otherCACCState //0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
+			  sscanf(send_test_str, "%hhu %hhu %hhu %hhu %u %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu ",
+				&dvi_out.platooningState, 			//0=standby, 1=joining, 2=platooning, 3=leaving, 4=dissolve (PATH: I guess only 0 and 3 is used?)
+				&dvi_out.position, 					//-1:nothing (follower with no platoon), 0:leader, >0 Follower (Ego position of vehicle)
+				&dvi_out.TBD, 						//Not used for the moment
+				&dvi_out.popup,						//0:no popup, 1:Platoon found - join?
+				&dvi_out.exitDistance, 				//value/10.0 km (PATH: Not currently used)
+				&dvi_out.vehicles[0].type, 			// 0=nothing 1=truck 2=truck with communication error
+				&dvi_out.vehicles[0].hasIntruder, 	// 0:false, 1:truck, 2:car, 3:MC  (PATH: The graphical indication is the same for all intruders)
+				&dvi_out.vehicles[0].isBraking, 	// 0:false, 1:braking, 2:hard braking  (PATH: same red indication for both 1 & 2)
+    			&dvi_out.vehicles[0].otherCACCState,//0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
+				&dvi_out.vehicles[0].statusFlag,	//0: Grey, 1: green, 2: Orange, 3: Red
+				&dvi_out.vehicles[1].type, 			// 0=nothing 1=truck 2=truck with communication error
+				&dvi_out.vehicles[1].hasIntruder, 	// 0:false, 1:truck, 2:car, 3:MC  (PATH: The graphical indication is the same for all intruders)
+				&dvi_out.vehicles[1].isBraking, 	// 0:false, 1:braking, 2:hard braking (PATH: same red indication for both 1 & 2)
+    			&dvi_out.vehicles[1].otherCACCState,//0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
+				&dvi_out.vehicles[1].statusFlag,	//0: Grey, 1: green, 2: Orange, 3: Red
+				&dvi_out.vehicles[2].type, 			// 0=nothing 1=truck 2=truck with communication error
+				&dvi_out.vehicles[2].hasIntruder, 	// 0:false, 1:truck, 2:car, 3:MC (PATH: The graphical indication is the same for all intruders)
+				&dvi_out.vehicles[2].isBraking, 	// 0:false, 1:braking, 2:hard braking (PATH: same red indication for both 1 & 2)
+    			&dvi_out.vehicles[2].otherCACCState,//0:nothing, 1:CACC Enabled, 2:CACC Active, 3: ACC enabled, 4:ACC active
+				&dvi_out.vehicles[2].statusFlag		//0: Grey, 1: green, 2: Orange, 3: Red
 			  );
 			  break;
 		case 'E': send_test = 1; 
@@ -176,7 +196,7 @@ int main(int argc, char *argv[])
     				&egodata.CACCTimeGap,//0-4
     				&egodata.ACCTimeGap,//0-4
     				&egodata.CACCEvents,//0:"No popup", 1:"FCW",2:"Brake Capacity",3:"LC Left",4:"LC Right",5:"Obstacle ahead",6:"Connection lost"
-    				&egodata.platooningState,//0:"Platooning",1:"Joining",2:"Leaving",3:"Left",4:"Dissolving",5:"Dissolved" (NOT CURRENTLY USED!)
+    				&egodata.platooningState,//0: Grey, 1: green, 2: Orange, 3: Red
     				&egodata.counter //Counter for dissolving, not implemented for the moment
 			  );
 			  break;
@@ -251,6 +271,23 @@ int main(int argc, char *argv[])
 			exit(EXIT_SUCCESS);
 	}
 
+		bytes_sent = sendto(sd2, &egodata, sizeof(egodata),
+		0, (struct sockaddr *) &dst_addr2, sizeof(dst_addr2));
+
+		if (bytes_sent < 0) {
+			perror("dvi_snd: UDP sendto ");
+			printf("port %d addr 0x%08x\n",
+			ntohs(dst_addr2.sin_port),
+			ntohl(dst_addr2.sin_addr.s_addr));
+			fflush(stdout);
+		}
+		if(verbose) {
+			printf("bytes_sent2 %d\n", bytes_sent);
+			for(i=0; i<bytes_sent; i++)
+				printf("%#hhx ", egodata_array[i]);
+			printf("\n");
+		}
+
         get_local_name(hostname, MAXHOSTNAMELEN);
 
 	if(create_db_vars)
@@ -285,13 +322,18 @@ int main(int argc, char *argv[])
 	get_current_timestamp(&comm_pkt3_ts_sav);
 	while (1) {
 		clt_ipc_receive(pclt, &trig_info, sizeof(trig_info));
+		db_clt_read(pclt, DB_LONG_OUTPUT_VAR, sizeof(long_output_typ), &long_output);
+		egodata.platooningState = long_output.dvi_led_state;
+
+
 
 		if(DB_TRIG_VAR(&trig_info) == DB_COMM_TX_VAR) {
-	                db_clt_read(pclt, DB_COMM_TX_VAR, sizeof(veh_comm_packet_t), &self_comm_pkt);
+			db_clt_read(pclt, DB_COMM_TX_VAR, sizeof(veh_comm_packet_t), &self_comm_pkt);
 			db_clt_read(pclt, DB_LONG_OUTPUT_VAR, sizeof(long_output_typ), &long_output);
 			db_clt_read(pclt, DB_J1939_VOLVO_TARGET_VAR, sizeof(j1939_volvo_target_typ), &volvo_target);
 
 			egodata.CACCState = drive_mode_2_myCACCState[self_comm_pkt.user_ushort_2];
+			egodata.platooningState = long_output.dvi_led_state;
 			if( (long_output.selected_gap_level > 0) && (long_output.selected_gap_level <= 5) ) 
 				long_output.selected_gap_level--;
 			else {
@@ -303,16 +345,19 @@ int main(int argc, char *argv[])
 			}
     			egodata.CACCTimeGap = long_output.selected_gap_level;//0-4
     			egodata.ACCTimeGap = long_output.selected_gap_level;//0-4
-			egodata.CACCTargetActive = (volvo_target.TargetAvailable == 0) ? 0 : 1;
+    			egodata.CACCTargetActive = (volvo_target.TargetAvailable == 0) ? 0 : 1;
+//self_comm_pkt.my_pip = 1;
+//dvi_out.position=1;
+//egodata.CACCState=1; //Needed to make buttons visible
 
 			dvi_out.platooningState = 2; //0=standby, 2=platooning NOTE:Must be set to 2 to get rid of "Please switch VEC stalk to ON"
 			dvi_out.position = self_comm_pkt.my_pip - 1;       // 1-3: 0=Not available 1=First position 2=Second position 3=Third position
-			printf("Got self_pkt! myCACCState %d my_pip %d db_dvi_rcv %hhu user_ushort_2 %d\n",
-				egodata.CACCState, 
-				dvi_out.position,
-				db_dvi_rcv,
-				self_comm_pkt.user_ushort_2
-			);
+//			printf("Got self_pkt! myCACCState %d my_pip %d db_dvi_rcv %hhu user_ushort_2 %d\n",
+//				egodata.CACCState,
+//				dvi_out.position,
+//				db_dvi_rcv,
+//				self_comm_pkt.user_ushort_2
+//			);
 			if(self_comm_pkt.my_pip == 1) {
 				dvi_out.vehicles[0].type = 1;	// 0=nothing 1=truck 2=truck with communication error
 				if ( (self_comm_pkt.user_bit_3 == 1) || (self_comm_pkt.user_float > 0.1) )
@@ -434,10 +479,11 @@ int main(int argc, char *argv[])
 		}
 
 		if(verbose)
-			printf("EgoPlatooningState %d EgoVehiclePosition %d EgomyCACCState1 %d Type1 %d Braking1 %d CutIn1 %d Type2 %d Braking2 %d CutIn2 %d Type3 %d Braking3 %d CutIn3 %d db_dvi_rcv %hhu\n",
+			printf("EgoPlatooningState %d EgoVehiclePosition %d EgomyCACCState1 %d EgoPlatooningState (dvi_led_state) %d Type1 %d Braking1 %d CutIn1 %d Type2 %d Braking2 %d CutIn2 %d Type3 %d Braking3 %d CutIn3 %d db_dvi_rcv %hhu\n",
 						dvi_out.platooningState, 
 						dvi_out.position,
 						egodata.CACCState, 
+						egodata.platooningState,
 						dvi_out.vehicles[0].type, 
 						dvi_out.vehicles[0].isBraking, 
 						dvi_out.vehicles[0].hasIntruder, 

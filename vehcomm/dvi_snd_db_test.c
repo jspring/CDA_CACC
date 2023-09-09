@@ -103,10 +103,10 @@ void set_vehicle_string(veh_comm_packet_t *pvcp, char * vehicle_str)
 	/** GPS_OBJECT_ID_SIZE is only 6, "Blue" and "Gold" will
 	 *  work, "Silver" will be shortened 
 	 */
-	strncpy(&pvcp->object_id[0], vehicle_str, GPS_OBJECT_ID_SIZE);
+//	strncpy(&pvcp->object_id[0], vehicle_str, GPS_OBJECT_ID_SIZE);
 	
 	/// make sure string is terminated
-	pvcp->object_id[GPS_OBJECT_ID_SIZE - 1] = '\0';
+//	pvcp->object_id[GPS_OBJECT_ID_SIZE - 1] = '\0';
 }
 
 
