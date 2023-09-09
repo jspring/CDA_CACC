@@ -303,6 +303,7 @@ int print_comm_packet(veh_comm_packet_t *comm_pkt)
 		comm_pkt->latitude,
 		comm_pkt->longitude);
 	return 0;
+}
 
 
 void print_comm_packet_time(veh_comm_packet_t *comm_pkt)
