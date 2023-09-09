@@ -7,6 +7,6 @@
 #include "long_comm.h"
 
 //extern int vehcomm2BSM(MessageFrame_t *BSMCACC, veh_comm_packet_t *comm_pkt);
-asn_enc_rval_t vehcomm2BSM(char * buffer, size_t buffer_size, veh_comm_packet_t *comm_pkt);
+asn_enc_rval_t vehcomm2BSM(char * buffer, size_t buffer_size, veh_comm_packet_t *comm_pkt, int verbose);
 extern int BSM2vehcomm(MessageFrame_t *BSMCACC, veh_comm_packet_t *comm_pkt);
 extern int print_comm_packet(veh_comm_packet_t *comm_pkt);

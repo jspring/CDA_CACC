@@ -231,7 +231,7 @@ CACCFlags ::= OCTET STRING (SIZE(1))
     -- ACC Switch           (2),    "00000010"  0=False\off, 1=True\on
     -- ACC Setting type     (4),    "00000100"  0=Manual, 1=Auto
     -- ACC Resume\Engaged   (8),    "00001000"  0=off, 1=on
-    -- ACC) Cancel Button   (16),   "00010000"  0=off, 1=on
+    -- ACC Cancel Button   (16),   "00010000"  0=off, 1=on
     -- ACC\CACC Flag        (32),   "00100000"  0=off, 1=on
 	
 

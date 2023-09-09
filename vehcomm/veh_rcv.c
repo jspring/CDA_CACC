@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
 
 //					if ((TS_TO_MS(&comm_pkt.ts) - vehs_obj[i].msg_ts_last) > 0) {
 						db_clt_write(pclt, vehs_obj[i].db_var, sizeof(veh_comm_packet_t), &comm_pkt);
-						if(repeat_comm_packet != 0 && (!strncmp(&comm_pkt.object_id[0], "taur",4))){
+						if(repeat_comm_packet != 0 && (!strncmp(&comm_pkt.object_id[0], "camr",4))){
 							db_clt_write(pclt, DB_REPEAT_COMM_PACKET_VAR, sizeof(veh_comm_packet_t), &comm_pkt);
 							printf("Writing to repeat db var %d seq_no %d my_pip %d\n", DB_REPEAT_COMM_PACKET_VAR, comm_pkt.sequence_no, comm_pkt.my_pip);
 						}

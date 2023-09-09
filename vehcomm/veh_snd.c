@@ -114,8 +114,10 @@ int main(int argc, char *argv[])
 	int sequence_no_sav = 0;
 	input_t input;
 	float velocity_sav = 0;
+	int verbose  = 0;
+	int very_verbose  = 0;
 
-	while ((option = getopt(argc, argv, "A:a:i:t:u:dsR")) != EOF)
+	while ((option = getopt(argc, argv, "A:a:i:t:u:dvwsR")) != EOF)
 	{
 		switch (option)
 		{
@@ -137,6 +139,13 @@ int main(int argc, char *argv[])
 		case 's':
 			use_db = 0;
 			break;
+        case 'v':
+                verbose = 1;
+                break;
+        case 'w':
+                very_verbose = 1;
+                break;
+
 		case 'd':
 			debug = 1;
 			break;
@@ -159,8 +168,8 @@ int main(int argc, char *argv[])
 //
 //	vehicle_pip = get_ini_long(fpin, "PositionInPlatoon", 1);
 	printf("veh_snd: Vehicle %s\n", vehicle_str);
-	if( (strcmp(vehicle_str, "priu") != 0) && (strcmp(vehicle_str, "acco") != 0) && (strcmp(vehicle_str, "taur") != 0)) {
-		printf("Vehicle ID must be one of priu, acco, or taur. Exiting...\n");
+	if( (strcmp(vehicle_str, "priu") != 0) && (strcmp(vehicle_str, "camr") != 0) && (strcmp(vehicle_str, "leaf") != 0)) {
+		printf("Vehicle ID must be one of priu, camr, or leaf. Exiting...\n");
 		exit(EXIT_FAILURE);
 	}
 	memset(&comm_pkt, 0, sizeof(veh_comm_packet_t));
@@ -218,7 +227,7 @@ int main(int argc, char *argv[])
 		msg_count++;
 		msg_count %= 128;
 
-//		db_clt_read(pclt, DB_INPUT_VAR, sizeof(input_t), &input); // dbvar 1000
+		db_clt_read(pclt, DB_INPUT_VAR, sizeof(input_t), &input); // dbvar 1000
 
 		if (use_db != 0)
 		{
@@ -309,15 +318,15 @@ int main(int argc, char *argv[])
 		if(encode_repeat_msg){
 //			printf("repeat_comm_pkt.velocity2 %.2f pip %d id %s send_pkt %d seq_no %d seq_no_sav %d\n",
 //					repeat_comm_pkt.velocity, repeat_comm_pkt.my_pip, repeat_comm_pkt.object_id, send_pkt,  repeat_comm_pkt.sequence_no, sequence_no_sav);
-			enc_rval = vehcomm2BSM(encod_buffer, sizeof(encod_buffer), &repeat_comm_pkt);
+			enc_rval = vehcomm2BSM(encod_buffer, sizeof(encod_buffer), &repeat_comm_pkt, very_verbose);
 		}
 		else{
-//			printf("comm_pkt.velocity3 %.2f pip %d id %s send_pkt %d repeat_comm_pkt %d seq_no %d seq_no_sav %d lat %f long %f\n",
-//					comm_pkt.velocity, comm_pkt.my_pip,
-//					comm_pkt.object_id, send_pkt, repeat_comm_packet,
-//					comm_pkt.sequence_no, sequence_no_sav,
-//					comm_pkt.latitude, comm_pkt.longitude);
-			enc_rval = vehcomm2BSM(encod_buffer, sizeof(encod_buffer), &comm_pkt);
+			printf("comm_pkt.velocity3 %.2f pip %d id %s send_pkt %d repeat_comm_pkt %d seq_no %d seq_no_sav %d lat %f long %f\n",
+					comm_pkt.velocity, comm_pkt.my_pip,
+					comm_pkt.object_id, send_pkt, repeat_comm_packet,
+					comm_pkt.sequence_no, sequence_no_sav,
+					comm_pkt.latitude, comm_pkt.longitude);
+			enc_rval = vehcomm2BSM(encod_buffer, sizeof(encod_buffer), &comm_pkt, very_verbose);
 		}
 		retval = ((enc_rval.encoded + 7) / 8);
 
@@ -451,7 +460,7 @@ int main(int argc, char *argv[])
 			else
 				input.sys_status &= (unsigned int)(!SYSSTAT_VEH_SND_SEND_ERR);
 
-//			db_clt_write(pclt, DB_INPUT_VAR, sizeof(input_t), &input); // dbvar 1000
+			db_clt_write(pclt, DB_INPUT_VAR, sizeof(input_t), &input); // dbvar 1000
 
 			if (debug)
 			{

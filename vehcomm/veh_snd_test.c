@@ -66,10 +66,11 @@ void set_vehicle_string(veh_comm_packet_t *pvcp, char * vehicle_str)
 	/** GPS_OBJECT_ID_SIZE is only 6, "Blue" and "Gold" will
 	 *  work, "Silver" will be shortened 
 	 */
-	strncpy(&pvcp->object_id[0], vehicle_str, GPS_OBJECT_ID_SIZE);
+//	strncpy(&pvcp->object_id[0], vehicle_str, GPS_OBJECT_ID_SIZE);
+	pvcp->object_id = 1;
 	
 	/// make sure string is terminated
-	pvcp->object_id[GPS_OBJECT_ID_SIZE - 1] = '\0';
+//	pvcp->object_id[GPS_OBJECT_ID_SIZE - 1] = '\0';
 }
 
 char *usage = "-a <ip_addr (127.0.0.1)> \n\t\t\t-b broadcast message \n\t\t\t-t <vehicle (Blue)> \n\t\t\t-u <udp port (5051)> \n\t\t\t-r <comm reply, user_ushort_1 (1)> \n\t\t\t-w <sw_pt->auto_sw, user_ushort_2 (1)> \n\t\t\t-s <global time (0.0)> \n\t\t\t-z <platoon size (1)> \n\t\t\t-v verbose\n";
