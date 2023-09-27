@@ -1,0 +1,55 @@
+
+
+Panda Linux interface steps:
+
+ 
+
+    Dependencies:
+    sudo apt-get install dfu-util gcc-arm-none-eabi python3-pip libffi-dev git
+
+ 
+
+    Uncompress Padna_Leaf and open terminal inside the “panda” folder. This is a modified version of commaAI’s repo (github.com/commaai/panda)
+
+ 
+
+    Install requirements and library:
+    pip install -r requirements.txt
+    python setup.py install
+
+ 
+
+    Udev rules (run this command):
+
+ 
+
+sudo tee /etc/udev/rules.d/11-panda.rules <<EOF
+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="bbaa", ATTRS{idProduct}=="ddcc", MODE="0666"
+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="bbaa", ATTRS{idProduct}=="ddee", MODE="0666"
+
+EOF
+
+sudo udevadm control --reload-rules && sudo udevadm trigger
+
+ 
+
+    Install driver:
+
+    Run: 
+
+apt-get install dkms gcc linux-headers-$(uname -r) make sudo
+
+    Run:
+    make link (only needed the first time. It will report an error on subsequent attempts to link)
+
+make all
+
+make install
+
+ 
+
+    It should be ready. When panda connected to laptop, run lsusb to see if it’s properly detected. 
+
++
