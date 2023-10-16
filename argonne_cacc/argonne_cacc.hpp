@@ -32,6 +32,7 @@ void End_tasks();
 int get_accord_targets();
 int get_prius_targets();
 int get_camry_targets();
+int get_leaf_targets();
 void Read_db_v2x_comm_data();
 void UpdateStandardLogFile();
 void InitOutputFile();

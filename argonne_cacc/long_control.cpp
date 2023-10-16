@@ -102,9 +102,9 @@ long_control::long_control(setup_struct* ss, int _veh_id, int _control_mode, dou
 			ego_wn = cfg->PRIUS_BANDWIDTH;
 			ego_df = cfg->PRIUS_DAMPING_FACTOR;
 		break;
-		case(ACCORD):
-			ego_wn = cfg->ACCORD_BANDWIDTH;
-			ego_df = cfg->ACCORD_DAMPING_FACTOR;
+		case(LEAF):
+			ego_wn = cfg->LEAF_BANDWIDTH;
+			ego_df = cfg->LEAF_DAMPING_FACTOR;
 		break;
 		case(CAMRY):
 			ego_wn = cfg->CAMRY_BANDWIDTH;
@@ -117,9 +117,9 @@ long_control::long_control(setup_struct* ss, int _veh_id, int _control_mode, dou
 			prec_wn = cfg->PRIUS_BANDWIDTH;
 			prec_df = cfg->PRIUS_DAMPING_FACTOR;
 		break;
-		case(ACCORD):
-			prec_wn = cfg->ACCORD_BANDWIDTH;
-			prec_df = cfg->ACCORD_DAMPING_FACTOR;
+		case(LEAF):
+			prec_wn = cfg->LEAF_BANDWIDTH;
+			prec_df = cfg->LEAF_DAMPING_FACTOR;
 		break;
 		case(CAMRY):
 			prec_wn = cfg->CAMRY_BANDWIDTH;
@@ -197,8 +197,8 @@ void long_control::Update_ACC_inputs(double i_long_speed, double i_long_accelera
 	this->long_acceleration = i_long_acceleration;
 	this->current_time = _current_time;
 	switch(this->vehicle_id){
-		case(ACCORD):
-			Get_preceding_vehicle_from_accord_list(nb_targets, this->long_speed);
+		case(LEAF):
+			Get_preceding_vehicle_from_leaf_list(nb_targets, this->long_speed);
 		break;
 		case(PRIUS):
 			Update_preceding_vehicle_from_prius_target(this->long_speed);
@@ -265,8 +265,8 @@ void long_control::Update_CACC_inputs(double i_long_speed, double i_long_acceler
 	circuit_loc->update_states(fmax(0, this->ego_speed_filter->low_pass_order_1(i_long_speed)));
 
 	switch(this->vehicle_id){
-		case(ACCORD):
-			Get_preceding_vehicle_from_accord_list(nb_targets, this->long_speed);
+		case(LEAF):
+			Get_preceding_vehicle_from_leaf_list(nb_targets, this->long_speed);
 		break;
 		case(PRIUS):
 			this->long_speed = i_long_speed;
@@ -317,8 +317,8 @@ void long_control::Update_Emergency_braking_inputs(double i_long_speed, int nb_t
 	}
 
 	switch(this->vehicle_id){
-		case(ACCORD):
-			Get_preceding_vehicle_from_accord_list(nb_targets, this->long_speed);
+		case(LEAF):
+			Get_preceding_vehicle_from_leaf_list(nb_targets, this->long_speed);
 		break;
 		case(PRIUS):
 			this->long_speed = fmax(0.000001,this->ego_speed_filter->low_pass_order_1(i_long_speed/0.992));
@@ -332,22 +332,14 @@ void long_control::Update_Emergency_braking_inputs(double i_long_speed, int nb_t
 	return;
 }
 
-void long_control::Get_preceding_vehicle_from_accord_list(int nb_targets, double ego_speed){
+void long_control::Get_preceding_vehicle_from_leaf_list(int nb_targets, double ego_speed){
 	double closest_distance = 120;
-	for(int i=0; i <nb_targets; i++){
-		if (targets[i].relative_distance < closest_distance &&
-				targets[i].relative_distance > 0.1 &&
-					targets[i].relative_distance <= (fmax(25, this->long_speed * cfg->MAXIMUM_ACC_TIME_GAP_HORIZON + this->standstill_distance)) &&
-						this->targets[i].relative_speed > fmin(-0.8*ego_speed,-2) &&
-							fabs(this->targets[i].relative_position) < cfg->LATERAL_LANE_TARGET_SPACE){
-			this->preceding_vehicle.relative_speed = this->targets[i].relative_speed;
-			this->preceding_vehicle.relative_position = this->targets[i].relative_position;
-			this->preceding_vehicle.relative_distance = this->targets[i].relative_distance;
-			this->preceding_vehicle.ID = this->targets[i].ID;
-			closest_distance = this->preceding_vehicle.relative_distance;
-			this->missing_target_elapsed_time = 0.;
-			this->is_preceding_valid = true;
-		}
+	if (targets[0].relative_distance > 0.01 && targets[0].relative_distance <= fmax(25,(this->long_speed * cfg->MAXIMUM_ACC_TIME_GAP_HORIZON + this->standstill_distance))){
+		this->preceding_vehicle.relative_speed = this->targets[0].relative_speed;
+		this->preceding_vehicle.relative_distance = this->targets[0].relative_distance;
+		closest_distance = this->preceding_vehicle.relative_distance;
+		this->missing_target_elapsed_time = 0.;
+		this->is_preceding_valid = true;
 	}
 	if(closest_distance == 120){
 		this->missing_target_elapsed_time += this->Ts;
@@ -485,14 +477,14 @@ void long_control::Change_target_time_gap_user_requested(){
 			this->ACC_fb_out_lp_filter->init_values(0);
 			this->CACC_fb_out_lp_filter->init_values(0);
 			this->current_spacing_policy->InitGapClosing(hinit, this->current_spacing_policy->htarg, cfg->CUT_OUT_A_MAX,
-											cfg->CUT_OUT_J_MAX, this->long_speed, fmin(cfg->MAXIMUM_SPEED, this->long_speed+speed_range_for_profile));
+				cfg->CUT_OUT_J_MAX, this->long_speed, fmin(cfg->MAXIMUM_SPEED, this->long_speed+speed_range_for_profile));
 		}
 	} else {
 		if(this->long_speed > 0.1){
 			this->ACC_fb_out_lp_filter->init_values(0);
 			this->CACC_fb_out_lp_filter->init_values(0);
 			this->current_spacing_policy->InitGapOpening(hinit, this->current_spacing_policy->htarg, cfg->CUT_IN_A_MAX,
-											cfg->CUT_IN_J_MAX, this->long_speed, fmax(0, this->long_speed-speed_range_for_profile));
+				cfg->CUT_IN_J_MAX, this->long_speed, fmax(0, this->long_speed-speed_range_for_profile));
 		}
 	}
 	return;
@@ -955,16 +947,16 @@ double long_control::Throttle_map_search(double _veh_speed, double _desired_acce
 				out = (prius_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + prius_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex))* (accelerationIndex - accel_floor) +
 				(prius_throttle_map[speed_ceil][accel_floor] * (speedIndex - speed_floor) + prius_throttle_map[speed_floor][accel_floor] * (speed_ceil - speedIndex)) * (accel_ceil - accelerationIndex);
 			break;
-		case(ACCORD):
+		case(LEAF):
 			if (speed_floor == speed_ceil && accel_floor == accel_ceil)
-				out = accord_throttle_map[speed_ceil][accel_floor];
+				out = leaf_throttle_map[speed_ceil][accel_floor];
 			else if (speed_floor == speed_ceil && accel_floor != accel_ceil)
-				out = accord_throttle_map[speed_ceil][accel_ceil] * (accelerationIndex - accel_floor) + accord_throttle_map[speed_ceil][accel_floor] * (accel_ceil - accelerationIndex);
+				out = leaf_throttle_map[speed_ceil][accel_ceil] * (accelerationIndex - accel_floor) + leaf_throttle_map[speed_ceil][accel_floor] * (accel_ceil - accelerationIndex);
 			else if (speed_floor != speed_ceil && accel_floor == accel_ceil)
-				out = accord_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + accord_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex);
+				out = leaf_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + leaf_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex);
 			else
-				out = (accord_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + accord_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex)) * (accelerationIndex - accel_floor) +
-				(accord_throttle_map[speed_ceil][accel_floor] * (speedIndex - speed_floor) + accord_throttle_map[speed_floor][accel_floor] * (speed_ceil - speedIndex)) * (accel_ceil - accelerationIndex);
+				out = (leaf_throttle_map[speed_ceil][accel_ceil] * (speedIndex - speed_floor) + leaf_throttle_map[speed_floor][accel_ceil] * (speed_ceil - speedIndex)) * (accelerationIndex - accel_floor) +
+				(leaf_throttle_map[speed_ceil][accel_floor] * (speedIndex - speed_floor) + leaf_throttle_map[speed_floor][accel_floor] * (speed_ceil - speedIndex)) * (accel_ceil - accelerationIndex);
 			break;
 		case(CAMRY):
 			if (speed_floor == speed_ceil && accel_floor == accel_ceil)
@@ -1014,7 +1006,7 @@ void long_control::print_monitoring_data(int desired_control_mode, int vehicle_i
 	if((this->monitoring_counter * this->Ts) < (1/cfg->MONITORING_FREQUENCY))
 		return;
 	this->monitoring_counter=0;
-	if(vehicle_id==ACCORD){
+	if(vehicle_id==LEAF){
 		printf("a=%2.1f b=%2.1f A-",this->throttle_level_command, this->brake_level_command);
 	}
 	if(vehicle_id==PRIUS){
@@ -1220,8 +1212,8 @@ void long_control::print_cfg_parameters(){
 
 	printf("%.2f \n", cfg->PRIUS_DAMPING_FACTOR);
 	printf("%.2f \n", cfg->PRIUS_BANDWIDTH);
-	printf("%.2f \n", cfg->ACCORD_DAMPING_FACTOR);
-	printf("%.2f \n", cfg->ACCORD_BANDWIDTH);
+	printf("%.2f \n", cfg->LEAF_DAMPING_FACTOR);
+	printf("%.2f \n", cfg->LEAF_BANDWIDTH);
 	printf("%.2f \n", cfg->CAMRY_DAMPING_FACTOR);
 	printf("%.2f \n", cfg->CAMRY_BANDWIDTH);
 

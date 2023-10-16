@@ -71,7 +71,7 @@ void Initialization_task(int argc, char *argv[]) {
 
 	desired_control_mode = ACC;
 	ego_vehicle_id = PRIUS;
-	preceding_vehicle_id = ACCORD;
+	preceding_vehicle_id = CAMRY;
 	my_pip = 1;
 	v2i_engaged = false;
 	with_hmi = 0;
@@ -285,8 +285,11 @@ bool Read_inputs() {
 			}
 			switch (ego_vehicle_id) {
 				case(PRIUS):
-				case(ACCORD):
 					get_prius_targets();
+					nb_radar_objectives=1;
+					break;
+				case(LEAF):
+					get_leaf_targets();
 					nb_radar_objectives=1;
 					break;
 				case(CAMRY):
@@ -307,7 +310,6 @@ bool Read_inputs() {
 		case(CACC):
 			switch (ego_vehicle_id) {
 				case(PRIUS):
-				case(ACCORD):
 					get_prius_targets();
 					nb_radar_objectives = 1;
 					break;
@@ -315,6 +317,11 @@ bool Read_inputs() {
 					get_camry_targets();
 					nb_radar_objectives = 1;
 					break;
+				case(LEAF):
+					get_leaf_targets();
+					nb_radar_objectives = 1;
+					break;
+
 			}
 			control_structure->Update_CACC_inputs(i_long_speed, i_long_acceleration, nb_radar_objectives, current_time);
 			if(with_hmi){
@@ -329,12 +336,15 @@ bool Read_inputs() {
 		case(EMERGENCY_BRAKING):
 			switch (ego_vehicle_id) {
 				case(PRIUS):
-				case(ACCORD):
 					get_prius_targets();
 					nb_radar_objectives = 1;
 					break;
 				case(CAMRY):
 					get_camry_targets();
+					nb_radar_objectives = 1;
+					break;
+				case(LEAF):
+					get_leaf_targets();
 					nb_radar_objectives = 1;
 					break;
 			}
@@ -351,7 +361,7 @@ bool Process_data() {
 
 	switch (ego_vehicle_id) {
 		case(PRIUS):
-		case(ACCORD):
+		case(LEAF):
 		case(CAMRY):
 			o_deceleration_command = control_structure->Get_deceleration_command();
 			o_throttle_command = fmax(0, control_structure->desired_acceleration);
@@ -425,50 +435,31 @@ int get_prius_targets() {
 		);
 	return 0;
 }
-int get_accord_targets() {
 
-	accord_target_object_t accord_target_object[13];
-	int i;
-	int verbose = 0;
+int get_leaf_targets() {
+	leaf_target_object_distance_t leaf_target_object_distance;
+	leaf_target_relative_speed_mps_t leaf_target_relative_speed_mps;
+	int verbose = 1;
 
-	for(i = 0; i < 8; i++) {
-		db_clt_read(pclt,DB_ACCORD_MSG410_VAR + i, sizeof(accord_target_object_t), &accord_target_object[i]);
-		target[i].relative_distance = accord_target_object[i].object_relative_distance_CAN5_M;
-		target[i].relative_speed = accord_target_object[i].object_relative_velocity_CAN5_MPS/3.6;
-		target[i].relative_position = accord_target_object[i].object_relative_position_CAN5_M/100;
-		control_structure->targets[i].relative_distance = accord_target_object[i].object_relative_distance_CAN5_M;
-		control_structure->targets[i].relative_speed = accord_target_object[i].object_relative_velocity_CAN5_MPS/3.6;
-		control_structure->targets[i].relative_position = accord_target_object[i].object_relative_position_CAN5_M/100;
-		control_structure->targets[i].ID = i;
-		if(verbose)
-			printf("get_accord_targets: t=%.4f i %d distance %f position %f speed %f\n",
-					current_time,
-					i,
-					target[i].relative_distance,
-					target[i].relative_position,
-					target[i].relative_speed
-			);
-	}
-	for(i = 8; i < 13; i++) {
-		db_clt_read(pclt,DB_ACCORD_MSG420_VAR + i - 8, sizeof(accord_target_object_t), &accord_target_object[i]);
-		target[i].relative_distance = accord_target_object[i].object_relative_distance_CAN5_M;
-		target[i].relative_speed = accord_target_object[i].object_relative_velocity_CAN5_MPS/3.6;
-		target[i].relative_position = accord_target_object[i].object_relative_position_CAN5_M/100;
-		control_structure->targets[i].relative_distance = accord_target_object[i].object_relative_distance_CAN5_M;
-		control_structure->targets[i].relative_speed = accord_target_object[i].object_relative_velocity_CAN5_MPS/3.6;
-		control_structure->targets[i].relative_position = accord_target_object[i].object_relative_position_CAN5_M/100;
-		control_structure->targets[i].ID = i;
-		if(verbose)
-			printf("get_accord_targets: t=%.4f i %d distance %f position %f speed %f\n",
-					current_time,
-					i,
-					target[i].relative_distance,
-					target[i].relative_position,
-					target[i].relative_speed
-			);
-	}
+	db_clt_read(pclt, DB_LEAF_OBD2MSG107_VAR, sizeof(leaf_target_object_distance_t), &leaf_target_object_distance);
+	db_clt_read(pclt, DB_LEAF_OBD2MSG108_VAR, sizeof(leaf_target_relative_speed_mps_t), &leaf_target_relative_speed_mps);
+
+
+	target[0].relative_distance = leaf_target_object_distance.object_distance_Radar;
+	target[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
+	control_structure->targets[0].relative_distance = leaf_target_object_distance.object_distance_Radar;
+	control_structure->targets[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
+	control_structure->targets[0].ID = 0;
+	if(verbose)
+		printf("\get_leaf_targets: t=%.4f i %d 	DISTANCE %.4f 		REL SPEED %.4f\n",
+				current_time,
+				0,
+				target[0].relative_distance,
+				target[0].relative_speed
+		);
 	return 0;
 }
+
 
 int get_camry_targets(){
 	camry_prius_radar_forward_vehicle_t a;
@@ -592,14 +583,14 @@ void InitOutputFile(){
 	time( &rawtime );
 	timeinfo = localtime( &rawtime );
 
-	sprintf(file_name,"/home/qnxuser/path_can_bin/data/control_test_%s_log_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	sprintf(file_name,"/home/qnxuser/leaf_binaries_and_scripts/path_can_bin/data/control_test_%s_log_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
 	fp = fopen(file_name, "w");
 	usleep(100000);
 	if(ego_vehicle_id == CAMRY && camry_verbosity){
 		char file_name_t[200]={0};
 		printf("Trying to create file \n");
-		sprintf(file_name_t,"/home/qnxuser/path_can_bin/data/targets%02d%02d%d__%02d_%02d_%02d.dat", tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);//%s_targets_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+		sprintf(file_name_t,"/home/qnxuser/leaf_binaries_and_scripts/path_can_bin/data/targets%02d%02d%d__%02d_%02d_%02d.dat", tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);//%s_targets_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 		printf("\nFile name %s \n", file_name_t);
 		fp_t = fopen(file_name_t, "w");
 		if (fp_t == NULL) {
@@ -1094,12 +1085,12 @@ bool Fill_config_structure(setup_struct* ss, char* name, float value){
 		ss->PRIUS_BANDWIDTH = value;
 		return true;
 	}
-	if (!strcmp(name, "ACCORD_BANDWIDTH")) {
-		ss->ACCORD_BANDWIDTH = value;
+	if (!strcmp(name, "LEAF_BANDWIDTH")) {
+		ss->LEAF_BANDWIDTH = value;
 		return true;
 	}
-	if (!strcmp(name, "ACCORD_DAMPING_FACTOR")) {
-		ss->ACCORD_DAMPING_FACTOR = value;
+	if (!strcmp(name, "LEAF_DAMPING_FACTOR")) {
+		ss->LEAF_DAMPING_FACTOR = value;
 		return true;
 	}
 	if (!strcmp(name, "CAMRY_DAMPING_FACTOR")) {
@@ -1129,9 +1120,10 @@ void Write_read_hmi_variables_to_database(){
 	db_2_hmi_data->v2v_available = (control_structure->v2v_fault_timer > config->MAX_V2V_MISSING_TIME_TOLERANCE) ? 0 : 1;
 	db_2_hmi_data->timestamp = current_time;
 
-	printf("Write_read_hmi_variables_to_database: db_2_hmi_data->ego_speed %.2f control_structure->long_speed %.2f\n ",
+	printf("Write_read_hmi_variables_to_database: db_2_hmi_data->ego_speed %.2f control_structure->long_speed %.2f current_time %.2f\n ",
 			db_2_hmi_data->ego_speed,
-			control_structure->long_speed
+			control_structure->long_speed,
+			db_2_hmi_data->timestamp
 			);
 	db_clt_write(pclt, DB_2_HMI_DATA, sizeof(tx_data), db_2_hmi_data);
 	db_clt_read(pclt, HMI_2_DB_DATA, sizeof(rx_data), hmi_2_db_data);
