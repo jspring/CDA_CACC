@@ -12,10 +12,10 @@
 #include <sys/types.h>
 
 extern int can_open(char *filename, int flags);
-extern int can_set_filter(int fd, unsigned long id, unsigned long mask);
-extern int can_read(int fd, unsigned long *id, char *extended, void *data,
+extern int can_set_filter(int fd, int id, unsigned long mask);
+extern int can_read(int fd, int *id, char *extended, void *data,
 			unsigned char size);
-extern int can_write(int fd, unsigned long id, char extended, void *data, 
+extern int can_write(int fd, unsigned int id, char extended, void *data,
 			unsigned char size);
 extern int can_empty_q(int fd);
 extern int can_arm(int fd, pid_t proxy);
