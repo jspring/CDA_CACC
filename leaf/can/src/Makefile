@@ -11,7 +11,7 @@ PATH_OBJS = $(OBJDIR)/leaf_lib.o
 PATH_INCLUDES = leaf_can.h
 PATH_CFLAGS += -I../../../steinhoff -I../../../vehcomm -I../../../include -fPIC
 
-EXEC = $(OBJDIR)/leaf_can $(OBJDIR)/clt_vars_leaf
+EXEC = $(OBJDIR)/leaf_can $(OBJDIR)/clt_vars_leaf $(OBJDIR)/hex2float
 
 all: $(OBJDIR) $(PATH_INCLUDES) $(PATH_OBJS) $(EXEC)
 
