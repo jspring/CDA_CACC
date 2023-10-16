@@ -1,0 +1,59 @@
+﻿ Torque and Braking action Signals description
+Subject:
+Torque and Braking action Signals description
+From:
+"Timermans Ladero, Inigo" <itimermans@anl.gov>
+Date:
+9/29/23, 2:05 PM
+To:
+John Spring <jspring@berkeley.edu>
+
+These are the signals in the 2B0 and 1C3 messages:
+
+ 
+
+Message 0x2B0 (positive torque):
+
+ 
+
+Description of them:
+
+ 
+
+The first three bytes (B1 to B3) are Nissan’s “funny” way to hide the important information: The positive torque value is a “byte and a half” (three hex characters) value that is duplicated, applied a different scaling to each copy, then “split” and rearranged in the 2B0 message.
+
+What I call the “left” and ”right” side are those two copies of the value:
+
+    Right side = (Torque_command + 680)
+    Left side = (Torque_command - 3415)*(-1)
+
+Then the Right side and Left side signals are split in what I call “Least Significant” and “Most Significant” parts
+
+ 
+
+The last five bytes are much easier to understand:
+
+    B4: Brake pedal information. It changes when the pedal is pressed. No modification is done to it as it would make it fault
+    B5: Cruise info. Changes when ACC is engaged/propilot button is pressed. The panda fixes it at 0x5B
+    B6 and B7: Constant and counter (umodified)
+    B8: Very very least significant value for the torque signal. The original signal takes only 0x3, 0x6, 0x9 and 0xC values. I leave it at 0x3 as it wont affect anything
+
+ 
+
+ 
+
+Message 0x1C3 (Braking action)
+
+ 
+
+Description:
+
+ 
+
+    B1 and B2 comprise the braking action plus some constant values. The encoding is simple: scaled at 0. It is easy to see the signal with a 0 value and increasing when there’s active braking
+    B3, B4, B5: Constant
+    B6: Braking info (info on brake pedal tapping) and Counter (last 2 bytes, unmodified)
+    B7: constant
+    B8: Checksum: B8 = 0xFF & (B1 + B2 + B3 + B4 + B5 + B6 + B7 + 0xC3 + 0x01);
+
+ 
