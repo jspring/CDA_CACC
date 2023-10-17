@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 		if (size < 0) 
 			read_err++;	
 		else {
-			db_steinhoff_msg.size = size;
+			db_steinhoff_msg.size = can_msg.size;
 			db_steinhoff_msg.id = can_msg.id;
 			memcpy(db_steinhoff_msg.data, can_msg.data, 8) ;
         		if(use_db != 0) {

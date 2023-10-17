@@ -13,8 +13,8 @@ HDRS = can_client.h $(CAN_DIR)/include/can_defs.h
 
 LOCAL_LIB = $(OBJDIR)/libcapath_can.a
 
-EXECS = $(OBJDIR)/can_tx $(OBJDIR)/can_rx #$(OBJDIR)/can_rx1_tx2
-# $(OBJDIR)/can_tx_taurus_brake_only
+EXECS = $(OBJDIR)/can_tx $(OBJDIR)/can_rx
+#$(OBJDIR)/can_rx1_tx2
 CAN_OBJS = $(OBJDIR)/can_client_steinhoff.o
 
 PATH_CFLAGS += -g -I$(CAN_DIR)/include -I$(CAN_DIR) -I../include

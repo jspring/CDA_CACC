@@ -9,6 +9,7 @@
 #include <candef.h>   // Steinhoff include files
 #include <canstr.h>
 #include <canglob.h>
+#include <timestamp.h>
 
 typedef struct {
         canhdl_t hdl;   // Steinhoff handle
@@ -25,7 +26,7 @@ typedef struct {
  *  otherwise number of bytes in the data segment.
  *  Blocking read, includes MsgReceive
  */
-int can_read(int fd, unsigned long *id, char *extended, void *data, 
+int can_read(int fd, int *id, char *extended, void *data, 
                                 unsigned char size) {
         can_dev_handle_t *phdl = (can_dev_handle_t *) fd; 
         int chid = phdl->channel_id;
@@ -35,7 +36,6 @@ int can_read(int fd, unsigned long *id, char *extended, void *data,
         int byte_count;
         int rcvid;
         short resp;
-	int i;
 
         memset(&pulse, 0, sizeof(pulse));
 
@@ -52,14 +52,14 @@ int can_read(int fd, unsigned long *id, char *extended, void *data,
                                 CanGetStatus(phdl->hdl, &st), 
                                 rmsg.frame_inf.inf.DLC,
                                 rmsg.id, rmsg.frame_inf.inf.FF);
-			for(i=0; i<rmsg.frame_inf.inf.DLC; i++)
+			for(int i=0; i<rmsg.frame_inf.inf.DLC; i++)
 				printf(" %hhx", rmsg.data[i]);
 			printf("\n");
                         fflush(stdout);
 #endif
                         byte_count = rmsg.frame_inf.inf.DLC;
                         if (id != NULL)
-                                *id = (unsigned long)rmsg.id;
+                                *id = (int)rmsg.id;
                         if (extended != NULL)
                                 *extended = rmsg.frame_inf.inf.FF; 
                         memcpy(data, rmsg.data,
@@ -75,25 +75,28 @@ int can_read(int fd, unsigned long *id, char *extended, void *data,
         }
 }
 
-int can_write(int fd, unsigned long id, char extended, void *data, 
+int can_write(int fd, unsigned int id, char extended, void *data,
                                 unsigned char size) {
         can_dev_handle_t *phdl = (can_dev_handle_t *) fd; 
         struct can_object msg;          // Steinhoff CAN message type
+	timestamp_t ts;
 
 #ifdef DO_TRACE
         printf("can_write: extended %hhd size %hhu\n", extended, size);
 #endif
         msg.frame_inf.inf.DLC = size > 8 ? 8 : size;
-        msg.id = id;
+        msg.id = (unsigned int) id;
         if (extended) 
                 msg.frame_inf.inf.FF = ExtFF;
         else
-                msg.frame_inf.inf.FF = StdFF;
+            msg.frame_inf.inf.FF = StdFF;
         msg.frame_inf.inf.RTR = 0;
         memcpy(msg.data, data, msg.frame_inf.inf.DLC);
 
 #ifdef DO_TRACE
-        printf("can_write: msg.frame_inf.octet 0x%02hhx\n", msg.frame_inf.octet);
+	get_current_timestamp(&ts);
+	print_timestamp(stdout, &ts);
+        printf("can_write: msg.frame_inf.octet 0x%02hhx ID %#X\n", msg.frame_inf.octet, msg.id);
 #endif
         return (CanWrite(phdl->hdl, &msg));
 }
@@ -105,7 +108,7 @@ int can_write(int fd, unsigned long id, char extended, void *data,
  *
  *      Internal to the driver, set as part of open for read
  */
-int can_set_filter(int fd, unsigned long id, unsigned long mask)
+int can_set_filter(int fd, int id, unsigned long mask)
 {
         can_filter_t filter_data;
         filter_data.id = id;

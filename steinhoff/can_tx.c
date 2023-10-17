@@ -68,12 +68,11 @@ int main(int argc, char **argv)
 	int xport = COMM_OS_XPORT;      /// value set correctly in sys_os.h
 
 	float secs = 1.0;
-	unsigned long id = 0;  
+	unsigned int id = 0;
 	unsigned char extended = 0;
-	unsigned char data[8] = {0};
+	unsigned char data[24] = {0};
 	long count=0;
-	int fd;
-	char *port= "0";
+	char port= 0;
 	db_steinhoff_out_t db_steinhoff_out;
 	int opt;
 	int verbose = 0;	// by default silent
@@ -89,8 +88,8 @@ int main(int argc, char **argv)
 	int write_err = ERR_OK;
 	int msg_size = 0;
 	int cld = 0; //send command line data
-//        while ((opt = getopt(argc, argv, "A:B:ep:m:i:n:s:t:vcd0:1:2:3:4:5:6:7:")) != -1) {
-        while ((opt = getopt(argc, argv, "A:B:ep:m:i:n:s:t:vcd")) != -1) {
+
+	while ((opt = getopt(argc, argv, "A:B:ep:m:i:n:s:t:vcd")) != -1) {
 		switch (opt) {
 			case 'A':
 				Acceleration = (short)atoi(optarg);
@@ -104,10 +103,10 @@ int main(int argc, char **argv)
 				extended = 1;
 				break;
 			case 'p':
-				port= strdup(optarg);
+				port= (char)atoi(optarg);
 				break;
 			case 'i':
-				id = (unsigned long)strtol(optarg, NULL, 0);
+				id = (unsigned int)atoi(optarg);
 				break;
 			case 'n':
 				dbnum = (int)strtol(optarg, NULL, 0);
@@ -142,49 +141,13 @@ int main(int argc, char **argv)
 				exit(1);
                 }
         }
-/*
-			case '0':
-				data[0] = strtol(optarg, NULL, 0);
-				cld = 1;
-				break;
-			case '1':
-				data[1] = strtol(optarg, NULL, 0);
-				break;
-			case '2':
-				data[2] = strtol(optarg, NULL, 0);
-				break;
-			case '3':
-				data[3] = strtol(optarg, NULL, 0);
-				break;
-			case '4':
-				data[4] = strtol(optarg, NULL, 0);
-				break;
-			case '5':
-				data[5] = strtol(optarg, NULL, 0);
-				break;
-			case '6':
-				data[6] = strtol(optarg, NULL, 0);
-				break;
-			case '7':
-				data[7] = strtol(optarg, NULL, 0);
-				break;
-*/
-		printf("data %#hhx %#hhx %#hhx %#hhx %#hhx %#hhx %#hhx %#hhx \n",
-				data[0],
-				data[1],
-				data[2],
-				data[3],
-				data[4],
-				data[5],
-				data[6],
-				data[7]
-		);
-
-	if( (id == 0) || (msg_size == 0) || (strcmp(port, "0") == 0) || ( (dbnum == 0) && ((Acceleration == 0) && (Brake == 0))) ) {
+        memset(data, 0, sizeof(data));
+	if( (id == 0) || (msg_size == 0) || (port== 0) || ( (dbnum == 0) && ((Acceleration == 0) && (Brake == 0))) ) {
 		printf("Usage: id (-i), message_size (-s), database number (-n), and port (-p) are REQUIRED options\n");
-		printf("id %ld message size %d database number %d port %s\n", id, msg_size,dbnum, port);
+		printf("id %d message size %d database number %d port %s\n", id, msg_size,dbnum, port);
 		exit(EXIT_FAILURE);
 	}
+
     if(Brake != 0){
       	create_db_vars = 0;
        	use_db = 0;
@@ -194,27 +157,17 @@ int main(int argc, char **argv)
     if(Acceleration != 0){
        	create_db_vars = 0;
        	use_db = 0;
-       	db_steinhoff_out.size = msg_size;
-       	db_steinhoff_out.data[0] = (Acceleration  & 0xFF00) >> 8;
-       	db_steinhoff_out.data[1] = Acceleration  & 0xFF;
      }
-	fd = can_open(port, O_WRONLY);
+	canhdl_t hdl;
+	short resp;
+	struct can_object msg;
+	if((port == 1) || (port == 2))
+	if((ConnectDriver(port, "CANDRV1", &hdl)) < 0) // physical channel 1
+		exit(-1);
+	if((port == 3) || (port == 4))
+	if((ConnectDriver(port - 2, "CANDRV2", &hdl)) < 0) // physical channel 2
+		exit(-1);
 
-	if(fd == -1) {
-		printf("error opening port %s\n", port);
-		exit(EXIT_FAILURE);
-	} else {
-		printf("program %s, device name %s, fd: %d, extended %hhd\n",
-			argv[0], port, fd, extended);
-		printf("interval %d ms, %d repetitions\n",
-			 millisecs, repetitions);
-		fflush(stdout);
-	}
-	if(cld != 0) {
-		if( (write_err = can_write(fd, id, extended, data, msg_size)) != ERR_OK)
-			perror("message error");
-		exit(EXIT_SUCCESS);
-	}
     if(use_db != 0){
          get_local_name(hostname, MAXHOSTNAMELEN);
          if(create_db_vars) {
@@ -225,7 +178,6 @@ int main(int argc, char **argv)
                                         exit(EXIT_FAILURE);
                         }
                         db_steinhoff_out.id = id;
-                        db_steinhoff_out.port = fd;
                         db_steinhoff_out.size = msg_size;
                         memset(&db_steinhoff_out.data[0], 0, 8);
 			if( db_clt_write(pclt, dbnum, sizeof(db_steinhoff_out_t), &db_steinhoff_out)
@@ -251,6 +203,8 @@ int main(int argc, char **argv)
 
         /* exit code on receiving signal */
         if (setjmp(exit_env) != 0) {
+        	if((DisConnectDriver(&hdl)) < 0) // physical channel 1
+        		exit(-1);
                 if(create_db_vars != 0)
                         db_list_done(pclt, db_steinhoff_vars_list, NUM_STEINHOFF_VARS, NULL, 0);
                 else
@@ -264,34 +218,66 @@ int main(int argc, char **argv)
         } else
                 sig_ign(sig_list, sig_hand);
         //Send 0 to enable control
-//		extended = 0;
-		data[0] = 0;
-		data[1] = 0;
-		data[2] = 0;
-		data[3] = 0;
-		data[4] = 0;
-		data[5] = 0;
-		can_write(fd, id, extended, data, 8);
+		// Output Frame
+		msg.frame_inf.inf.DLC = 8;
+		msg.frame_inf.inf.FF = StdFF; // standard frame
+		msg.frame_inf.inf.RTR = 0;
+		msg.id = id; // CAN ID
+		msg.data[0] = 0;
+		msg.data[1] = 0;
+		msg.data[2] = 0;
+		msg.data[3] = 0;
+		msg.data[4] = 0;
+		msg.data[5] = 0;
+		msg.data[6] = 0;
+		msg.data[7] = 0;
+		resp = CanWrite(hdl, &msg );
 
 	for(;;) {
 		if(use_db){
 			db_clt_read(pclt, dbnum, sizeof(db_steinhoff_out_t), &db_steinhoff_out);
-			if( (write_err = can_write(fd, id, extended, db_steinhoff_out.data, msg_size)) != ERR_OK)
-				perror("message error");
+			// Output Frame
+			memset(&msg, 0, sizeof(struct can_object));
+			msg.frame_inf.inf.DLC = 2;
+			msg.frame_inf.inf.FF = StdFF; // standard frame
+			msg.frame_inf.inf.RTR = 0;
+			if((id == 0x98) || (id == 0x99))
+				msg.id = id; // CAN ID
+			else{
+				printf("Bad id %#X Exiting....\n", id);
+				exit(EXIT_FAILURE);
+			}
+
+
+			msg.data[0] = db_steinhoff_out.data[0];
+			msg.data[1] = db_steinhoff_out.data[1];
+			resp = CanWrite(hdl, &msg );
+			printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
 		}
 		else{
 			if(Brake != 0) {
 				data[2] = Brake;
-				can_write(fd, id, extended, data, msg_size);
 			}
 			else {
 				if(Acceleration != 0) {
-					data[0] = Acceleration;
-					data[0] = db_steinhoff_out.data[0];
-					data[1] = db_steinhoff_out.data[1];
+
+
+					// Output Frame
+					msg.frame_inf.inf.DLC = 2;
+					msg.frame_inf.inf.FF = StdFF; // standard frame
+					msg.frame_inf.inf.RTR = 0;
+					msg.id = id; // CAN ID
+					msg.data[0] = (char)((Acceleration >> 8) & 0xFF);
+					msg.data[1] = (char)(Acceleration & 0xFF);
+
+					resp = CanWrite(hdl, &msg );
+					printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
+
+			        memset(data, 0, sizeof(data));
 					db_steinhoff_out.id = id;
-					memcpy(db_steinhoff_out.data, data, 8);
-					can_write(fd, id, extended, data, msg_size);
+					db_steinhoff_out.size = msg_size;
+					db_steinhoff_out.data[0] = (char)((Acceleration >> 8) & 0xFF);
+					db_steinhoff_out.data[1] = (char)(Acceleration & 0xFF);
 				}
 			}
 		}
@@ -299,7 +285,7 @@ int main(int argc, char **argv)
 			timestamp_t ts;
 			get_current_timestamp(&ts);
 			print_timestamp(stdout, &ts);
-		printf(" %#X ", db_steinhoff_out.id);
+			printf(" %#hX ", db_steinhoff_out.id);
 			for (i = 0; i < db_steinhoff_out.size; i++)
 				printf("%#hhx ", db_steinhoff_out.data[i]);
 			printf("\n");
