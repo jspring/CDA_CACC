@@ -583,7 +583,7 @@ void InitOutputFile(){
 	time( &rawtime );
 	timeinfo = localtime( &rawtime );
 
-	sprintf(file_name,"/home/qnxuser/leaf_binaries_and_scripts/path_can_bin/data/control_test_%s_log_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	sprintf(file_name,"/home/qnxuser/path_can_bin/data/control_test_%s_log_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
 	fp = fopen(file_name, "w");
 	usleep(100000);
