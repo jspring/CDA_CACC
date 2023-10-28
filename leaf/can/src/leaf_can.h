@@ -150,11 +150,11 @@ typedef struct {
 } leaf_torque_t;
 
 static inline void get_leaf_torque(unsigned char *data, leaf_torque_t *p) {
-	short short_temp;
+//	short short_temp;
 
 	p->motor_inverter_input_voltage_CAN5 = (float)(data[0] * VOLTAGE_RES);
 
-	short_temp = (short)( ((data[2] << 8) & 0x700) + data[3]);
+//	short_temp = (short)( ((data[2] << 8) & 0x700) + data[3]);
 	p->Motor_Torque_CAN5__Nm = (float)(((data[2] << 8) + data[3]) * TORQUE_RES);
 }
 

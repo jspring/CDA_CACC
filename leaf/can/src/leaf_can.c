@@ -24,7 +24,7 @@ const char *usage = "-v verbose -a <acceleration> -b <braking pct>";
 int steinhoff_trig_list[] =  {
         DB_STEINHOFF_MSG_VAR,
 		DB_OUTPUT_VAR,
-		DB_STEINHOFF_OBD2_IN_3002_VAR
+		DB_STEINHOFF_OBD2_IN_3003_VAR
 };
 
 int num_steinhoff_trig_variables = sizeof(steinhoff_trig_list)/sizeof(int);
@@ -73,8 +73,6 @@ int main(int argc, char *argv[]) {
 	leaf_Torq_brake_ACC_t leaf_Torq_brake_ACC;
 	int use_98_command = 0;
 	int send_tx_commands = 1;
-	int i = 0;
-	char data[24] = {0};
 
         while ((option = getopt(argc, argv, "vwa:t:T")) != EOF) {
                 switch(option) {
@@ -119,21 +117,20 @@ int main(int argc, char *argv[]) {
 
 printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_MSG_VAR);
         if (setjmp(exit_env) != 0) {
-        	leaf_torque_cmd.torque_cmd = 0;
-			db_steinhoff_torque_out.port = BRAKE_PORT;
-			db_steinhoff_torque_out.id = 0x98;
-			db_steinhoff_torque_out.size = 2;
-			set_leaf_torque_cmd(db_steinhoff_torque_out.data, &leaf_torque_cmd);
-			db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_torque_out);
+//        	leaf_torque_cmd.torque_cmd = 0;
+//			db_steinhoff_torque_out.port = BRAKE_PORT;
+//			db_steinhoff_torque_out.id = 0x98;
+//			db_steinhoff_torque_out.size = 2;
+//			set_leaf_torque_cmd(db_steinhoff_torque_out.data, &leaf_torque_cmd);
+//			db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_torque_out);
 
-			sleep(0.02);
+//			sleep(0.02);
 
-			leaf_accel_cmd.accel_cmd = 0;
-			db_steinhoff_accel_out.port = ACCEL_PORT;
-			db_steinhoff_accel_out.id = 0x99;
-			db_steinhoff_accel_out.size = 2;
-			set_leaf_accel_cmd(db_steinhoff_accel_out.data, &leaf_accel_cmd);
-			db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
+//			leaf_accel_cmd.accel_cmd = 0;
+//			db_steinhoff_accel_out.port = ACCEL_PORT;
+//			db_steinhoff_accel_out.id = 0x99;
+//			db_steinhoff_accel_out.size = 2;
+//			set_leaf_accel_cmd(db_steinhoff_accel_out.data, &leaf_accel_cmd);
 
         	db_list_done(pclt, NULL, 0, steinhoff_trig_list, num_steinhoff_trig_variables);
                 printf("%s: received %d CAN messages %d IPC message errors\n", 
@@ -281,7 +278,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 			case 0x2B0:
 				get_leaf_torq_brake_acc(db_steinhoff_msg.data, &leaf_Torq_brake_ACC);
 
-				if(leaf_Torq_brake_ACC.Brake_pedal_state != 0)
+				if(leaf_Torq_brake_ACC.Brake_pedal_state == 0)
 					send_tx_commands = 1;
 
 				check_msg_timeout(ts_ms, &leaf_steering.ts_ms,
@@ -308,7 +305,63 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 				break;
 		}
 	}
+			else if(( DB_TRIG_VAR(&trig_info) == DB_STEINHOFF_OBD2_IN_3003_VAR )) {
+				count++;
+				memset(&db_steinhoff_msg.data[0], 0, 8);
+				db_clt_read(pclt, DB_STEINHOFF_OBD2_IN_3003_VAR, sizeof(db_steinhoff_msg_t), &db_steinhoff_msg);
+				get_current_timestamp(&ts);
+				ts_ms = TS_TO_MS(&ts);
+		//		printf("ID %hX: 0: %hhx 1: %hhx 2: %hhx 3: %hhx 4: %hhx 5: %hhx 6: %hhx 7: %hhx",
+		//				db_steinhoff_msg.id,
+		//				db_steinhoff_msg.data[0],
+		//				db_steinhoff_msg.data[1],
+		//				db_steinhoff_msg.data[2],
+		//				db_steinhoff_msg.data[3],
+		//				db_steinhoff_msg.data[4],
+		//				db_steinhoff_msg.data[5],
+		//				db_steinhoff_msg.data[6],
+		//				db_steinhoff_msg.data[7]
+		//		);
+				obd2ID = (unsigned int ) (((db_steinhoff_msg.data[0] <<24) & 0xFF000000) +
+						((db_steinhoff_msg.data[1] <<16) & 0x00FF0000) +
+						((db_steinhoff_msg.data[2] <<8) & 0x0000FF00) +
+						((db_steinhoff_msg.data[3]) & 0x000000FF));
+		//		printf(" %#X\n", obd2ID);
 
+				get_current_timestamp(&ts);
+				ts_ms = TS_TO_MS(&ts);
+				switch(db_steinhoff_msg.id) {
+					case 0x735:
+					switch(obd2ID){
+						case 0x05620107: //object distance
+							get_leaf_target_object_distance(db_steinhoff_msg.data, &leaf_target_object_distance);
+							check_msg_timeout(ts_ms, &leaf_target_object_distance.ts_ms,
+								&leaf_target_object_distance.two_message_periods,
+								&leaf_target_object_distance.message_timeout_counter);
+							db_clt_write(pclt, DB_LEAF_OBD2MSG107_VAR, sizeof(leaf_target_object_distance_t), &leaf_target_object_distance);
+							if(verbose){
+								print_timestamp(stdout, &ts);
+								printf("Leaf target distance %.3f\n", leaf_target_object_distance.object_distance_Radar);
+							}
+							break;
+						case 0x05620108: //object relative speed
+							get_leaf_target_relative_speed(db_steinhoff_msg.data, &leaf_target_relative_speed_mps);
+							check_msg_timeout(ts_ms, &leaf_target_relative_speed_mps.ts_ms,
+								&leaf_target_relative_speed_mps.two_message_periods,
+								&leaf_target_relative_speed_mps.message_timeout_counter);
+							db_clt_write(pclt, DB_LEAF_OBD2MSG108_VAR, sizeof(leaf_target_relative_speed_mps_t), &leaf_target_relative_speed_mps);
+							if(verbose){
+								print_timestamp(stdout, &ts);
+								printf("Leaf target relative speed %.3f\n", leaf_target_relative_speed_mps.object_relative_spd_Radar__mps);
+							}
+							break;
+						default:
+			//				if(veryverbose)
+			//					printf("Unknown message %#lX received\n", db_steinhoff_msg.id);
+							break;
+					}
+				}
+			}
 		get_current_timestamp(&ts);
 		ts_now = TS_TO_MS(&ts);
 
@@ -422,7 +475,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					db_steinhoff_obd2.data[5] = 0x00;
 					db_steinhoff_obd2.data[6] = 0x00;
 					db_steinhoff_obd2.data[7] = 0x00;
-					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
 					toggle_flag = 1;
 				}
 				else{
@@ -438,7 +491,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					db_steinhoff_obd2.data[5] = 0x00;
 					db_steinhoff_obd2.data[6] = 0x00;
 					db_steinhoff_obd2.data[7] = 0x00;
-					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
 					toggle_flag = 0;
 				}
 			}

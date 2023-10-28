@@ -11,7 +11,7 @@
 int printcan(db_steinhoff_msg_t *db_steinhoff_msg){
 	int i;
 
-	printf("CAN ID: %#03lx msg: ", db_steinhoff_msg->id);
+	printf("CAN ID: %#03x msg: ", db_steinhoff_msg->id);
 	for(i=0 ; i<8; i++)
 		printf("%#02x ", db_steinhoff_msg->data[i]);
 	printf("\n");
