@@ -70,7 +70,6 @@ int main(int argc, char **argv)
 	float secs = 1.0;
 	unsigned int id = 0;
 	unsigned char extended = 0;
-	unsigned char data[24] = {0};
 	long count=0;
 	char port= 0;
 	db_steinhoff_out_t db_steinhoff_out;
@@ -84,19 +83,17 @@ int main(int argc, char **argv)
 	int use_db = 1;
 	int create_db_vars = 0;
 	short Acceleration = 0; //+ for acceleration, 0x98 message; - for deceleration/braking, 0x99 message
-	unsigned char Brake = 0; //+ for acceleration, 0x98 message; - for deceleration/braking, 0x99 message
 	int write_err = ERR_OK;
 	int msg_size = 0;
 	int cld = 0; //send command line data
+	int ts_now = 0;
+	int ts_sav = 0;
+	int tdiff = 0;
 
 	while ((opt = getopt(argc, argv, "A:B:ep:m:i:n:s:t:vcd")) != -1) {
 		switch (opt) {
 			case 'A':
 				Acceleration = (short)atoi(optarg);
-				use_db = 0;
-				break;
-			case 'B':
-				Brake = (unsigned char)atoi(optarg);
 				use_db = 0;
 				break;
 			case 'e':
@@ -141,19 +138,12 @@ int main(int argc, char **argv)
 				exit(1);
                 }
         }
-        memset(data, 0, sizeof(data));
-	if( (id == 0) || (msg_size == 0) || (port== 0) || ( (dbnum == 0) && ((Acceleration == 0) && (Brake == 0))) ) {
+	if( (id == 0) || (msg_size == 0) || (port== 0) || ( (dbnum == 0) && (Acceleration == 0) )) {
 		printf("Usage: id (-i), message_size (-s), database number (-n), and port (-p) are REQUIRED options\n");
-		printf("id %d message size %d database number %d port %s\n", id, msg_size,dbnum, port);
+		printf("id %d message size %d database number %d port %d\n", id, msg_size,dbnum, port);
 		exit(EXIT_FAILURE);
 	}
 
-    if(Brake != 0){
-      	create_db_vars = 0;
-       	use_db = 0;
-       	db_steinhoff_out.size = msg_size;
-       	db_steinhoff_out.data[2] = Brake;
-    }
     if(Acceleration != 0){
        	create_db_vars = 0;
        	use_db = 0;
@@ -248,44 +238,37 @@ int main(int argc, char **argv)
 				exit(EXIT_FAILURE);
 			}
 
-
 			msg.data[0] = db_steinhoff_out.data[0];
 			msg.data[1] = db_steinhoff_out.data[1];
 			resp = CanWrite(hdl, &msg );
 			printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
 		}
-		else{
-			if(Brake != 0) {
-				data[2] = Brake;
-			}
-			else {
-				if(Acceleration != 0) {
+		else {
+			if(Acceleration != 0) {
+				// Output Frame
+				msg.frame_inf.inf.DLC = 2;
+				msg.frame_inf.inf.FF = StdFF; // standard frame
+				msg.frame_inf.inf.RTR = 0;
+				msg.id = id; // CAN ID
+				msg.data[0] = (char)((Acceleration >> 8) & 0xFF);
+				msg.data[1] = (char)(Acceleration & 0xFF);
 
-
-					// Output Frame
-					msg.frame_inf.inf.DLC = 2;
-					msg.frame_inf.inf.FF = StdFF; // standard frame
-					msg.frame_inf.inf.RTR = 0;
-					msg.id = id; // CAN ID
-					msg.data[0] = (char)((Acceleration >> 8) & 0xFF);
-					msg.data[1] = (char)(Acceleration & 0xFF);
-
-					resp = CanWrite(hdl, &msg );
-					printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
-
-			        memset(data, 0, sizeof(data));
-					db_steinhoff_out.id = id;
-					db_steinhoff_out.size = msg_size;
-					db_steinhoff_out.data[0] = (char)((Acceleration >> 8) & 0xFF);
-					db_steinhoff_out.data[1] = (char)(Acceleration & 0xFF);
-				}
+				resp = CanWrite(hdl, &msg );
+				printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
+				db_steinhoff_out.id = id;
+				db_steinhoff_out.size = msg_size;
+				db_steinhoff_out.data[0] = (char)((Acceleration >> 8) & 0xFF);
+				db_steinhoff_out.data[1] = (char)(Acceleration & 0xFF);
 			}
 		}
 		if (verbose) { 
 			timestamp_t ts;
 			get_current_timestamp(&ts);
+			ts_now = TS_TO_MS(&ts);
+			tdiff = ts_now - ts_sav;
+			ts_sav = ts_now;
 			print_timestamp(stdout, &ts);
-			printf(" %#hX ", db_steinhoff_out.id);
+			printf(" tdiff: %d ID: %#hX ext/std: %#hX ", tdiff, db_steinhoff_out.id, msg.frame_inf.inf.FF);
 			for (i = 0; i < db_steinhoff_out.size; i++)
 				printf("%#hhx ", db_steinhoff_out.data[i]);
 			printf("\n");
