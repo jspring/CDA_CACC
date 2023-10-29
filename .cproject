@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="qnx.recursive.gcc.toolchain.base.1621485708">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="qnx.recursive.gcc.toolchain.base.1621485708" moduleId="org.eclipse.cdt.core.settings" name="Default">
+		<cconfiguration id="qnx.recursive.gcc.toolchain.base.528599428">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="qnx.recursive.gcc.toolchain.base.528599428" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -14,29 +14,29 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration buildProperties="" description="" id="qnx.recursive.gcc.toolchain.base.1621485708" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
-					<folderInfo id="qnx.recursive.gcc.toolchain.base.1621485708.1319082292" name="/" resourcePath="">
-						<toolChain id="qnx.recursive.gcc.toolchain.base.577303245" name="QNX Multi-toolchain" superClass="qnx.recursive.gcc.toolchain.base">
-							<targetPlatform id="qnx.recursive.gcc.target.platform.base.1615642409" name="QNX Multi-toolchain Target Platform" superClass="qnx.recursive.gcc.target.platform.base"/>
-							<builder id="qnx.recursive.target.builder.1574963982" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="QNX Recursive Make Builder" superClass="qnx.recursive.target.builder">
+				<configuration buildProperties="" description="" id="qnx.recursive.gcc.toolchain.base.528599428" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="qnx.recursive.gcc.toolchain.base.528599428.1431037264" name="/" resourcePath="">
+						<toolChain id="qnx.recursive.gcc.toolchain.base.1550289652" name="QNX Multi-toolchain" superClass="qnx.recursive.gcc.toolchain.base">
+							<targetPlatform id="qnx.recursive.gcc.target.platform.base.2053916335" name="QNX Multi-toolchain Target Platform" superClass="qnx.recursive.gcc.target.platform.base"/>
+							<builder id="qnx.recursive.target.builder.1090157551" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="QNX Recursive Make Builder" superClass="qnx.recursive.target.builder">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
 								</outputEntries>
 							</builder>
-							<tool id="qnx.recursive.gcc.make.base.607548062" name="QNX Multi-toolchain Recursive Make" superClass="qnx.recursive.gcc.make.base"/>
-							<tool id="qnx.recursive.gcc.archiver.base.21320811" name="QNX Multi-toolchain Archiver" superClass="qnx.recursive.gcc.archiver.base"/>
-							<tool id="qnx.recursive.gcc.cpp.compiler.base.528944406" name="QNX Multi-toolchain C++ Compiler" superClass="qnx.recursive.gcc.cpp.compiler.base">
-								<inputType id="qnx.recursive.cpp.compiler.input.916221180" superClass="qnx.recursive.cpp.compiler.input"/>
+							<tool id="qnx.recursive.gcc.make.base.1218502380" name="QNX Multi-toolchain Recursive Make" superClass="qnx.recursive.gcc.make.base"/>
+							<tool id="qnx.recursive.gcc.archiver.base.181440236" name="QNX Multi-toolchain Archiver" superClass="qnx.recursive.gcc.archiver.base"/>
+							<tool id="qnx.recursive.gcc.cpp.compiler.base.1823024231" name="QNX Multi-toolchain C++ Compiler" superClass="qnx.recursive.gcc.cpp.compiler.base">
+								<inputType id="qnx.recursive.cpp.compiler.input.485118428" superClass="qnx.recursive.cpp.compiler.input"/>
 							</tool>
-							<tool id="qnx.recursive.gcc.c.compiler.base.783388371" name="QNX Multi-toolchain C Compiler" superClass="qnx.recursive.gcc.c.compiler.base"/>
-							<tool id="qnx.recursive.gcc.c.linker.base.510100135" name="QNX Multi-toolchain C Linker" superClass="qnx.recursive.gcc.c.linker.base"/>
-							<tool id="qnx.recursive.gcc.cpp.linker.base.1513984466" name="QNX Multi-toolchain C++ Linker" superClass="qnx.recursive.gcc.cpp.linker.base">
-								<inputType id="qnx.recursive.cpp.linker.input.1525026850" superClass="qnx.recursive.cpp.linker.input">
+							<tool id="qnx.recursive.gcc.c.compiler.base.805673979" name="QNX Multi-toolchain C Compiler" superClass="qnx.recursive.gcc.c.compiler.base"/>
+							<tool id="qnx.recursive.gcc.c.linker.base.1510104744" name="QNX Multi-toolchain C Linker" superClass="qnx.recursive.gcc.c.linker.base"/>
+							<tool id="qnx.recursive.gcc.cpp.linker.base.2078404103" name="QNX Multi-toolchain C++ Linker" superClass="qnx.recursive.gcc.cpp.linker.base">
+								<inputType id="qnx.recursive.cpp.linker.input.1834302172" superClass="qnx.recursive.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="qnx.recursive.gcc.assembler.base.1887548793" name="QNX Multi-toolchain Assembler" superClass="qnx.recursive.gcc.assembler.base"/>
+							<tool id="qnx.recursive.gcc.assembler.base.1999048613" name="QNX Multi-toolchain Assembler" superClass="qnx.recursive.gcc.assembler.base"/>
 						</toolChain>
 					</folderInfo>
 				</configuration>
@@ -45,12 +45,15 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="CDA_CACC.null.976854576" name="CDA_CACC"/>
+		<project id="CDA_CACC.null.720980242" name="CDA_CACC"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="qnx.recursive.gcc.toolchain.base.1621485708;qnx.recursive.gcc.toolchain.base.1621485708.1319082292;qnx.recursive.gcc.cpp.compiler.base.528944406;qnx.recursive.cpp.compiler.input.916221180">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.qnx.tools.ide.qde.managedbuilder.core.QNXMultiToolchainProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="qnx.recursive.gcc.toolchain.base.528599428;qnx.recursive.gcc.toolchain.base.528599428.1431037264;qnx.recursive.gcc.cpp.compiler.base.1823024231;qnx.recursive.cpp.compiler.input.485118428">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.qnx.tools.ide.qde.managedbuilder.core.QNXMultiToolchainProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>

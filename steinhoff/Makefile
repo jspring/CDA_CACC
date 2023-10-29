@@ -26,7 +26,7 @@ PATH_LDFLAGS += -L$(CAN_DIR)/client/steinhoff/$(OBJDIR) -L./lib -L./$(OBJDIR)
 all: $(OBJDIR) $(CAN_OBJS) $(LOCAL_LIB) $(EXECS) 
 
 $(OBJDIR):
-	mkdir -p $(OBJDIR)
+	mkdir $(OBJDIR)
 	#$(CAN_DIR)/client/mklinks $(CAN_DIR)
 
 
