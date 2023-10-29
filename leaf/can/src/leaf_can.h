@@ -361,6 +361,7 @@ typedef struct {
 	char ACC_button_state;
 	char Brake_pedal_state;
 	char Cruise_info;
+	char green_cruise_icon;
 	char counter;
 } leaf_Torq_brake_ACC_t;
 
@@ -388,7 +389,7 @@ static inline void get_leaf_torq_brake_acc(unsigned char *data, leaf_Torq_brake_
 	else
 		p->Brake_pedal_state = 0;
 
-	p->Cruise_info = (unsigned char)data[4];
+	p->green_cruise_icon = (data[4] & 0x40) == 0 ? 0 : 1;
 
 	p->counter = (unsigned char)data[6];
 

@@ -278,11 +278,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 			case 0x2B0:
 				get_leaf_torq_brake_acc(db_steinhoff_msg.data, &leaf_Torq_brake_ACC);
 
-<<<<<<< Updated upstream
-				if(leaf_Torq_brake_ACC.Brake_pedal_state == 0)
-=======
 				if( (leaf_Torq_brake_ACC.Brake_pedal_state == 0) && (leaf_Torq_brake_ACC.green_cruise_icon != 0))
->>>>>>> Stashed changes
 					send_tx_commands = 1;
 
 				check_msg_timeout(ts_ms, &leaf_steering.ts_ms,
