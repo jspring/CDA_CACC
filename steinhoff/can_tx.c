@@ -66,6 +66,7 @@ int main(int argc, char **argv)
 	char *domain = DEFAULT_SERVICE; /// on Linux sets DB q-file directory
 	db_clt_typ *pclt;               /// data server client pointer
 	int xport = COMM_OS_XPORT;      /// value set correctly in sys_os.h
+	trig_info_typ trig_info;
 
 	float secs = 1.0;
 	unsigned int id = 0;
@@ -82,19 +83,21 @@ int main(int argc, char **argv)
 	int i;
 	int use_db = 1;
 	int create_db_vars = 0;
-	short Acceleration = 0; //+ for acceleration, 0x98 message; - for deceleration/braking, 0x99 message
+	int Acceleration = 0; //+ for acceleration, 0x98 message; - for deceleration/braking, 0x99 message
 	int write_err = ERR_OK;
 	int msg_size = 0;
 	int cld = 0; //send command line data
 	int ts_now = 0;
 	int ts_sav = 0;
 	int tdiff = 0;
+	int triggered_read = 1;
 
 	while ((opt = getopt(argc, argv, "A:B:ep:m:i:n:s:t:vcd")) != -1) {
 		switch (opt) {
 			case 'A':
-				Acceleration = (short)atoi(optarg);
+				Acceleration = atoi(optarg);
 				use_db = 0;
+				triggered_read = 0;
 				break;
 			case 'e':
 				extended = 1;
@@ -120,6 +123,7 @@ int main(int argc, char **argv)
 				} else {
 					millisecs = secs * 1000.0 + 0.5;
 				}
+				triggered_read = 0;
 			   break;
 			case 'v':
 				verbose = 1;
@@ -185,11 +189,18 @@ int main(int argc, char **argv)
          }
      }
 
-	// second parameter of timer_init is no longer used
-	if ((ptmr = timer_init(millisecs, 0))== NULL) {
-                printf("timer_init failed in %s.\n", argv[0]);
-                exit(EXIT_FAILURE);
-        }
+    if(triggered_read == 0){
+		// second parameter of timer_init is no longer used
+		if ((ptmr = timer_init(millisecs, 0))== NULL) {
+					printf("timer_init failed in %s.\n", argv[0]);
+					exit(EXIT_FAILURE);
+			}
+    }
+    else {
+    	printf("No time interval was set; message sending is triggered by database\n");
+    	if (clt_trig_set( pclt, dbnum, dbnum) == FALSE )
+    		exit(EXIT_FAILURE);
+    }
 
         /* exit code on receiving signal */
         if (setjmp(exit_env) != 0) {
@@ -225,40 +236,56 @@ int main(int argc, char **argv)
 
 	for(;;) {
 		if(use_db){
+			if(triggered_read != 0){
+				printf("Waiting for clt_ipc_receive\n");
+				clt_ipc_receive(pclt, &trig_info, sizeof(trig_info));
+				printf("Got clt_ipc_receive\n");
+			}
+
 			db_clt_read(pclt, dbnum, sizeof(db_steinhoff_out_t), &db_steinhoff_out);
 			// Output Frame
 			memset(&msg, 0, sizeof(struct can_object));
-			msg.frame_inf.inf.DLC = 2;
+			msg.frame_inf.inf.DLC = db_steinhoff_out.size;
 			msg.frame_inf.inf.FF = StdFF; // standard frame
 			msg.frame_inf.inf.RTR = 0;
-			if((id == 0x98) || (id == 0x99))
-				msg.id = id; // CAN ID
+			if((id == 0x98) || (id == 0x99) || (id == 0x723))
+				msg.id = db_steinhoff_out.id; // CAN ID
 			else{
 				printf("Bad id %#X Exiting....\n", id);
 				exit(EXIT_FAILURE);
 			}
-
-			msg.data[0] = db_steinhoff_out.data[0];
-			msg.data[1] = db_steinhoff_out.data[1];
+			for(i=0; i<db_steinhoff_out.size; i++)
+				msg.data[i] = db_steinhoff_out.data[i];
+//			printf("DB: msg.id %#x msg.frame_inf.inf.DL %#x ",
+//					msg.data[0],
+//					msg.frame_inf.inf.DLC);
+//			for(i=0; i<msg_size; i++)
+//				printf("d[%i] %#hhx ", i, msg.data[i]);
+//			printf("\n");
 			resp = CanWrite(hdl, &msg );
-			printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
+//			printf("CAN Status1: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
 		}
 		else {
 			if(Acceleration != 0) {
+				memset(&msg, 0, sizeof(struct can_object));
+
 				// Output Frame
-				msg.frame_inf.inf.DLC = 2;
+				msg.frame_inf.inf.DLC = msg_size;
 				msg.frame_inf.inf.FF = StdFF; // standard frame
 				msg.frame_inf.inf.RTR = 0;
 				msg.id = id; // CAN ID
-				msg.data[0] = (char)((Acceleration >> 8) & 0xFF);
-				msg.data[1] = (char)(Acceleration & 0xFF);
+				msg.data[0] = (char)((Acceleration >> 24) & 0xFF);
+				msg.data[1] = (char)((Acceleration >> 16) & 0xFF);
+				msg.data[2] = (char)((Acceleration >> 8) & 0xFF);
+				msg.data[3] = (char)(Acceleration & 0xFF);
+				printf("Acceleration: msg.id %#x msg.frame_inf.inf.DL %#x ",
+						msg.data[0],
+						msg.frame_inf.inf.DLC);
+				for(i=0; i<msg_size; i++)
+					printf("d[%i] %#hhx ", i, msg.data[i]);
+				printf("\n");
 
 				resp = CanWrite(hdl, &msg );
-				printf("CAN Status: %04x resp: %04x\n", CanGetStatus(hdl, &msg), resp);
-				db_steinhoff_out.id = id;
-				db_steinhoff_out.size = msg_size;
-				db_steinhoff_out.data[0] = (char)((Acceleration >> 8) & 0xFF);
-				db_steinhoff_out.data[1] = (char)(Acceleration & 0xFF);
 			}
 		}
 		if (verbose) { 
@@ -268,16 +295,17 @@ int main(int argc, char **argv)
 			tdiff = ts_now - ts_sav;
 			ts_sav = ts_now;
 			print_timestamp(stdout, &ts);
-			printf(" tdiff: %d ID: %#hX ext/std: %#hX ", tdiff, db_steinhoff_out.id, msg.frame_inf.inf.FF);
-			for (i = 0; i < db_steinhoff_out.size; i++)
-				printf("%#hhx ", db_steinhoff_out.data[i]);
-			printf("\n");
+			printf(" tdiff: %d: msg.id %#x msg.frame_inf.inf.DL %#x ",
+						msg.data[0],
+						msg.frame_inf.inf.DLC);
+				for(i=0; i<msg_size; i++)
+					printf("d[%i] %#hhx ", i, msg.data[i]);
+				printf("\n");
 			fflush(stdout);
 		}
 		
-
-		TIMER_WAIT(ptmr);
-		
+		if(triggered_read == 0)
+			TIMER_WAIT(ptmr);
 	}
 	return 0;
 
