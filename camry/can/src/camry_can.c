@@ -104,10 +104,6 @@ int main(int argc, char *argv[]) {
     	else
     		printf("camry_can: clt_trig_set OK for DB_STEINHOFF_MSG2_VAR %d\n", DB_STEINHOFF_MSG2_VAR);
 
-//    	if (clt_trig_set( pclt, DB_STEINHOFF_MSG2_VAR, DB_STEINHOFF_MSG2_TYPE) == FALSE )
-//    		exit(EXIT_FAILURE);
-//    	printf("camry_can: clt_trig_set OK for DB_STEINHOFF_MSG2_VAR %d\n", DB_STEINHOFF_MSG2_VAR);
-
     	if (setjmp(exit_env) != 0) {
     		memset(&db_steinhoff_brake_out, 0, sizeof(db_steinhoff_out_t));
     		db_steinhoff_brake_out.port = BRAKE_PORT;
@@ -213,23 +209,6 @@ int main(int argc, char *argv[]) {
 //					if(verbose)
 //						print_long_lat_accel(&camry_long_lat_accel);
 					break;
-//				case 0x2E6: //742
-//					get_camry_radar_forward_vehicle(db_steinhoff_msg.data, &camry_radar_forward_vehicle);
-//					check_msg_timeout(ts_ms, &camry_radar_forward_vehicle.ts_ms,
-//						&camry_radar_forward_vehicle.two_message_periods,
-//						&camry_radar_forward_vehicle.message_timeout_counter);
-//						db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
-//						db_clt_write(pclt, DB_CAMRY_MSG2E6_VAR, sizeof(camry_radar_forward_vehicle_t), &camry_radar_forward_vehicle);
-//						if(verbose){
-////						     print_timestamp(stdout, &ts);
-////						     printf("Camry 0x2E6 target: dist %.2f speed %.2f d[0] %#hhx d[1] %#hhx\n",
-////						               camry_radar_forward_vehicle.Radar_forward_veh_distance_CAN1__m,
-////						               camry_radar_forward_vehicle.Radar_forward_veh_relative_spd_CAN1__mps,
-////						               db_steinhoff_msg.data[0],
-////						               db_steinhoff_msg.data[1]
-////						    );
-//						}
-//						break;
 //				case 0x301: //769
 //				case 0x303: //771
 //				case 0x305: //769
@@ -260,19 +239,12 @@ printf("ID %d index %d\n", db_steinhoff_msg.id, index);
 						&camry_radar_forward_vehicle[index].two_message_periods,
 						&camry_radar_forward_vehicle[index].message_timeout_counter);
 						db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
-//						char ID;
-//						float LONG_DIST_CAN1__m;
-//						float LAT_DIST_CAN1__m;
-//						float LONG_SPEED_CAN1__kph;
-//						float LONG_SPEED_CAN1__mps;
-//						float LAT_SPEED_CAN1__mps;
-//						int RCS;
 						db_clt_write(pclt, DB_CAMRY_MSG680_VAR + index, sizeof(camry_radar_forward_vehicle_t), &camry_radar_forward_vehicle[index]);
 						if(verbose){
 						     print_timestamp(stdout, &ts);
 						     printf("Camry %d target: dist %.5f  d[0] %#hhx d[1] %#hhx speed %.5f d[2] %#hhx d[3] %#hhx\n",
 						    		 db_steinhoff_msg.id,
-						             camry_radar_forward_vehicle[index].LONG_DIST_CAN1__m,
+					             camry_radar_forward_vehicle[index].LONG_DIST_CAN1__m,
 						             db_steinhoff_msg.data[0],
 						             db_steinhoff_msg.data[1],
 									 camry_radar_forward_vehicle[index].LONG_SPEED_CAN1__mps,
@@ -387,17 +359,17 @@ printf("ID %d index %d\n", db_steinhoff_msg.id, index);
 				camry_brake_cmd.accel_cmd = acceleration;
 			else
 				camry_brake_cmd.accel_cmd = output.accel_decel_request;
-			if(camry_brake_cmd.accel_cmd <= 0){
-//				output.throttle_pct = 0;		//if braking is requested, set throttle to 0
+			if(camry_brake_cmd.accel_cmd < 0){
+				output.throttle_pct = 0;		//if braking is requested, set throttle to 0
 				db_steinhoff_brake_out.port = BRAKE_PORT;
 				db_steinhoff_brake_out.id = 0x99;
 				db_steinhoff_brake_out.size = 2;
 				set_camry_accel_cmd(db_steinhoff_brake_out.data, &camry_brake_cmd);
 				if(verbose)
 					printf("camry_can: brake %hhx %#hhx %.2f\n",
-							db_steinhoff_brake_out.data[0],
-							db_steinhoff_brake_out.data[1],
-							camry_brake_cmd.accel_cmd
+						db_steinhoff_brake_out.data[0],
+						db_steinhoff_brake_out.data[1],
+						camry_brake_cmd.accel_cmd
 					);
 				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_brake_out);
 			}
@@ -408,7 +380,7 @@ printf("ID %d index %d\n", db_steinhoff_msg.id, index);
 				camry_brake_cmd.accel_cmd = 0;
 			}
 			else
-				camry_accel_cmd.accel_cmd = output.accel_decel_request;
+				camry_accel_cmd.accel_cmd = output.throttle_pct;
 			if(camry_accel_cmd.accel_cmd > 0) {
 				db_steinhoff_accel_out.port = BRAKE_PORT;
 				db_steinhoff_accel_out.id = 0x99;
@@ -452,8 +424,6 @@ printf("ID %d index %d\n", db_steinhoff_msg.id, index);
 //						print_timestamp(stdout, &ts);
 //					if(verbose)
 //						printf("Sending OBD2 fuel poll\n");
-					usleep(1000);
-					usleep(1000);
 			}
 		}
 	}
