@@ -70,7 +70,7 @@ asn_enc_rval_t vehcomm2BSM(char * buffer, size_t buffer_size, veh_comm_packet_t 
 	asn_enc_rval_t enc_rval;
 	// allocate memory to MessageFrame_t
 	MessageFrame_t *BSM_CACC = (MessageFrame_t *) calloc(1, sizeof(MessageFrame_t));
-	
+
 	/** 
 	 * fill in all needed data
 	**/
@@ -97,9 +97,9 @@ asn_enc_rval_t vehcomm2BSM(char * buffer, size_t buffer_size, veh_comm_packet_t 
 	acc_set->yaw = 0;
 
 //	// Temporary ID
-//	OCTET_STRING_t *id_octet_str = OCTET_STRING_new_fromBuf(&asn_DEF_TemporaryID, comm_pkt->object_id, 4);
-//	core_data->id = *id_octet_str;
-	core_data->id.buf = comm_pkt->object_id;
+	OCTET_STRING_t *id_octet_str = OCTET_STRING_new_fromBuf(&asn_DEF_TemporaryID, comm_pkt->object_id, 4);
+	core_data->id = *id_octet_str;
+//	core_data->id.buf = comm_pkt->object_id;
 	PositionalAccuracy_t *pos_acu = &(core_data->accuracy);
 	pos_acu->orientation = UNSET;
 	pos_acu->semiMajor = UNSET;
@@ -224,10 +224,10 @@ int BSM2vehcomm(MessageFrame_t *BSMCACC, veh_comm_packet_t *comm_pkt)
 	if (BSMCACC->messageId == 20 && BSMCACC->value.present == MessageFrame__value_PR_BasicSafetyMessage) {
 		
 //		printf("veh_lib: Found BSM safety message\n");
-		
+
 		BSMcoreData_t *core_data = &(BSMCACC->value.choice.BasicSafetyMessage.coreData);
 		CaccData_t *cacc_data = BSMCACC->value.choice.BasicSafetyMessage.caccData;
-		
+
 		timestamp_t current_ts;
 		get_current_timestamp(&(comm_pkt->rcv_ts));
 		comm_pkt->ts.hour = (char) *cacc_data->utcTime.hour;
