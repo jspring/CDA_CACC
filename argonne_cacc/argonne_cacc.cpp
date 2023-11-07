@@ -437,18 +437,28 @@ int get_prius_targets() {
 }
 
 int get_leaf_targets() {
-	leaf_target_object_distance_t leaf_target_object_distance;
-	leaf_target_relative_speed_mps_t leaf_target_relative_speed_mps;
+//	leaf_target_object_distance_t leaf_target_object_distance;
+//	leaf_target_relative_speed_mps_t leaf_target_relative_speed_mps;
+//	int verbose = 1;
+
+//	db_clt_read(pclt, DB_LEAF_OBD2MSG107_VAR, sizeof(leaf_target_object_distance_t), &leaf_target_object_distance);
+//	db_clt_read(pclt, DB_LEAF_OBD2MSG108_VAR, sizeof(leaf_target_relative_speed_mps_t), &leaf_target_relative_speed_mps);
+
+//	target[0].relative_distance = leaf_target_object_distance.object_distance_Radar;
+//	target[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
+//	control_structure->targets[0].relative_distance = leaf_target_object_distance.object_distance_Radar;
+//	control_structure->targets[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
+//	control_structure->targets[0].ID = 0;
+
+	leaf_target_object_205_distance_speed_t leaf_target_object_205_distance_speed;
 	int verbose = 1;
 
-	db_clt_read(pclt, DB_LEAF_OBD2MSG107_VAR, sizeof(leaf_target_object_distance_t), &leaf_target_object_distance);
-	db_clt_read(pclt, DB_LEAF_OBD2MSG108_VAR, sizeof(leaf_target_relative_speed_mps_t), &leaf_target_relative_speed_mps);
+	db_clt_read(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
 
-
-	target[0].relative_distance = leaf_target_object_distance.object_distance_Radar;
-	target[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
-	control_structure->targets[0].relative_distance = leaf_target_object_distance.object_distance_Radar;
-	control_structure->targets[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
+	target[0].relative_distance = leaf_target_object_205_distance_speed.object_205_distance;
+	target[0].relative_speed = leaf_target_object_205_distance_speed.object_205_relative_speed;
+	control_structure->targets[0].relative_distance = leaf_target_object_205_distance_speed.object_205_distance;
+	control_structure->targets[0].relative_speed = leaf_target_object_205_distance_speed.object_205_relative_speed;
 	control_structure->targets[0].ID = 0;
 	if(verbose)
 		printf("\get_leaf_targets: t=%.4f i %d 	DISTANCE %.4f 		REL SPEED %.4f\n",
@@ -590,7 +600,7 @@ void InitOutputFile(){
 	if(ego_vehicle_id == CAMRY && camry_verbosity){
 		char file_name_t[200]={0};
 		printf("Trying to create file \n");
-		sprintf(file_name_t,"/home/qnxuser/leaf_binaries_and_scripts/path_can_bin/data/targets%02d%02d%d__%02d_%02d_%02d.dat", tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);//%s_targets_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+		sprintf(file_name_t,"/home/qnxuser/path_can_bin/data/targets%02d%02d%d__%02d_%02d_%02d.dat", tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);//%s_targets_%02d%02d%d__%02d_%02d_%02d.dat",VEHICLE_NAMES[ego_vehicle_id], tm.tm_mon+1,tm.tm_mday,tm.tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 		printf("\nFile name %s \n", file_name_t);
 		fp_t = fopen(file_name_t, "w");
 		if (fp_t == NULL) {
