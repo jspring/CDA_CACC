@@ -326,17 +326,17 @@ int main(int argc, char *argv[]) {
 				prius_brake_cmd.accel_cmd = output.brake_level;
 			if(prius_brake_cmd.accel_cmd < 0){
 				output.throttle_pct = 0;		//if braking is requested, set throttle to 0
-			db_steinhoff_brake_out.port = BRAKE_PORT;
-			db_steinhoff_brake_out.id = 0x99;
-			db_steinhoff_brake_out.size = 2;
-			set_prius_accel_cmd(db_steinhoff_brake_out.data, &prius_brake_cmd);
-			if(verbose)
-				printf("prius_can: brake %hhx %#hhx %.2f\n",
-					db_steinhoff_brake_out.data[0],
-					db_steinhoff_brake_out.data[1],
-					prius_brake_cmd.accel_cmd
-				);
-			db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_brake_out);
+				db_steinhoff_brake_out.port = BRAKE_PORT;
+				db_steinhoff_brake_out.id = 0x99;
+				db_steinhoff_brake_out.size = 2;
+				set_prius_accel_cmd(db_steinhoff_brake_out.data, &prius_brake_cmd);
+				if(verbose)
+					printf("prius_can: brake %hhx %#hhx %.2f\n",
+						db_steinhoff_brake_out.data[0],
+						db_steinhoff_brake_out.data[1],
+						prius_brake_cmd.accel_cmd
+					);
+				db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_brake_out);
 			}
 
 			memset(&db_steinhoff_accel_out, 0, sizeof(db_steinhoff_out_t));
