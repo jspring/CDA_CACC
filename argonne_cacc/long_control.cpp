@@ -925,7 +925,8 @@ void long_control::Actuators_signal_from_reference_acceleration(double _veh_spee
 	if (_desired_acceleration < -0.5 || this->throttle_level_command < 0.00001) {
 		this->throttle_level_command = 0.0000000;
 		this->deceleration_command = _desired_acceleration;
-		this->brake_level_command = fmax(0, -_desired_acceleration / 0.1534); // Brake map first order fitting, only for Accord
+//		this->brake_level_command = fmax(0, -_desired_acceleration / 0.1534); // Brake map first order fitting, only for Accord
+		this->brake_level_command = (this->vehicle_id==LEAF) ? fmax(0, desired_acceleration) : fmax(0, -_desired_acceleration / 0.1534); // Brake map first order fitting, only for Accord
 	}
 	return;
 }
