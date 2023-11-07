@@ -102,18 +102,17 @@ static inline void get_leaf_vehicle_speed(unsigned char *data, leaf_vehicle_spee
 	get_current_timestamp(&ts);
 	p->veh_speed1_CAN6__mps = (float)(((data[0] << 8) + data[1]) * VEHICLE_SPEED_RES / KPH_2_MPS);
 	p->veh_speed2_CAN6__mps = (float)(((data[2] << 8) + data[3]) * VEHICLE_SPEED_RES / KPH_2_MPS);
-	print_timestamp(stdout, &ts);
-
-	printf(": library: vehicle speed 1 %.3f mps %.3f mph vehicle speed 2 %.3f mps %.3f mph data[0] %#hhx data[1] %#hhx data[2] %#hhx data[3] %#hhx\n",
-			p->veh_speed1_CAN6__mps,
-			p->veh_speed1_CAN6__mps * 2.23694,
-			p->veh_speed2_CAN6__mps,
-			p->veh_speed2_CAN6__mps * 2.23694,
-			data[0],
-			data[1],
-			data[2],
-			data[3]
-	);
+//	print_timestamp(stdout, &ts);
+//	printf(": library: vehicle speed 1 %.3f mps %.3f mph vehicle speed 2 %.3f mps %.3f mph data[0] %#hhx data[1] %#hhx data[2] %#hhx data[3] %#hhx\n",
+//			p->veh_speed1_CAN6__mps,
+//			p->veh_speed1_CAN6__mps * 2.23694,
+//			p->veh_speed2_CAN6__mps,
+//			p->veh_speed2_CAN6__mps * 2.23694,
+//			data[0],
+//			data[1],
+//			data[2],
+//			data[3]
+//	);
 }
 
 /*******************************************************************************
@@ -150,11 +149,11 @@ typedef struct {
 } leaf_torque_t;
 
 static inline void get_leaf_torque(unsigned char *data, leaf_torque_t *p) {
-	short short_temp;
+//	short short_temp;
 
 	p->motor_inverter_input_voltage_CAN5 = (float)(data[0] * VOLTAGE_RES);
 
-	short_temp = (short)( ((data[2] << 8) & 0x700) + data[3]);
+//	short_temp = (short)( ((data[2] << 8) & 0x700) + data[3]);
 	p->Motor_Torque_CAN5__Nm = (float)(((data[2] << 8) + data[3]) * TORQUE_RES);
 }
 
@@ -200,13 +199,13 @@ static inline void get_leaf_steering(unsigned char *data, leaf_steering_t *p) {
 
 	temp = (data[3] & 0xFF) ;
 	p->SteeringAngleChangeRate = (float)temp;
-	printf("library: leaf steering angle %.3f deg %.3f deg/sec data[0] %#hhx data[1] %#hhx data[2] %#hhx\n",
-			p->SteeringAngle,
-			p->SteeringAngleChangeRate,
-			data[0],
-			data[1],
-			data[2]
-	);
+//	printf("library: leaf steering angle %.3f deg %.3f deg/sec data[0] %#hhx data[1] %#hhx data[2] %#hhx\n",
+//			p->SteeringAngle,
+//			p->SteeringAngleChangeRate,
+//			data[0],
+//			data[1],
+//			data[2]
+//	);
 }
 
 /*******************************************************************************
@@ -243,6 +242,55 @@ static inline void get_leaf_fuel_rate(unsigned char *data, leaf_fuel_rate_t *p) 
 
 /*******************************************************************************
  *	leaf_target_object_distance
+ *      Message ID      0x205
+ *      Transmitted every 25 ms
+ *
+ *	dbvar = DB_LEAF_MSG205_VAR
+ *
+ *      Byte Position   0-1
+ *      Bit Position    0
+ *      Bit Length      12
+ *
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+*/
+
+#define OBJ_205_REL_DIST_RES	0.05
+#define OBJ_205_REL_SPEED_RES	0.04
+
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	float object_205_distance;
+	float object_205_relative_speed;
+} leaf_target_object_205_distance_speed_t;
+
+static inline void get_leaf_target_object_205_distance_speed(unsigned char *data, leaf_target_object_205_distance_speed_t *p) {
+	unsigned short ushort_temp;
+	short short_temp;
+
+	ushort_temp = (unsigned short) ((((data[0] << 4) & 0x0FF0) + (data[1] >> 4) & 0xFF));
+	p->object_205_distance = ushort_temp * OBJ_205_REL_DIST_RES - 1;
+	short_temp = (short) ( ((data[1] << 8) & 0x0F00) + (data[2] & 0xFF));
+	if( (short_temp & 0x0800) != 0)
+		short_temp = (short)(short_temp | 0xF000);
+	p->object_205_relative_speed = short_temp * OBJ_205_REL_SPEED_RES;
+printf("library: leaf target object 205 distance %.3f speed %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+		p->object_205_distance,
+		p->object_205_relative_speed,
+		data[0],
+		data[1],
+		data[2],
+		data[3],
+		data[4],
+		data[5],
+		data[6],
+		data[7]
+);
+}
+/*******************************************************************************
+ *	leaf_target_object_distance
  *      OBD2 Message Poll ID      0x723:0x03 22 01 07
  *      Transmitted every 25 ms
  *
@@ -274,18 +322,25 @@ typedef struct {
 } leaf_target_object_distance_t;
 
 static inline void get_leaf_target_object_distance(unsigned char *data, leaf_target_object_distance_t *p) {
+	unsigned short ushort_temp;
+
 	p->size = data[0];
 	p->mode = data[1];
 	p->id = data[2];
-	p->object_distance_Radar = ((data[4] * 256) + data[5]) * OBJ_REL_DIST_RES;
-printf("library: leaf target object distance %.3f m %#hhx %#hhx size %#hhx mode %#hhx id %#hhx\n",
-		p->object_distance_Radar,
-		data[3],
-		data[4],
-		data[0],
-		data[1],
-		data[2]
-);
+
+	ushort_temp = (unsigned short) (((data[4] << 8) & 0xFFFF0000) + (data[5] & 0xFF));
+	p->object_distance_Radar = ushort_temp * OBJ_REL_DIST_RES;
+//printf("library: leaf target object distance %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+//		p->object_distance_Radar,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[4],
+//		data[5],
+//		data[6],
+//		data[7]
+//);
 }
 
 /*******************************************************************************
@@ -328,14 +383,17 @@ static inline void get_leaf_target_relative_speed(unsigned char *data, leaf_targ
 	p->id = data[2];
 	short_temp = (short)(((data[4] << 8) & 0xFF00) + (data[5] & 0xFF));
 	p->object_relative_spd_Radar__mps = short_temp * OBJ_REL_SPEED_RES;
-printf("library: leaf target relative speed %.3f m %#hhx %#hhx size %#hhx mode %#hhx id %#hhx\n",
-		p->object_relative_spd_Radar__mps,
-		data[3],
-		data[4],
-		data[0],
-		data[1],
-		data[2]
-);
+//	printf("library: leaf target relative speed %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+//			p->object_relative_spd_Radar__mps,
+//			data[0],
+//			data[1],
+//			data[2],
+//			data[3],
+//			data[4],
+//			data[5],
+//			data[6],
+//			data[7]
+//	);
 }
 
 /*******************************************************************************
@@ -361,6 +419,7 @@ typedef struct {
 	char ACC_button_state;
 	char Brake_pedal_state;
 	char Cruise_info;
+	char green_cruise_icon;
 	char counter;
 } leaf_Torq_brake_ACC_t;
 
@@ -388,26 +447,26 @@ static inline void get_leaf_torq_brake_acc(unsigned char *data, leaf_Torq_brake_
 	else
 		p->Brake_pedal_state = 0;
 
-	p->Cruise_info = (unsigned char)data[4];
+	p->green_cruise_icon = (data[4] & 0x40) == 0 ? 0 : 1;
 
 	p->counter = (unsigned char)data[6];
 
 	if((p->ACC_button_state != 0) || (p->Brake_pedal_state != 0)){
 
-	print_timestamp(stdout, &ts);
-	printf("library: Left_side_Torque_cmd %d Right_side_Torque_cmd %d ACC_button_state %#hhx Brake_pedal_state %#hhx Cruise_info %d counter %d d[0]: %#hhx d[1]: %#hhx d[2]: %#hhx d[3]: %#hhx d[6]: %#hhx \n",
-		p->Left_side_Torque_cmd,
-		p->Right_side_Torque_cmd,
-		p->ACC_button_state,
-		p->Brake_pedal_state,
-		p->Cruise_info,
-		p->counter,
-		data[0],
-		data[1],
-		data[2],
-		data[3],
-		data[6]
-	);
+//	print_timestamp(stdout, &ts);
+//	printf("library: Left_side_Torque_cmd %d Right_side_Torque_cmd %d ACC_button_state %#hhx Brake_pedal_state %#hhx Cruise_info %d counter %d d[0]: %#hhx d[1]: %#hhx d[2]: %#hhx d[3]: %#hhx d[6]: %#hhx \n",
+//		p->Left_side_Torque_cmd,
+//		p->Right_side_Torque_cmd,
+//		p->ACC_button_state,
+//		p->Brake_pedal_state,
+//		p->Cruise_info,
+//		p->counter,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[6]
+//	);
 	}
 }
 

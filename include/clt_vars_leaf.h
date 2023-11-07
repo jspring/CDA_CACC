@@ -14,6 +14,7 @@
 #define DB_LEAF_OBD2MSG108_TYPE	0x108
 #define DB_LEAF_MSG158_TYPE	0x158
 #define DB_LEAF_MSG1DA_TYPE	0x1DA
+#define DB_LEAF_MSG205_TYPE	0x205
 #define DB_LEAF_MSG292_TYPE	0x292
 #define DB_LEAF_MSG2B0_TYPE	0x2B0
 #define DB_LEAF_MSG392_TYPE	0x392
@@ -39,6 +40,7 @@
 #define DB_LEAF_OBD2MSG108_VAR	DB_LEAF_OBD2MSG108_TYPE
 #define DB_LEAF_MSG158_VAR	DB_LEAF_MSG158_TYPE
 #define DB_LEAF_MSG1DA_VAR	DB_LEAF_MSG1DA_TYPE
+#define DB_LEAF_MSG205_VAR	DB_LEAF_MSG205_TYPE
 #define DB_LEAF_MSG2B0_VAR	DB_LEAF_MSG2B0_TYPE
 #define DB_LEAF_MSG292_VAR	DB_LEAF_MSG292_TYPE
 #define DB_LEAF_MSG392_VAR	DB_LEAF_MSG392_TYPE
@@ -49,6 +51,7 @@ db_id_t db_vars_list_leaf[] =  {
 	{DB_LEAF_MSG98_VAR, sizeof(leaf_torque_cmd_t)},
 	{DB_LEAF_MSG99_VAR, sizeof(leaf_accel_cmd_t)},
 	{DB_LEAF_MSG158_VAR, sizeof(leaf_vehicle_speed_t)},
+	{DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t)},
 	{DB_LEAF_MSG292_VAR, sizeof(leaf_Veh_Accel_CAN4_t)},
 	{DB_LEAF_MSG2B0_VAR, sizeof(leaf_Torq_brake_ACC_t)},
 	{DB_LEAF_MSG1DA_VAR, sizeof(leaf_torque_t)},
@@ -59,17 +62,17 @@ db_id_t db_vars_list_leaf[] =  {
 	{DB_OUTPUT_VAR, sizeof(output_t)},
 	{DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t)},
 	{DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t)},
-	{DB_STEINHOFF_OBD2_OUT_VAR, sizeof(db_steinhoff_out_t)},
-	{DB_STEINHOFF_OBD2_IN_3002_VAR, sizeof(db_steinhoff_msg_t)},
+	{DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t)},
+	{DB_STEINHOFF_OBD2_IN_3003_VAR, sizeof(db_steinhoff_msg_t)},
 	{DB_STEINHOFF_MSG_VAR, sizeof(db_steinhoff_msg_t)},
 	{DB_STEINHOFF_MSG2_VAR, sizeof(db_steinhoff_msg_t)},
 	{DB_STEINHOFF_CHASSIS_3004_VAR, sizeof(db_steinhoff_msg_t)},
-        {DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t)},
-        {DB_COMM_LEAD_TRK_VAR, sizeof(veh_comm_packet_t)},
-        {DB_COMM_SECOND_TRK_VAR, sizeof(veh_comm_packet_t)},
-        {DB_COMM_THIRD_TRK_VAR, sizeof(veh_comm_packet_t)},
-        {DB_COMM_TX_VAR, sizeof(veh_comm_packet_t)},
-        {DB_GPS_GGA_VAR, sizeof(path_gps_point_t)},
+    {DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t)},
+    {DB_COMM_LEAD_TRK_VAR, sizeof(veh_comm_packet_t)},
+    {DB_COMM_SECOND_TRK_VAR, sizeof(veh_comm_packet_t)},
+    {DB_COMM_THIRD_TRK_VAR, sizeof(veh_comm_packet_t)},
+    {DB_COMM_TX_VAR, sizeof(veh_comm_packet_t)},
+    {DB_GPS_GGA_VAR, sizeof(path_gps_point_t)},
 	{DB_REPEAT_COMM_PACKET_VAR, sizeof(veh_comm_packet_t)},
 };
 #define NUM_DB_VARS (sizeof(db_vars_list_leaf)/sizeof(db_id_t))
