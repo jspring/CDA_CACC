@@ -24,7 +24,8 @@ const char *usage = "-v verbose -a <acceleration> -b <braking pct>";
 int steinhoff_trig_list[] =  {
         DB_STEINHOFF_MSG_VAR,
 		DB_OUTPUT_VAR,
-		DB_STEINHOFF_OBD2_IN_3003_VAR
+		DB_STEINHOFF_OBD2_IN_3003_VAR,
+		DB_STEINHOFF_CHASSIS_3004_VAR
 };
 
 int num_steinhoff_trig_variables = sizeof(steinhoff_trig_list)/sizeof(int);
@@ -48,7 +49,7 @@ int main(int argc, char *argv[]) {
 	db_steinhoff_msg_t db_steinhoff_msg;
 	db_steinhoff_out_t db_steinhoff_torque_out;
 	db_steinhoff_out_t db_steinhoff_accel_out;
-	db_steinhoff_out_t db_steinhoff_obd2;
+//	db_steinhoff_out_t db_steinhoff_obd2;
 
 	input_t input;
 	output_t output;
@@ -67,12 +68,16 @@ int main(int argc, char *argv[]) {
 	leaf_steering_t leaf_steering;
 	leaf_fuel_rate_t leaf_fuel_rate;
 	leaf_target_object_distance_t leaf_target_object_distance;
+	leaf_target_object_205_distance_speed_t leaf_target_object_205_distance_speed;
 	leaf_target_relative_speed_mps_t leaf_target_relative_speed_mps;
 	veh_comm_packet_t virtual_car_comm_packet;
 	leaf_Veh_Accel_CAN4_t leaf_Veh_Accel_CAN4;
 	leaf_Torq_brake_ACC_t leaf_Torq_brake_ACC;
 	int use_98_command = 0;
 	int send_tx_commands = 1;
+	int obd2_send_speed_poll_flag = 0;
+	int obd2_send_dist_poll_flag = 0;
+	int obd2_start_msg_flag = 1;
 
         while ((option = getopt(argc, argv, "vwa:t:T")) != EOF) {
                 switch(option) {
@@ -105,6 +110,7 @@ int main(int argc, char *argv[]) {
 	get_local_name(hostname, MAXHOSTNAMELEN);
 	if ( (pclt = db_list_init(argv[0], hostname, domain, xport,
 			NULL, 0, NULL, 0))
+//			NULL, 0, steinhoff_trig_list, num_steinhoff_trig_variables))
 		== NULL) {
 			exit(EXIT_FAILURE);
 	}
@@ -112,8 +118,10 @@ int main(int argc, char *argv[]) {
 
 	if (clt_trig_set( pclt, DB_STEINHOFF_MSG_VAR, DB_STEINHOFF_MSG_TYPE) == FALSE )
 		exit(EXIT_FAILURE);
-//	if (clt_trig_set( pclt, DB_STEINHOFF_CHASSIS_3004_VAR, DB_STEINHOFF_CHASSIS_3004_TYPE) == FALSE )
-//		exit(EXIT_FAILURE);
+	if (clt_trig_set( pclt, DB_STEINHOFF_CHASSIS_3004_VAR, DB_STEINHOFF_CHASSIS_3004_TYPE) == FALSE )
+		exit(EXIT_FAILURE);
+	if (clt_trig_set( pclt, DB_STEINHOFF_OBD2_IN_3003_VAR, DB_STEINHOFF_OBD2_IN_3003_TYPE) == FALSE )
+		exit(EXIT_FAILURE);
 
 printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_MSG_VAR);
         if (setjmp(exit_env) != 0) {
@@ -139,10 +147,10 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
         } else
                sig_ign(sig_list, sig_hand);
 
-        if ((ptimer = timer_init( 20, ChannelCreate(0) )) == NULL) {
-                fprintf(stderr, "Unable to initialize delay timer\n");
-                exit(EXIT_FAILURE);
-        }
+//        if ((ptimer = timer_init( 20, ChannelCreate(0) )) == NULL) {
+//                fprintf(stderr, "Unable to initialize delay timer\n");
+//                exit(EXIT_FAILURE);
+//        }
 
 	/* Zero data structures */
 	memset(&leaf_accel_cmd, 0, sizeof(leaf_accel_cmd));
@@ -326,19 +334,36 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 						((db_steinhoff_msg.data[1] <<16) & 0x00FF0000) +
 						((db_steinhoff_msg.data[2] <<8) & 0x0000FF00) +
 						((db_steinhoff_msg.data[3]) & 0x000000FF));
-		//		printf(" %#X\n", obd2ID);
+				print_timestamp(stdout, &ts);
+//				printf("obd2ID %#X\n", obd2ID);
 
 				get_current_timestamp(&ts);
 				ts_ms = TS_TO_MS(&ts);
 				switch(db_steinhoff_msg.id) {
+					case 0x205:
+						get_leaf_target_object_205_distance_speed(db_steinhoff_msg.data, &leaf_target_object_205_distance_speed);
+						check_msg_timeout(ts_ms, &leaf_target_object_205_distance_speed.ts_ms,
+							&leaf_target_object_205_distance_speed.two_message_periods,
+							&leaf_target_object_205_distance_speed.message_timeout_counter);
+						db_clt_write(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
+						if(verbose){
+							print_timestamp(stdout, &ts);
+							printf("Leaf target distance %.3f speed %.3f\n", 
+								leaf_target_object_205_distance_speed.object_205_distance,
+								leaf_target_object_205_distance_speed.object_205_relative_speed);
+						}
+						break;
 					case 0x735:
 					switch(obd2ID){
-						case 0x05620107: //object distance
+					case 0x05620107: //object distance
 							get_leaf_target_object_distance(db_steinhoff_msg.data, &leaf_target_object_distance);
 							check_msg_timeout(ts_ms, &leaf_target_object_distance.ts_ms,
 								&leaf_target_object_distance.two_message_periods,
 								&leaf_target_object_distance.message_timeout_counter);
 							db_clt_write(pclt, DB_LEAF_OBD2MSG107_VAR, sizeof(leaf_target_object_distance_t), &leaf_target_object_distance);
+							obd2_send_speed_poll_flag = 1;
+							obd2_send_dist_poll_flag = 0;
+							obd2_start_msg_flag = 0;
 							if(verbose){
 								print_timestamp(stdout, &ts);
 								printf("Leaf target distance %.3f\n", leaf_target_object_distance.object_distance_Radar);
@@ -350,12 +375,26 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 								&leaf_target_relative_speed_mps.two_message_periods,
 								&leaf_target_relative_speed_mps.message_timeout_counter);
 							db_clt_write(pclt, DB_LEAF_OBD2MSG108_VAR, sizeof(leaf_target_relative_speed_mps_t), &leaf_target_relative_speed_mps);
+							obd2_start_msg_flag = 1;
+							obd2_send_dist_poll_flag = 0;
+							obd2_send_speed_poll_flag = 0;
+
 							if(verbose){
 								print_timestamp(stdout, &ts);
 								printf("Leaf target relative speed %.3f\n", leaf_target_relative_speed_mps.object_relative_spd_Radar__mps);
 							}
 							break;
 						default:
+							if((obd2ID & 0x04620100) == 0x04620100) {
+								obd2_send_dist_poll_flag = 1;
+								obd2_send_speed_poll_flag = 0;
+								obd2_start_msg_flag = 0;
+								if(verbose){
+									print_timestamp(stdout, &ts);
+									printf("Got OBD2 start sequence flag obd2ID %#X\n", obd2ID);
+								}
+							}
+
 			//				if(veryverbose)
 			//					printf("Unknown message %#lX received\n", db_steinhoff_msg.id);
 							break;
@@ -373,8 +412,8 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 			input.distance_from_start = virtual_car_comm_packet.user_float;
 			db_clt_write(pclt, DB_COMM_VIRTUAL_TRK_VAR, sizeof(veh_comm_packet_t), &virtual_car_comm_packet);
 
-			if(verbose && ((count % 5) == 0) )
-			print_timestamp(stdout, &ts);
+//			if(verbose && ((count % 5) == 0) )
+//			print_timestamp(stdout, &ts);
 
 			if(send_tx_commands == 1){
 				if(use_98_command){
@@ -461,42 +500,71 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					}
 			}
 
-			if((++obd2_ctr % 3) == 0) {
-				if(toggle_flag == 0) {
-					//Send OBD2 target distance poll
-					db_steinhoff_obd2.port = PORT_3;
-					db_steinhoff_obd2.id = 0x723;
-					db_steinhoff_obd2.size = 8;
-					db_steinhoff_obd2.data[0] = 0x03;
-					db_steinhoff_obd2.data[1] = 0x22;
-					db_steinhoff_obd2.data[2] = 0x01;
-					db_steinhoff_obd2.data[3] = 0x07;
-					db_steinhoff_obd2.data[4] = 0x00;
-					db_steinhoff_obd2.data[5] = 0x00;
-					db_steinhoff_obd2.data[6] = 0x00;
-					db_steinhoff_obd2.data[7] = 0x00;
-					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
-					toggle_flag = 1;
-				}
-				else{
-					//Send OBD2 object relative speed poll
-					db_steinhoff_obd2.port = PORT_3;
-					db_steinhoff_obd2.id = 0x723;
-					db_steinhoff_obd2.size = 8;
-					db_steinhoff_obd2.data[0] = 0x03;
-					db_steinhoff_obd2.data[1] = 0x22;
-					db_steinhoff_obd2.data[2] = 0x01;
-					db_steinhoff_obd2.data[3] = 0x08;
-					db_steinhoff_obd2.data[4] = 0x00;
-					db_steinhoff_obd2.data[5] = 0x00;
-					db_steinhoff_obd2.data[6] = 0x00;
-					db_steinhoff_obd2.data[7] = 0x00;
-					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
-					toggle_flag = 0;
-				}
+//			if(++obd2_ctr % 8 == 0){
+//				print_timestamp(stdout, &ts);
+//				printf("Got to 1\n");
+//			if(obd2_start_msg_flag != 0) {
+//				//Send OBD2 start message
+//				db_steinhoff_obd2.port = PORT_3;
+//				db_steinhoff_obd2.id = 0x723;
+//				db_steinhoff_obd2.size = 8;
+//				db_steinhoff_obd2.data[0] = 0x03;
+//				db_steinhoff_obd2.data[1] = 0x22;
+//				db_steinhoff_obd2.data[2] = 0x01;
+//				db_steinhoff_obd2.data[3] = 0x00;
+//				db_steinhoff_obd2.data[4] = 0x00;
+//				db_steinhoff_obd2.data[5] = 0x00;
+//				db_steinhoff_obd2.data[6] = 0x00;
+//				db_steinhoff_obd2.data[7] = 0x00;
+//				db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+//				obd2_start_msg_flag = 0;
+//				obd2_send_dist_poll_flag = 0;
+//				obd2_send_speed_poll_flag = 0;
+//				printf("Sent obd2 start message\n");
+//			}
+//			else if(obd2_send_dist_poll_flag != 0) {
+//			//Send OBD2 target distance poll
+//					db_steinhoff_obd2.port = PORT_3;
+//					db_steinhoff_obd2.id = 0x723;
+//					db_steinhoff_obd2.size = 8;
+//					db_steinhoff_obd2.data[0] = 0x03;
+//					db_steinhoff_obd2.data[1] = 0x22;
+//					db_steinhoff_obd2.data[2] = 0x01;
+//					db_steinhoff_obd2.data[3] = 0x07;
+//					db_steinhoff_obd2.data[4] = 0x00;
+//					db_steinhoff_obd2.data[5] = 0x00;
+//					db_steinhoff_obd2.data[6] = 0x00;
+//					db_steinhoff_obd2.data[7] = 0x00;
+//					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+//					obd2_start_msg_flag = 0;
+//					obd2_send_dist_poll_flag = 0;
+//					obd2_send_speed_poll_flag = 0;
+//					printf("Sent obd2 distance poll message\n");
+//
+//			}
+//			else if(obd2_send_speed_poll_flag != 0) {
+//					//Send OBD2 object relative speed poll
+//					db_steinhoff_obd2.port = PORT_3;
+//					db_steinhoff_obd2.id = 0x723;
+//					db_steinhoff_obd2.size = 8;
+//					db_steinhoff_obd2.data[0] = 0x03;
+//					db_steinhoff_obd2.data[1] = 0x22;
+//					db_steinhoff_obd2.data[2] = 0x01;
+//					db_steinhoff_obd2.data[3] = 0x08;
+//					db_steinhoff_obd2.data[4] = 0x00;
+//					db_steinhoff_obd2.data[5] = 0x00;
+//					db_steinhoff_obd2.data[6] = 0x00;
+//					db_steinhoff_obd2.data[7] = 0x00;
+//					db_clt_write(pclt, DB_STEINHOFF_OBD2_OUT_4003_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_obd2);
+//					obd2_start_msg_flag = 0;
+//					obd2_send_dist_poll_flag = 0;
+//					obd2_send_speed_poll_flag = 0;
+//					printf("Sent obd2 relative speed poll message\n");
+//
+//				}
+//			}
 			}
-			}
-			usleep(10);
+//			usleep(10);
 	}
 	return 0;
 }
@@ -507,5 +575,6 @@ void check_msg_timeout(int curr_ts_ms, int *prev_ts_ms,
 	if( (curr_ts_ms - *prev_ts_ms) > *two_message_periods ) {
 	   ++*message_timeout_counter;
 	   *prev_ts_ms = curr_ts_ms;
-	}
+	}//			usleep(10);
+
 }
