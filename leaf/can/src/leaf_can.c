@@ -190,6 +190,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 		clt_ipc_receive(pclt, &trig_info, sizeof(trig_info));
 		if( DB_TRIG_VAR(&trig_info) == DB_STEINHOFF_MSG_VAR ) {
 			count++;
+
 			db_clt_read(pclt, DB_STEINHOFF_MSG_VAR, sizeof(db_steinhoff_msg_t), &db_steinhoff_msg);
 			get_current_timestamp(&ts);
 			ts_ms = TS_TO_MS(&ts);
@@ -209,12 +210,12 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					db_clt_read(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 
 					if(veryverbose)
-						printf("Leaf input.vehicle speed %.2f vehicle speed1 %.2f vehicle speed2 %.2f output.torque_level %.2f output.accel_decel_request %.2f mph data[0] %#hhx data[1] %#hhx data[2] %#hhx data[3] %#hhx\n",
+						printf("Leaf input.vehicle speed %.2f vehicle speed1 %.2f vehicle speed2 %.2f data[0] %#hhx data[1] %#hhx data[2] %#hhx data[3] %#hhx\n",
 								input.vehicle_speed_mps,
 								leaf_vehicle_speed.veh_speed1_CAN6__mps,
 								leaf_vehicle_speed.veh_speed2_CAN6__mps,
-								output.torque_level,
-								output.accel_decel_request,
+//								output.torque_level,
+//								output.accel_decel_request,
 								db_steinhoff_msg.data[0],
 								db_steinhoff_msg.data[1],
 								db_steinhoff_msg.data[2],
@@ -315,6 +316,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 	}
 			else if(( DB_TRIG_VAR(&trig_info) == DB_STEINHOFF_OBD2_IN_3003_VAR )) {
 				count++;
+
 				memset(&db_steinhoff_msg.data[0], 0, 8);
 				db_clt_read(pclt, DB_STEINHOFF_OBD2_IN_3003_VAR, sizeof(db_steinhoff_msg_t), &db_steinhoff_msg);
 				get_current_timestamp(&ts);
@@ -334,7 +336,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 						((db_steinhoff_msg.data[1] <<16) & 0x00FF0000) +
 						((db_steinhoff_msg.data[2] <<8) & 0x0000FF00) +
 						((db_steinhoff_msg.data[3]) & 0x000000FF));
-				print_timestamp(stdout, &ts);
+//				print_timestamp(stdout, &ts);
 //				printf("obd2ID %#X\n", obd2ID);
 
 				get_current_timestamp(&ts);
@@ -422,11 +424,11 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 						printf("torque2: torque %d\n", torque);
 						leaf_torque_cmd.torque_cmd = torque;
 					}
-					else
-						leaf_torque_cmd.torque_cmd = output.torque_level;
-					if(leaf_torque_cmd.torque_cmd != 0) {
-						output.accel_decel_request = 0;		//if braking is requested, set throttle to 0
-					}
+//					else
+//						leaf_torque_cmd.torque_cmd = output.torque_level;
+//					if(leaf_torque_cmd.torque_cmd != 0) {
+//						output.accel_decel_request = 0;		//if braking is requested, set throttle to 0
+//					}
 					db_steinhoff_torque_out.port = PORT_1;
 					db_steinhoff_torque_out.id = 0x98;
 					db_steinhoff_torque_out.size = 2;
