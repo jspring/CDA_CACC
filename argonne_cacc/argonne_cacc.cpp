@@ -54,7 +54,6 @@ void Initialization_task(int argc, char *argv[]) {
 	}
 	if (setjmp(exit_env) != 0) {
 		output_t output;
-		output.torque_level = 0; output.accel_decel_request = 0;
 		db_clt_write(pclt,DB_OUTPUT_VAR, sizeof(output_t), &output);
 		db_list_done(pclt, (db_id_t *)NULL, (int)0, (int *)NULL, (int)0);
 		delete sProfile;
@@ -290,7 +289,7 @@ bool Read_inputs() {
 					break;
 				case(LEAF):
 					get_leaf_targets();
-					nb_radar_objectives=1;
+					nb_radar_objectives=16;
 					break;
 				case(CAMRY):
 					get_camry_targets();
@@ -319,7 +318,7 @@ bool Read_inputs() {
 					break;
 				case(LEAF):
 					get_leaf_targets();
-					nb_radar_objectives = 1;
+					nb_radar_objectives = 16;
 					break;
 
 			}
@@ -345,7 +344,7 @@ bool Read_inputs() {
 					break;
 				case(LEAF):
 					get_leaf_targets();
-					nb_radar_objectives = 1;
+					nb_radar_objectives = 16;
 					break;
 			}
 			control_structure->Update_Emergency_braking_inputs(i_long_speed, nb_radar_objectives, current_time, trigger_EB);
@@ -450,23 +449,23 @@ int get_leaf_targets() {
 //	control_structure->targets[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
 //	control_structure->targets[0].ID = 0;
 
-	leaf_target_object_205_distance_speed_t leaf_target_object_205_distance_speed;
+	leddar_SIGHT_detection_t leddar_SIGHT_detection[8];
 	int verbose = 1;
+	int i = 0;
 
-	db_clt_read(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
-
-	target[0].relative_distance = leaf_target_object_205_distance_speed.object_205_distance;
-	target[0].relative_speed = leaf_target_object_205_distance_speed.object_205_relative_speed;
-	control_structure->targets[0].relative_distance = leaf_target_object_205_distance_speed.object_205_distance;
-	control_structure->targets[0].relative_speed = leaf_target_object_205_distance_speed.object_205_relative_speed;
-	control_structure->targets[0].ID = 0;
-	if(verbose)
-		printf("\get_leaf_targets: t=%.4f i %d 	DISTANCE %.4f 		REL SPEED %.4f\n",
-				current_time,
-				0,
-				target[0].relative_distance,
-				target[0].relative_speed
-		);
+	for(i=0; i<8; i++) {
+			db_clt_read(pclt, DB_LEDDAR_SIGHT_DETECTION_VAR+i, sizeof(leddar_SIGHT_detection_t), &leddar_SIGHT_detection[i]);
+			target[2*i].relative_distance = leddar_SIGHT_detection[i].distance1;
+			target[2*i+1].relative_distance = leddar_SIGHT_detection[i].distance2;
+			control_structure->targets[2*i].relative_distance = leddar_SIGHT_detection[i].distance1;
+			control_structure->targets[2*i+1].relative_distance = leddar_SIGHT_detection[i].distance2;
+	}
+	if(verbose){
+		printf("\get_leaf_targets: t=%.4f ",current_time);
+		for(i=0; i<16; i++)
+			printf("%d %.2f ", i, target[i].relative_distance);
+		printf("\n");
+	}
 	return 0;
 }
 
@@ -749,6 +748,22 @@ void UpdateStandardLogFile(){
 	fprintf(fp," %.3f", control_structure->circuit_loc->time_estimated);
 	fprintf(fp," %.3f", control_structure->circuit_loc->time_remaining);
 	fprintf(fp," %.3f", control_structure->circuit_loc->ref_accel_traj_plan);
+	fprintf(fp," %.3f", control_structure->targets[0].relative_distance); //76
+	fprintf(fp," %.3f", control_structure->targets[1].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[2].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[3].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[4].relative_distance); //80
+	fprintf(fp," %.3f", control_structure->targets[5].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[6].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[7].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[8].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[9].relative_distance); //85
+	fprintf(fp," %.3f", control_structure->targets[10].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[11].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[12].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[13].relative_distance);
+	fprintf(fp," %.3f", control_structure->targets[14].relative_distance); //90
+	fprintf(fp," %.3f", control_structure->targets[15].relative_distance);
 
 	fprintf(fp, "\n");
 }
