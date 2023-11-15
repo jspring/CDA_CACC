@@ -148,10 +148,10 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-    if(Acceleration != 0){
-       	create_db_vars = 0;
-       	use_db = 0;
-     }
+	if(Acceleration != 0){
+		create_db_vars = 0;
+		use_db = 0;
+	}
 	canhdl_t hdl;
 	short resp;
 	struct can_object msg;
@@ -162,32 +162,32 @@ int main(int argc, char **argv)
 	if((ConnectDriver(port - 2, "CANDRV2", &hdl)) < 0) // physical channel 2
 		exit(-1);
 
-    if(use_db != 0){
-         get_local_name(hostname, MAXHOSTNAMELEN);
-         if(create_db_vars) {
+	if(use_db != 0){
+		get_local_name(hostname, MAXHOSTNAMELEN);
+		if(create_db_vars) {
 			db_steinhoff_vars_list[0].id = dbnum;
-                        if ( (pclt = db_list_init(argv[0], hostname, domain, xport,
-                                db_steinhoff_vars_list, NUM_STEINHOFF_VARS, NULL, 0))
-                                == NULL) {
-                                        exit(EXIT_FAILURE);
-                        }
-                        db_steinhoff_out.id = id;
-                        db_steinhoff_out.size = msg_size;
-                        memset(&db_steinhoff_out.data[0], 0, 8);
+			if ( (pclt = db_list_init(argv[0], hostname, domain, xport,
+				db_steinhoff_vars_list, NUM_STEINHOFF_VARS, NULL, 0))
+				== NULL) {
+					exit(EXIT_FAILURE);
+			}
+			db_steinhoff_out.id = id;
+			db_steinhoff_out.size = msg_size;
+			memset(&db_steinhoff_out.data[0], 0, 8);
 			if( db_clt_write(pclt, dbnum, sizeof(db_steinhoff_out_t), &db_steinhoff_out)
 				== FALSE) {
 				fprintf(stderr, "can_tx: db_clt_write of db_steinhoff_out returned FALSE. Exiting....\n");
 				exit(EXIT_FAILURE);
-            		}
-                }
-         else {
-            if ( (pclt = db_list_init(argv[0], hostname, domain, xport,
-               NULL, 0, NULL, 0))
-               == NULL) {
-               exit(EXIT_FAILURE);
-           }
-         }
-     }
+			}
+		}
+		else {
+			if ( (pclt = db_list_init(argv[0], hostname, domain, xport,
+			NULL, 0, NULL, 0))
+			== NULL) {
+			exit(EXIT_FAILURE);
+			}
+		}
+	}
 
     if(triggered_read == 0){
 		// second parameter of timer_init is no longer used
@@ -274,16 +274,24 @@ int main(int argc, char **argv)
 				msg.frame_inf.inf.FF = StdFF; // standard frame
 				msg.frame_inf.inf.RTR = 0;
 				msg.id = id; // CAN ID
-				msg.data[0] = (char)((Acceleration >> 24) & 0xFF);
-				msg.data[1] = (char)((Acceleration >> 16) & 0xFF);
-				msg.data[2] = (char)((Acceleration >> 8) & 0xFF);
-				msg.data[3] = (char)(Acceleration & 0xFF);
-				printf("Acceleration: msg.id %#x msg.frame_inf.inf.DL %#x ",
-						msg.data[0],
+				if(msg_size == 4) { //For sending an int with MSB in msg.data[0], i.e. Motorola byte ordering
+					msg.data[0] = (char)((Acceleration >> 24) & 0xFF);
+					msg.data[1] = (char)((Acceleration >> 16) & 0xFF);
+					msg.data[2] = (char)((Acceleration >> 8) & 0xFF);
+					msg.data[3] = (char)(Acceleration & 0xFF);
+				}
+				else{ //For sending an int or long argument with LSB in msg.data[0], i.e. Intel byte ordering
+					for(i=0; i<msg_size; i++)
+						msg.data[i] = (char)((Acceleration >> i*8) & 0xFF);
+				}
+				if(verbose) {
+					printf("Acceleration: msg.id %#x msg.frame_inf.inf.DL %#x ",
+						msg.id,
 						msg.frame_inf.inf.DLC);
-				for(i=0; i<msg_size; i++)
-					printf("d[%i] %#hhx ", i, msg.data[i]);
-				printf("\n");
+					for(i=0; i<msg_size; i++)
+						printf("d[%i] %#hhx ", i, msg.data[i]);
+					printf("\n");
+				}
 
 				resp = CanWrite(hdl, &msg );
 			}
