@@ -8,7 +8,7 @@ extern "C" {
 #include <clt_vars_leaf.h>
 #include <clt_vars_prius.h>
 #include <clt_vars_accord.h>
-#include "Leddar.h"
+#include "leddar_SIGHT.h"
 #include "path_gps_lib.h"
 }
 #include <math.h>
@@ -83,8 +83,6 @@ double i_latitude;
 double i_longitude;
 double i_steering;
 double i_fuel_rate;
-leddar_t* targets;
-
 double o_throttle_command;
 double o_brake_command;
 double o_deceleration_command;
