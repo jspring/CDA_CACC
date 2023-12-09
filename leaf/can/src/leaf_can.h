@@ -257,6 +257,7 @@ static inline void get_leaf_fuel_rate(unsigned char *data, leaf_fuel_rate_t *p) 
 
 #define OBJ_205_REL_DIST_RES	0.05
 #define OBJ_205_REL_SPEED_RES	0.04
+#define OBJ_205_AZIMUTH_RES		0.10
 
 typedef struct {
 	int ts_ms;
@@ -264,21 +265,33 @@ typedef struct {
 	unsigned int message_timeout_counter;
 	float object_205_distance;
 	float object_205_relative_speed;
+	float object_205_azimuth;
 } leaf_target_object_205_distance_speed_t;
 
 static inline void get_leaf_target_object_205_distance_speed(unsigned char *data, leaf_target_object_205_distance_speed_t *p) {
 	unsigned short ushort_temp;
+	unsigned char uchar_temp;
 	short short_temp;
 
-	ushort_temp = (unsigned short) ((((data[0] << 4) & 0x0FF0) + (data[1] >> 4) & 0xFF));
+	ushort_temp = (unsigned short) ( ((data[0] << 4) & 0x0FF0) + ((data[1] >> 4) & 0x0F) );
 	p->object_205_distance = ushort_temp * OBJ_205_REL_DIST_RES - 1;
-	short_temp = (short) ( ((data[1] << 8) & 0x0F00) + (data[2] & 0xFF));
+
+//	uchar_temp = (unsigned char) ((((data[0] << 4) & 0xF0) + (data[1] >> 4) & 0x0F));
+//	p->object_205_distance = (float)((uchar_temp - 82) / 32.27);
+	short_temp = (short) ( ((data[1] << 8) & 0x0F00) + (data[2] & 0xFF) );
 	if( (short_temp & 0x0800) != 0)
 		short_temp = (short)(short_temp | 0xF000);
 	p->object_205_relative_speed = short_temp * OBJ_205_REL_SPEED_RES;
-printf("library: leaf target object 205 distance %.3f speed %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+
+	short_temp = (short) ( ((data[3] << 4) & 0x0FF0) + ((data[4] >> 4) & 0x0F) );
+	if( (short_temp & 0x0800) != 0)
+		short_temp = (short)(short_temp | 0xF000);
+	p->object_205_azimuth = short_temp * OBJ_205_AZIMUTH_RES;
+
+printf("library: leaf target object 205 distance %.3f speed %.3f azimuth %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
 		p->object_205_distance,
 		p->object_205_relative_speed,
+		p->object_205_azimuth,
 		data[0],
 		data[1],
 		data[2],
@@ -289,6 +302,68 @@ printf("library: leaf target object 205 distance %.3f speed %.3f d[0] %#hhx d[1]
 		data[7]
 );
 }
+
+/*******************************************************************************
+ *	leaf_target_object_distance
+ *      Message ID      0x21F
+ *      Transmitted every 25 ms
+ *
+ *	dbvar = DB_LEAF_MSG21F_VAR
+ *
+ *      Byte Position   0-1
+ *      Bit Position    0
+ *      Bit Length      12
+ *
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+*/
+
+#define OBJ_21F_DIST_RES		0.05
+#define OBJ_21F_REL_SPEED_RES	0.04
+#define OBJ_21F_AZIMUTH_RES		0.10
+
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	float object_21F_distance;
+	float object_21F_relative_speed;
+	float object_21F_azimuth;
+} leaf_target_object_21F_distance_speed_t;
+
+static inline void get_leaf_target_object_21F_distance_speed(unsigned char *data, int id, leaf_target_object_21F_distance_speed_t *p) {
+	unsigned short ushort_temp;
+	short short_temp;
+
+	ushort_temp = (unsigned short) ( ((data[2] << 4) & 0x0FF0) + ((data[3] >> 4) & 0x0F) );
+	p->object_21F_distance = ushort_temp * OBJ_21F_DIST_RES - 1;
+
+	short_temp = (short) ( ((data[3] << 8) & 0x0F00) + (data[4] & 0xFF));
+	if( (short_temp & 0x0800) != 0)
+		short_temp = (short)(short_temp | 0xF000);
+	p->object_21F_azimuth = short_temp * OBJ_21F_AZIMUTH_RES;
+
+	short_temp = (short) ( ((data[5] << 4) & 0x0FF0) + ((data[6] >> 4) & 0x0F) );
+	if( (short_temp & 0x0800) != 0)
+		short_temp = (short)(short_temp | 0xF000);
+	p->object_21F_relative_speed = short_temp * OBJ_21F_REL_SPEED_RES;
+
+printf("library: leaf target object %#x distance %.3f azimuth %.3f speed %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+		id,
+		p->object_21F_distance,
+		p->object_21F_azimuth,
+		p->object_21F_relative_speed,
+		data[0],
+		data[1],
+		data[2],
+		data[3],
+		data[4],
+		data[5],
+		data[6],
+		data[7]
+);
+}
+
 /*******************************************************************************
  *	leaf_target_object_distance
  *      OBD2 Message Poll ID      0x723:0x03 22 01 07

@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
 	leaf_fuel_rate_t leaf_fuel_rate;
 	leaf_target_object_distance_t leaf_target_object_distance;
 	leaf_target_object_205_distance_speed_t leaf_target_object_205_distance_speed;
+	leaf_target_object_21F_distance_speed_t leaf_target_object_21F_distance_speed;
 	leaf_target_relative_speed_mps_t leaf_target_relative_speed_mps;
 	veh_comm_packet_t virtual_car_comm_packet;
 	leaf_Veh_Accel_CAN4_t leaf_Veh_Accel_CAN4;
@@ -342,19 +343,44 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 				get_current_timestamp(&ts);
 				ts_ms = TS_TO_MS(&ts);
 				switch(db_steinhoff_msg.id) {
-					case 0x205:
-						get_leaf_target_object_205_distance_speed(db_steinhoff_msg.data, &leaf_target_object_205_distance_speed);
-						check_msg_timeout(ts_ms, &leaf_target_object_205_distance_speed.ts_ms,
-							&leaf_target_object_205_distance_speed.two_message_periods,
-							&leaf_target_object_205_distance_speed.message_timeout_counter);
-						db_clt_write(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
-						if(verbose){
-							print_timestamp(stdout, &ts);
-							printf("Leaf target distance %.3f speed %.3f\n", 
-								leaf_target_object_205_distance_speed.object_205_distance,
-								leaf_target_object_205_distance_speed.object_205_relative_speed);
-						}
-						break;
+				case 0x205:
+					get_leaf_target_object_205_distance_speed(db_steinhoff_msg.data, &leaf_target_object_205_distance_speed);
+					check_msg_timeout(ts_ms, &leaf_target_object_205_distance_speed.ts_ms,
+						&leaf_target_object_205_distance_speed.two_message_periods,
+						&leaf_target_object_205_distance_speed.message_timeout_counter);
+					db_clt_write(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
+					if(verbose){
+						print_timestamp(stdout, &ts);
+						printf("Leaf %#hx target distance %.3f speed %.3f azimuth %.3f\n",
+							db_steinhoff_msg.id,
+							leaf_target_object_205_distance_speed.object_205_distance,
+							leaf_target_object_205_distance_speed.object_205_relative_speed,
+							leaf_target_object_205_distance_speed.object_205_azimuth
+							);
+					}
+					break;
+				case 0x21B:
+				case 0x21E:
+				case 0x21F:
+				case 0x220:
+				case 0x221:
+				case 0x222:
+				case 0x223:
+					get_leaf_target_object_21F_distance_speed(db_steinhoff_msg.data, db_steinhoff_msg.id, &leaf_target_object_21F_distance_speed);
+					check_msg_timeout(ts_ms, &leaf_target_object_21F_distance_speed.ts_ms,
+						&leaf_target_object_21F_distance_speed.two_message_periods,
+						&leaf_target_object_21F_distance_speed.message_timeout_counter);
+					db_clt_write(pclt, db_steinhoff_msg.id, sizeof(leaf_target_object_21F_distance_speed_t), &leaf_target_object_21F_distance_speed);
+					if(verbose){
+						print_timestamp(stdout, &ts);
+						printf("Leaf %#hx target distance %.3f speed %.3f azimuth %.3f\n",
+							db_steinhoff_msg.id,
+							leaf_target_object_21F_distance_speed.object_21F_distance,
+							leaf_target_object_21F_distance_speed.object_21F_relative_speed,
+							leaf_target_object_21F_distance_speed.object_21F_azimuth
+							);
+					}
+					break;
 					case 0x735:
 					switch(obd2ID){
 					case 0x05620107: //object distance

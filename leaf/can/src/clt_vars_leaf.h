@@ -15,6 +15,13 @@
 #define DB_LEAF_MSG158_TYPE	0x158
 #define DB_LEAF_MSG1DA_TYPE	0x1DA
 #define DB_LEAF_MSG205_TYPE	0x205
+#define DB_LEAF_MSG21B_TYPE	0x21B
+#define DB_LEAF_MSG21E_TYPE	0x21E
+#define DB_LEAF_MSG21F_TYPE	0x21F
+#define DB_LEAF_MSG220_TYPE	0x220
+#define DB_LEAF_MSG221_TYPE	0x221
+#define DB_LEAF_MSG222_TYPE	0x222
+#define DB_LEAF_MSG223_TYPE	0x223
 #define DB_LEAF_MSG292_TYPE	0x292
 #define DB_LEAF_MSG2B0_TYPE	0x2B0
 #define DB_LEAF_MSG392_TYPE	0x392
@@ -41,6 +48,13 @@
 #define DB_LEAF_MSG158_VAR	DB_LEAF_MSG158_TYPE
 #define DB_LEAF_MSG1DA_VAR	DB_LEAF_MSG1DA_TYPE
 #define DB_LEAF_MSG205_VAR	DB_LEAF_MSG205_TYPE
+#define DB_LEAF_MSG21B_VAR	DB_LEAF_MSG21B_TYPE
+#define DB_LEAF_MSG21E_VAR	DB_LEAF_MSG21E_TYPE
+#define DB_LEAF_MSG21F_VAR	DB_LEAF_MSG21F_TYPE
+#define DB_LEAF_MSG220_VAR	DB_LEAF_MSG220_TYPE
+#define DB_LEAF_MSG221_VAR	DB_LEAF_MSG221_TYPE
+#define DB_LEAF_MSG222_VAR	DB_LEAF_MSG222_TYPE
+#define DB_LEAF_MSG223_VAR	DB_LEAF_MSG223_TYPE
 #define DB_LEAF_MSG2B0_VAR	DB_LEAF_MSG2B0_TYPE
 #define DB_LEAF_MSG292_VAR	DB_LEAF_MSG292_TYPE
 #define DB_LEAF_MSG392_VAR	DB_LEAF_MSG392_TYPE
@@ -52,6 +66,13 @@ db_id_t db_vars_list_leaf[] =  {
 	{DB_LEAF_MSG99_VAR, sizeof(leaf_accel_cmd_t)},
 	{DB_LEAF_MSG158_VAR, sizeof(leaf_vehicle_speed_t)},
 	{DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t)},
+	{DB_LEAF_MSG21B_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG21E_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG21F_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG220_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG221_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG222_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG223_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
 	{DB_LEAF_MSG292_VAR, sizeof(leaf_Veh_Accel_CAN4_t)},
 	{DB_LEAF_MSG2B0_VAR, sizeof(leaf_Torq_brake_ACC_t)},
 	{DB_LEAF_MSG1DA_VAR, sizeof(leaf_torque_t)},
