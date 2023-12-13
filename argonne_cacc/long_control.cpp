@@ -333,6 +333,38 @@ void long_control::Update_Emergency_braking_inputs(double i_long_speed, int nb_t
 }
 
 void long_control::Get_preceding_vehicle_from_leaf_list(int nb_targets, double ego_speed){
+//	void long_control::Get_preceding_vehicle_from_accord_list(int nb_targets, double ego_speed){
+//		double closest_distance = 120;
+//		for(int i=0; i <nb_targets; i++){
+//			if (targets[i].relative_distance < closest_distance &&
+//				targets[i].relative_distance > 0.1 &&
+//				targets[i].relative_distance <= (fmax(25, this->long_speed * cfg->MAXIMUM_ACC_TIME_GAP_HORIZON + this->standstill_distance)) &&
+//				this->targets[i].relative_speed > fmin(-0.8*ego_speed,-2) &&
+//				fabs(this->targets[i].relative_position) < cfg->LATERAL_LANE_TARGET_SPACE){
+//					this->preceding_vehicle.relative_speed = this->targets[i].relative_speed;
+//					this->preceding_vehicle.relative_position = this->targets[i].relative_position;
+//					this->preceding_vehicle.relative_distance = this->targets[i].relative_distance;
+//					this->preceding_vehicle.ID = this->targets[i].ID;
+//					closest_distance = this->preceding_vehicle.relative_distance;
+//					this->missing_target_elapsed_time = 0.;
+//					this->is_preceding_valid = true;
+//			}
+//		}
+//		if(closest_distance == 120){
+//			this->missing_target_elapsed_time += this->Ts;
+//			this->is_preceding_valid = false;
+//		}
+//		if(this->is_cacc_performance_flag || this->is_v2i_engaged)
+//			return;
+//
+//		if(this->is_preceding_valid){
+//			Verify_possible_cut_in_out();
+//		}
+//		if(this->is_with_hmi && (this->current_spacing_policy->cut_detection_frames_counter == -1) && this->user_time_gap_change_flag){
+//			Change_target_time_gap_user_requested();
+//		}
+//
+
 	double closest_distance = 120;
 	if (targets[0].relative_distance > 0.01 && targets[0].relative_distance <= fmax(25,(this->long_speed * cfg->MAXIMUM_ACC_TIME_GAP_HORIZON + this->standstill_distance))){
 		this->preceding_vehicle.relative_speed = this->targets[0].relative_speed;
@@ -926,7 +958,7 @@ void long_control::Actuators_signal_from_reference_acceleration(double _veh_spee
 		this->throttle_level_command = 0.0000000;
 		this->deceleration_command = _desired_acceleration;
 //		this->brake_level_command = fmax(0, -_desired_acceleration / 0.1534); // Brake map first order fitting, only for Accord
-		this->brake_level_command = (this->vehicle_id==LEAF) ? fmax(0, desired_acceleration) : fmax(0, -_desired_acceleration / 0.1534); // Brake map first order fitting, only for Accord
+		this->brake_level_command = (this->vehicle_id==LEAF) ? fmax(0, _desired_acceleration) : fmax(0, -_desired_acceleration / 0.1534); // Brake map first order fitting, only for Accord
 	}
 	return;
 }
