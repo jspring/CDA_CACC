@@ -54,6 +54,7 @@ void Initialization_task(int argc, char *argv[]) {
 	}
 	if (setjmp(exit_env) != 0) {
 		output_t output;
+		output.throttle_pct = output.brake_level = 0;
 		db_clt_write(pclt,DB_OUTPUT_VAR, sizeof(output_t), &output);
 		db_list_done(pclt, (db_id_t *)NULL, (int)0, (int *)NULL, (int)0);
 		delete sProfile;
@@ -289,7 +290,7 @@ bool Read_inputs() {
 					break;
 				case(LEAF):
 					get_leaf_targets();
-					nb_radar_objectives=16;
+					nb_radar_objectives=1;
 					break;
 				case(CAMRY):
 					get_camry_targets();
@@ -318,7 +319,7 @@ bool Read_inputs() {
 					break;
 				case(LEAF):
 					get_leaf_targets();
-					nb_radar_objectives = 16;
+					nb_radar_objectives = 1;
 					break;
 
 			}
@@ -344,7 +345,7 @@ bool Read_inputs() {
 					break;
 				case(LEAF):
 					get_leaf_targets();
-					nb_radar_objectives = 16;
+					nb_radar_objectives = 1;
 					break;
 			}
 			control_structure->Update_Emergency_braking_inputs(i_long_speed, nb_radar_objectives, current_time, trigger_EB);
@@ -364,6 +365,7 @@ bool Process_data() {
 		case(CAMRY):
 			o_deceleration_command = control_structure->Get_deceleration_command();
 			o_throttle_command = fmax(0, control_structure->desired_acceleration);
+			printf("Process_data: o_throttle_command %.2f control_structure->desired_acceleration %.2f\n", o_throttle_command, control_structure->desired_acceleration);
 			break;
 //		case(CAMRY):
 //			o_deceleration_command = control_structure->Get_deceleration_command();
@@ -385,6 +387,7 @@ bool Write_outputs() {
 //	output.accel_decel_request = o_throttle_command;
 	(ego_vehicle_id == ACCORD) ? output.brake_level = o_brake_command : output.brake_level = o_deceleration_command;
 	output.throttle_pct = o_throttle_command;
+	printf("Write_outputs: output.throttle_pct %.2f o_throttle_command %.2f\n",output.throttle_pct, o_throttle_command);
 
 	db_clt_write(pclt, DB_OUTPUT_VAR, sizeof(output_t), &output);
 	db_clt_read(pclt, DB_COMM_TX_VAR, sizeof(comm_pkt), &comm_pkt);
@@ -436,6 +439,7 @@ int get_prius_targets() {
 }
 
 int get_leaf_targets() {
+	//OBD2 radar targets
 //	leaf_target_object_distance_t leaf_target_object_distance;
 //	leaf_target_relative_speed_mps_t leaf_target_relative_speed_mps;
 //	int verbose = 1;
@@ -449,20 +453,31 @@ int get_leaf_targets() {
 //	control_structure->targets[0].relative_speed = leaf_target_relative_speed_mps.object_relative_spd_Radar__mps;
 //	control_structure->targets[0].ID = 0;
 
-	leddar_SIGHT_detection_t leddar_SIGHT_detection[8];
+	//Leddartech SIGHT lidar targets
+//	leddar_SIGHT_detection_t leddar_SIGHT_detection[8];
 	int verbose = 1;
 	int i = 0;
+//
+//	for(i=0; i<8; i++) {
+//			db_clt_read(pclt, DB_LEDDAR_SIGHT_DETECTION_VAR+i, sizeof(leddar_SIGHT_detection_t), &leddar_SIGHT_detection[i]);
+//			target[2*i].relative_distance = leddar_SIGHT_detection[i].distance1;
+//			target[2*i+1].relative_distance = leddar_SIGHT_detection[i].distance2;
+//			control_structure->targets[2*i].relative_distance = leddar_SIGHT_detection[i].distance1;
+//			control_structure->targets[2*i+1].relative_distance = leddar_SIGHT_detection[i].distance2;
+//	}
 
-	for(i=0; i<8; i++) {
-			db_clt_read(pclt, DB_LEDDAR_SIGHT_DETECTION_VAR+i, sizeof(leddar_SIGHT_detection_t), &leddar_SIGHT_detection[i]);
-			target[2*i].relative_distance = leddar_SIGHT_detection[i].distance1;
-			target[2*i+1].relative_distance = leddar_SIGHT_detection[i].distance2;
-			control_structure->targets[2*i].relative_distance = leddar_SIGHT_detection[i].distance1;
-			control_structure->targets[2*i+1].relative_distance = leddar_SIGHT_detection[i].distance2;
-	}
+//Leaf message 0x205 target
+	leaf_target_object_205_distance_speed_t leaf_target_object_205_distance_speed;
+	db_clt_read(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
+	target[0].relative_distance = leaf_target_object_205_distance_speed.object_205_distance;
+	target[0].relative_speed = leaf_target_object_205_distance_speed.object_205_relative_speed;
+	control_structure->targets[0].relative_distance = leaf_target_object_205_distance_speed.object_205_distance;
+	control_structure->targets[0].relative_speed = leaf_target_object_205_distance_speed.object_205_relative_speed;
+
 	if(verbose){
 		printf("\get_leaf_targets: t=%.4f ",current_time);
-		for(i=0; i<16; i++)
+//		for(i=0; i<16; i++)
+		i = 0;
 			printf("%d %.2f ", i, target[i].relative_distance);
 		printf("\n");
 	}
@@ -681,31 +696,31 @@ void UpdateStandardLogFile(){
 	fprintf(fp," %.4f", gps_data.latitude);
 	fprintf(fp," %.4f", gps_data.longitude);
 	fprintf(fp," %.4f", gps_data.altitude);
-	fprintf(fp," %d",   control_structure->is_preceding_valid ? 1 : 0); //20
+	fprintf(fp," %d",   control_structure->is_preceding_valid ? 1 : 0); 		//20
 
 	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_distance); // 21
-	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_speed);
-	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_position);
-	fprintf(fp," %.3f", control_structure->throttle_level_command);
-	fprintf(fp," %.3f", control_structure->brake_level_command);
+	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_speed);	//22
+	fprintf(fp," %.3f", control_structure->preceding_vehicle.relative_position);//23
+	fprintf(fp," %.3f", control_structure->throttle_level_command);				//24
+	fprintf(fp," %.3f", control_structure->brake_level_command);				//25
 
-	fprintf(fp," %.3f", control_structure->deceleration_command);
-	fprintf(fp," %.3f", control_structure->setpoint_speed);
-	fprintf(fp," %.3f", control_structure->desired_acceleration);
-	fprintf(fp," %.3f", control_structure->desired_distance_gap);
-	fprintf(fp," %.3f", control_structure->ACC_time_gap);
+	fprintf(fp," %.3f", control_structure->deceleration_command);				//26
+	fprintf(fp," %.3f", control_structure->setpoint_speed);						//27
+	fprintf(fp," %.3f", control_structure->desired_acceleration);				//28
+	fprintf(fp," %.3f", control_structure->desired_distance_gap);				//29
+	fprintf(fp," %.3f", control_structure->ACC_time_gap);						//30
 
-	fprintf(fp," %.3f", control_structure->ACC_gap_error);  // 31
-	fprintf(fp," %.3f", control_structure->ACC_fb_out);
-	fprintf(fp," %.3f", control_structure->ACC_ref_speed);
-	fprintf(fp," %.3f", control_structure->v2v_fault_timer);
-	fprintf(fp," %.3f", control_structure->cooperative_ACC_time_gap);
+	fprintf(fp," %.3f", control_structure->ACC_gap_error);  					//31
+	fprintf(fp," %.3f", control_structure->ACC_fb_out);							//32
+	fprintf(fp," %.3f", control_structure->ACC_ref_speed);						//33
+	fprintf(fp," %.3f", control_structure->v2v_fault_timer);					//34
+	fprintf(fp," %.3f", control_structure->cooperative_ACC_time_gap);			//35
 
-	fprintf(fp," %.3f", control_structure->CACC_gap_error);
-	fprintf(fp," %.3f", control_structure->cooperative_ACC_fb_out);
-	fprintf(fp," %.3f", control_structure->cooperative_ACC_ref_speed);
-	fprintf(fp," %.3f", control_structure->preceding_ref_speed);
-	fprintf(fp," %.3f", control_structure->leader_ref_speed);
+	fprintf(fp," %.3f", control_structure->CACC_gap_error);  					//36
+	fprintf(fp," %.3f", control_structure->cooperative_ACC_fb_out);  			//37
+	fprintf(fp," %.3f", control_structure->cooperative_ACC_ref_speed);  		//38
+	fprintf(fp," %.3f", control_structure->preceding_ref_speed);  				//39
+	fprintf(fp," %.3f", control_structure->leader_ref_speed);  					//40
 
 	fprintf(fp," %d", control_structure->is_LPF_active ? 1 : 0);  // 41
 	fprintf(fp," %.3f", control_structure->CACC_ff_out);
