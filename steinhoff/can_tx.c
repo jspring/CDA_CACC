@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 	int i;
 	int use_db = 1;
 	int create_db_vars = 0;
-	int Acceleration = 0; //+ for acceleration, 0x98 message; - for deceleration/braking, 0x99 message
+	long Acceleration = 0; //+ for acceleration, 0x98 message; - for deceleration/braking, 0x99 message
 	int write_err = ERR_OK;
 	int msg_size = 0;
 	int cld = 0; //send command line data
@@ -95,7 +95,8 @@ int main(int argc, char **argv)
 	while ((opt = getopt(argc, argv, "A:B:ep:m:i:n:s:t:vcd")) != -1) {
 		switch (opt) {
 			case 'A':
-				Acceleration = atoi(optarg);
+//				Acceleration = atoi(optarg);
+				Acceleration = strtol(optarg, NULL, 0);
 				use_db = 0;
 				triggered_read = 0;
 				break;
@@ -106,7 +107,7 @@ int main(int argc, char **argv)
 				port= (char)atoi(optarg);
 				break;
 			case 'i':
-				id = (unsigned int)atoi(optarg);
+				id = (unsigned int)strtol(optarg, NULL, 0);
 				break;
 			case 'n':
 				dbnum = (int)strtol(optarg, NULL, 0);
@@ -304,8 +305,9 @@ int main(int argc, char **argv)
 			ts_sav = ts_now;
 			print_timestamp(stdout, &ts);
 			printf(" tdiff: %d: msg.id %#x msg.frame_inf.inf.DL %#x ",
-						msg.data[0],
-						msg.frame_inf.inf.DLC);
+					tdiff,
+					msg.id,
+					msg.frame_inf.inf.DLC);
 				for(i=0; i<msg_size; i++)
 					printf("d[%i] %#hhx ", i, msg.data[i]);
 				printf("\n");
