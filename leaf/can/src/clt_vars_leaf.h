@@ -22,6 +22,7 @@
 #define DB_LEAF_MSG221_TYPE	0x221
 #define DB_LEAF_MSG222_TYPE	0x222
 #define DB_LEAF_MSG223_TYPE	0x223
+#define DB_LEAF_MSG239_TYPE	0x239
 #define DB_LEAF_MSG292_TYPE	0x292
 #define DB_LEAF_MSG2B0_TYPE	0x2B0
 #define DB_LEAF_MSG392_TYPE	0x392
@@ -54,6 +55,7 @@
 #define DB_LEAF_MSG220_VAR	DB_LEAF_MSG220_TYPE
 #define DB_LEAF_MSG221_VAR	DB_LEAF_MSG221_TYPE
 #define DB_LEAF_MSG222_VAR	DB_LEAF_MSG222_TYPE
+#define DB_LEAF_MSG239_VAR	DB_LEAF_MSG239_TYPE
 #define DB_LEAF_MSG223_VAR	DB_LEAF_MSG223_TYPE
 #define DB_LEAF_MSG2B0_VAR	DB_LEAF_MSG2B0_TYPE
 #define DB_LEAF_MSG292_VAR	DB_LEAF_MSG292_TYPE
@@ -73,6 +75,7 @@ db_id_t db_vars_list_leaf[] =  {
 	{DB_LEAF_MSG221_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
 	{DB_LEAF_MSG222_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
 	{DB_LEAF_MSG223_VAR, sizeof(leaf_target_object_21F_distance_speed_t)},
+	{DB_LEAF_MSG239_VAR, sizeof(CC_cluster_t)},
 	{DB_LEAF_MSG292_VAR, sizeof(leaf_Veh_Accel_CAN4_t)},
 	{DB_LEAF_MSG2B0_VAR, sizeof(leaf_Torq_brake_ACC_t)},
 	{DB_LEAF_MSG1DA_VAR, sizeof(leaf_torque_t)},
