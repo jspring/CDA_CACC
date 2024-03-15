@@ -22,8 +22,8 @@ CACC_2_ACC = 6
 ACC_2_CACC = 7
 
 ####### THESE PARAMETERS HAVE TO BE DEFINED BEFORE RUNNING
-ego_veh_id = CAMRY
-setPointSpeedValue = 68.24  # In mph
+ego_veh_id = LEAF
+setPointSpeedValue = 65.0 # In mph
 selectedTimeGap = 1.35  # In sec
 desired_control_mode = ACC
 performance_factor = 0.5   # 0: Comfort     1: Performance
@@ -71,7 +71,7 @@ def setupSliders():
     sSlider = plt.axes([0.65, 0.92, 0.28, 0.05])
     hSlider = plt.axes([0.65, 0.84, 0.28, 0.05])
     pSlider = plt.axes([0.65, 0.76, 0.28, 0.05])
-    s_slider = Slider(sSlider, 'Cruise speed', 25, 75, valinit=setPointSpeedValue)
+    s_slider = Slider(sSlider, 'Cruise speed', 5, 75, valinit=setPointSpeedValue)
     h_slider = Slider(hSlider, 'Time gap', 0.3, 1.7, valinit=selectedTimeGap)
     p_slider = Slider(pSlider, 'Perf. factor', 0.0, 1.0, valinit=performance_factor)
     return s_slider, h_slider, p_slider
@@ -236,7 +236,7 @@ if ego_veh_id == PRIUS:
     ip_address = '172.16.0.127'
 elif ego_veh_id == LEAF:
     veh_id = './img/leaf.jpg'
-    ip_address = '172.16.0.120'
+    ip_address = '172.16.0.121'
 elif ego_veh_id == CAMRY:
     veh_id = './img/camry.jpg'
     ip_address = '172.16.0.128'

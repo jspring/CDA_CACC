@@ -82,7 +82,7 @@ int main(int argc, char const *argv[]){
 	address.sin_family = AF_INET;
 	switch(ego_id){
 		case(LEAF):
-			address.sin_addr.s_addr = inet_addr("172.16.0.120"); // LEAF
+			address.sin_addr.s_addr = inet_addr("172.16.0.121"); // LEAF
 			break;
 		case(PRIUS):
 			address.sin_addr.s_addr = inet_addr("172.16.0.127"); // PRIUS
@@ -316,12 +316,12 @@ int Send_data_to_hmi(int socket){
 											(int) (db_data->veh_3_speed*100000),
 											(int) (db_data->timestamp*100000),
 											(int) (db_data->sys_status*100000));
-	printf("Send_data_to_hmi: my_pip %d curr_ctl_mode %d v2v_avail %d ego_speed %d meas_time_gap %d\n",
-											db_data->my_pip,
-											db_data->current_control_mode,
-											db_data->v2v_available,
-											(int) (db_data->ego_speed*100000),
-											(int) (db_data->measured_time_gap*100000)
+//	printf("Send_data_to_hmi: my_pip %d curr_ctl_mode %d v2v_avail %d ego_speed %d meas_time_gap %d\n",
+//											db_data->my_pip,
+//											db_data->current_control_mode,
+//											db_data->v2v_available,
+//											(int) (db_data->ego_speed*100000),
+//											(int) (db_data->measured_time_gap*100000)
 //											(int) (db_data->ACC_set_time_gap*100000),
 //											(int) (db_data->CACC_set_time_gap*100000),
 //											(int) (db_data->veh_1_speed*100000),
@@ -329,7 +329,7 @@ int Send_data_to_hmi(int socket){
 //											(int) (db_data->veh_3_speed*100000),
 //											(int) (db_data->timestamp*100000),
 //											(int) (db_data->sys_status*100000)
-											);
+//											);
 	send(socket , tx_char , strlen(tx_char) , 0 );
 	return 1;
 }
