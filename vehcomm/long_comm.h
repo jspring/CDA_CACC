@@ -69,8 +69,61 @@ typedef struct {
 	double longitude;
 	double latitude;
 	float heading;
+	int desired_torque;
+	unsigned char brake_switch;
+	unsigned char cc_active;
 	char object_id[7];
 } IS_PACKED veh_comm_packet_t;
+
+// Message structure used by the test CAVs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+typedef struct{
+	// Time info
+	short year;
+	char month;
+	char day;
+	char hour;
+	char minute;
+	char second;
+	short ms;
+
+	// Test vehicle info
+	short ID;
+	short leaderID; // String leader ID
+	char stringPos;
+	char route; // 1: WB; 2: EB
+	short v; // 0.001 m/s
+	int pos; // Position from the start, 0.001 m
+	char lane;
+} IS_PACKED test_veh_data_t;
+
+typedef struct {
+	// Time info
+	short year;
+	char month;
+	char day;
+	char hour;
+	char minute;
+	char second;
+	short ms;
+
+	// Sim veh ID, used to determine if there is a virtual leading vehicle
+	int16_t simID;
+
+	// Target test vehicle
+	short targetVehID;
+
+	// Virtual leading vehicle
+	int v; // 0.001 m/s
+	int pos; // Position from the start, 0.001 m
+
+	// Signal control
+	char signalState;
+	int endTime; // numer of ms since 00:00:00 of the day
+
+	// TP Info
+	int refAcc; // 0.001 m/s2
+	//int32_t intersectionLoc; // Location of the downstream intersection, 0.001 m
+} IS_PACKED server_2_test_vehicle_t;
 
 typedef veh_comm_packet_t long_comm_pkt;
 
