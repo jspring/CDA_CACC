@@ -48,11 +48,11 @@ static inline void set_prius_accel_cmd(unsigned char data[], prius_accel_cmd_t *
 	accel_cmd_short =  (short)(p->accel_cmd / ACCEL_RES);
 	data[0] = (accel_cmd_short & 0xFF00) >> 8;
 	data[1] = accel_cmd_short & 0xFF;
-		printf("library set_prius_accel_cmd: p->accel_cmd %.2f 0:%#2.2hhx   1:%#2.2hhx\n",
-				p->accel_cmd,
-				data[0],
-				data[1]
-				);
+//		printf("library set_prius_accel_cmd: p->accel_cmd %.2f 0:%#2.2hhx   1:%#2.2hhx\n",
+//				p->accel_cmd,
+//				data[0],
+//				data[1]
+//				);
 }
 
 /*******************************************************************************
@@ -272,6 +272,78 @@ static inline void get_prius_long_lat_accel(unsigned char *data, prius_long_lat_
 }
 
 /*******************************************************************************
+ *      prius_brake
+ *      Message ID      0x226
+ *      Transmitted every 40 ms
+ *
+ *	dbvar = DB_PRIUS_MSG226_VAR
+ *
+ *	Veh_brake_pressure_CAN1
+ *      Byte Position   1-2
+ *      Bit Position    0
+ *      Bit Length      9
+ *
+ *	Veh_brake_position_CAN1
+ *      Byte Position   3-4
+ *      Bit Position    16
+ *      Bit Length      9
+ *
+ *	Veh_brake_switch_CAN1
+ *      Byte Position   5
+ *      Bit Position    37
+ *      Bit Length      1
+ *
+BO_ 550 HS_CAN5__226: 5 Vector__XXX
+ SG_ Veh_brake_pressure_CAN1 : 0|9@0+ (1,0) [0|511] "" XXX
+ SG_ Veh_brake_position_CAN1 : 16|9@0+ (1,0) [0|511] "" XXX
+ SG_ Veh_brake_switch_CAN1 : 37|1@0+ (1,0) [0|0] "" XXX
+ *
+ *
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+ *
+ */
+
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	unsigned short brake_pressure;
+	unsigned short brake_position;
+	unsigned char brake_switch;
+} prius_brake_t;
+
+static inline void get_prius_brake(unsigned char *data, prius_brake_t *p) {
+	unsigned char uchar_temp;
+	unsigned short ushort_temp;
+
+	ushort_temp = (unsigned short)(((data[0] << 8) & 0x100) + (data[1] & 0xFF));
+	p->brake_pressure = ushort_temp;
+
+	ushort_temp = (unsigned short)(((data[2] << 8) & 0x100) + (data[3] & 0xFF));
+	p->brake_position = ushort_temp;
+
+	uchar_temp = (unsigned char)((data[4] >> 5) & 0x1);
+	p->brake_switch = uchar_temp;
+
+
+	printf("library: brake pressure: data[0] %#hhx data[1] %#hhx %d brake position: data[2] %#hhx data[3] %#hhx %d brake switch: data[4] %#hhx %d\n",
+			data[0],
+			data[1],
+			p->brake_pressure,
+			data[2],
+			data[3],
+			p->brake_position,
+			data[4],
+			p->brake_switch
+			);
+
+}
+
+
+
+
+/*******************************************************************************
  *      prius_accel_cmd_status
  *      Message ID      0x343
  *      Transmitted every 40 ms
@@ -329,6 +401,63 @@ static inline void get_prius_accel_cmd_status(unsigned char *data, prius_accel_c
 	p->checksum = data[7];
 	p->checksum_check  = (data[0] + data[1] + data[2] + data[3] + data[4] + data[5] + data[6] + 0x4e) & 0xff;
 }
+
+/*******************************************************************************
+ *      prius_cruise_state
+ *      Message ID      0x1D3
+ *      Transmitted every 40 ms
+ *
+ *	dbvar = DB_PRIUS_MSG1D3_VAR
+ *
+ *	cruise_main_on_CAN1
+ *      Byte Position   0
+ *      Bit Position    4
+ *      Bit Length      1
+ *
+ *	cruise_control_state_CAN1
+ *	Byte Position   1
+ *      Bit Position    0-4
+ *      Bit Length      4
+ *
+ *	cruise_dash_set_speed_CAN1
+ *	Byte Position   3
+ *      Bit Position    0-7
+ *      Bit Length      8
+ *
+ *      BO_ 467 HS_CAN5__1D3: 8 Vector__XXX
+ SG_ Radar_following_distance_state_CAN1 : 4|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ Cruise_low_speed_lockout_CAN1 : 14|2@0+ (1,0) [0|3] "" XXX
+ SG_ Cruise_main_on_CAN1 : 15|1@0+ (1,0) [0|0] "" XXX
+ SG_ Cruise_set_speed_CAN1__kph : 23|8@0+ (1,0) [0|255] "kph" XXX
+ SG_ Radar_following_distance_2_CAN1 : 62|7@0+ (0.5,0) [0|127] "" Vector__XXX
+ SG_ Cruise_active_state_CAN1 : 63|1@0+ (1,0) [0|0] "" Vector__XXX
+ *
+  7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+ *
+ */
+
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	unsigned char	Radar_following_distance_state_CAN1;
+	unsigned char	Cruise_low_speed_lockout_CAN1;
+	unsigned char	Cruise_main_on_CAN1;
+	unsigned char	Cruise_set_speed_CAN1__kph;
+	float			Radar_following_distance_2_CAN1;
+	unsigned char	Cruise_active_state_CAN1;
+} prius_cruise_control_state_1D3_t;
+
+static inline void get_prius_cruise_control_state_1D3(unsigned char *data, prius_cruise_control_state_1D3_t *p) {
+	p->Radar_following_distance_state_CAN1 = (data[0] >> 3) & 0x03;
+	p->Cruise_low_speed_lockout_CAN1 = (data[1] >> 3) & 0x03;
+	p->Cruise_main_on_CAN1 = (data[1] >> 7) & 0x01;
+	p->Cruise_set_speed_CAN1__kph = data[2] & 0xFF;
+	p->Radar_following_distance_2_CAN1 = 0.5 * (data[7] & 0x3F);
+	p->Cruise_active_state_CAN1 = (data[7] >> 7) & 0x01;
+}
+
 
 /*******************************************************************************
  *      prius_cruise_state
@@ -513,21 +642,21 @@ static inline void get_camry_prius_radar_forward_vehicle(unsigned char *data, ca
 
 //	SG_ RCS : 63|8@0+ (1,0) [0|255] "" XXX
 	p->RCS = (int)(char7);
-	get_current_timestamp(&ts);
-	print_timestamp(stdout, &ts);
-	printf("library #%hX (%d) targets: ID %d long dist %.5f long speed %.5f lat dist %.5f lat speed %.5f RCS %d ",
-			msgid,
-			msgid,
-			p->ID,
-			p->LONG_DIST_CAN1__m,
-			p->LONG_SPEED_CAN1__mps,
-			p->LAT_DIST_CAN1__m,
-			p->LAT_SPEED_CAN1__mps,
-			p->RCS
-			);
-	for(i=0; i<8; i++)
-		printf("d[%d]:%#hhX ", i, data[i]);
-	printf("\n");
+//	get_current_timestamp(&ts);
+//	print_timestamp(stdout, &ts);
+//	printf("library #%hX (%d) targets: ID %d long dist %.5f long speed %.5f lat dist %.5f lat speed %.5f RCS %d ",
+//			msgid,
+//			msgid,
+//			p->ID,
+//			p->LONG_DIST_CAN1__m,
+//			p->LONG_SPEED_CAN1__mps,
+//			p->LAT_DIST_CAN1__m,
+//			p->LAT_SPEED_CAN1__mps,
+//			p->RCS
+//			);
+//	for(i=0; i<8; i++)
+//		printf("d[%d]:%#hhX ", i, data[i]);
+//	printf("\n");
 
 }
 
