@@ -74,6 +74,8 @@ int main(int argc, char *argv[]) {
 	veh_comm_packet_t virtual_car_comm_packet;
 	leaf_Veh_Accel_CAN4_t leaf_Veh_Accel_CAN4;
 	leaf_Torq_brake_ACC_t leaf_Torq_brake_ACC;
+	CC_cluster_t CC_cluster;
+	veh_comm_packet_t comm_pkt;
 	int use_98_command = 0;
 	int send_tx_commands = 1;
 	int obd2_send_speed_poll_flag = 0;
@@ -160,6 +162,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 	memset(&leaf_torque, 0, sizeof(leaf_torque_t));
 	memset(&leaf_steering, 0, sizeof(leaf_steering_t));
 	memset(&leaf_Torq_brake_ACC, 0, sizeof(leaf_Torq_brake_ACC_t));
+	memset(&CC_cluster, 0, sizeof(CC_cluster_t));
 
 	leaf_accel_cmd.two_message_periods = 40; 		// 2*20 msec
 	leaf_torque_cmd.two_message_periods = 40; 		// 2*20 msec
@@ -167,6 +170,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 	leaf_torque.two_message_periods = 80;
 	leaf_steering.two_message_periods = 80;
 	leaf_Torq_brake_ACC.two_message_periods = 80;
+	CC_cluster.two_message_periods = 80;
 
 	db_clt_write(pclt, DB_LEAF_MSG99_VAR, sizeof(leaf_accel_cmd_t), &leaf_accel_cmd);
 	db_clt_write(pclt, DB_LEAF_MSG98_VAR, sizeof(leaf_torque_cmd_t), &leaf_torque_cmd);
@@ -174,6 +178,7 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 	db_clt_write(pclt, DB_LEAF_MSG1DA_VAR, sizeof(leaf_torque_t), &leaf_torque);
 	db_clt_write(pclt, DB_LEAF_MSG2_VAR, sizeof(leaf_steering_t), &leaf_steering);
 	db_clt_write(pclt, DB_LEAF_MSG2B0_VAR, sizeof(leaf_Torq_brake_ACC_t), &leaf_Torq_brake_ACC);
+	db_clt_write(pclt, DB_LEAF_MSG239_VAR, sizeof(CC_cluster_t), &CC_cluster);
 
 	if(acceleration == 0)
 		leaf_accel_cmd.accel_cmd = 0;
@@ -248,11 +253,35 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 							leaf_steering.SteeringAngleChangeRate
 						);
 					break;
+				case 0x239:
+					get_CC_cluster(db_steinhoff_msg.data, &CC_cluster);
+					check_msg_timeout(ts_ms, &CC_cluster.ts_ms,
+						&CC_cluster.two_message_periods,
+						&CC_cluster.message_timeout_counter);
+					if(veryverbose){
+						print_timestamp(stdout, &ts);
+						printf("library: accel_pedal_position %d CC_button_state %d CC_button_press %#hhx resume_button_press %d set_button_press %d gap_button_press %d counter %d d[0]: %#hhx d[1]: %#hhx d[2]: %#hhx d[3]: %#hhx d[4]: %#hhx \n",
+							CC_cluster.accel_pedal_position,
+							CC_cluster.CC_button_state,
+							CC_cluster.CC_button_press,
+							CC_cluster.resume_button_press,
+							CC_cluster.set_button_press,
+							CC_cluster.gap_button_press,
+							CC_cluster.counter,
+							db_steinhoff_msg.data[0],
+							db_steinhoff_msg.data[1],
+							db_steinhoff_msg.data[2],
+							db_steinhoff_msg.data[3],
+							db_steinhoff_msg.data[4]
+						);
+					}
+					break;
 				case 0x292:
 					get_leaf_accel(db_steinhoff_msg.data, &leaf_Veh_Accel_CAN4);
 					check_msg_timeout(ts_ms, &leaf_Veh_Accel_CAN4.ts_ms,
 						&leaf_Veh_Accel_CAN4.two_message_periods,
 						&leaf_Veh_Accel_CAN4.message_timeout_counter);
+					input.brake_pressure = leaf_Veh_Accel_CAN4.Veh_brake_press_CAN4__bar;
 					input.vehicle_accel_mps2 = G2MPS2 * leaf_Veh_Accel_CAN4.Long_Accel_CAN4__G;
 					db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input);
 					if(veryverbose)
@@ -287,6 +316,13 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 		switch(db_steinhoff_msg.id) {
 			case 0x2B0:
 				get_leaf_torq_brake_acc(db_steinhoff_msg.data, &leaf_Torq_brake_ACC);
+				input.brake_switch = leaf_Torq_brake_ACC.Brake_pedal_state;
+				input.torque = leaf_Torq_brake_ACC.Right_side_Torque_cmd;
+				db_clt_write(pclt,DB_INPUT_VAR, sizeof(input_t), &input);
+				db_clt_read(pclt, DB_COMM_TX_VAR, sizeof(veh_comm_packet_t), &comm_pkt);
+				comm_pkt.desired_torque = leaf_Torq_brake_ACC.Right_side_Torque_cmd;
+				comm_pkt.brake_switch = input.brake_switch;
+				db_clt_write(pclt, DB_COMM_TX_VAR, sizeof(veh_comm_packet_t), &comm_pkt);
 
 				if( (leaf_Torq_brake_ACC.Brake_pedal_state == 0) && (leaf_Torq_brake_ACC.green_cruise_icon != 0))
 					send_tx_commands = 1;
@@ -348,6 +384,10 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 					check_msg_timeout(ts_ms, &leaf_target_object_205_distance_speed.ts_ms,
 						&leaf_target_object_205_distance_speed.two_message_periods,
 						&leaf_target_object_205_distance_speed.message_timeout_counter);
+                                        if(leaf_target_object_205_distance_speed.object_205_distance < 1){
+                                                leaf_target_object_205_distance_speed.object_205_distance = 201.0;
+                                                leaf_target_object_205_distance_speed.object_205_relative_speed =5.0;
+                                        }
 					db_clt_write(pclt, DB_LEAF_MSG205_VAR, sizeof(leaf_target_object_205_distance_speed_t), &leaf_target_object_205_distance_speed);
 					if(verbose){
 						print_timestamp(stdout, &ts);
@@ -359,13 +399,13 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 							);
 					}
 					break;
-				case 0x21B:
-				case 0x21E:
+//				case 0x21B:
+//				case 0x21E:
 				case 0x21F:
-				case 0x220:
-				case 0x221:
-				case 0x222:
-				case 0x223:
+//				case 0x220:
+//				case 0x221:
+//				case 0x222:
+//				case 0x223:
 					get_leaf_target_object_21F_distance_speed(db_steinhoff_msg.data, db_steinhoff_msg.id, &leaf_target_object_21F_distance_speed);
 					check_msg_timeout(ts_ms, &leaf_target_object_21F_distance_speed.ts_ms,
 						&leaf_target_object_21F_distance_speed.two_message_periods,
@@ -481,10 +521,11 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 						db_steinhoff_accel_out.size = 2;
 						set_leaf_accel_cmd(db_steinhoff_accel_out.data, &leaf_accel_cmd);
 						if(verbose)
-							printf("leaf_can: brake %hhx %#hhx %.2f\n",
+							printf("leaf_can: brake %hhx %#hhx %.2f output.brake_level %.2f\n",
 								db_steinhoff_accel_out.data[0],
 								db_steinhoff_accel_out.data[1],
-								leaf_accel_cmd.accel_cmd
+								leaf_accel_cmd.accel_cmd,
+								output.brake_level
 							);
 						db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
 						}
@@ -494,37 +535,42 @@ printf("leaf_can: clt_trig_set OK for DB_STEINHOFF_MSG_VAR %d\n", DB_STEINHOFF_M
 						}
 						else
 							leaf_accel_cmd.accel_cmd = output.throttle_pct;
+//						if((leaf_accel_cmd.accel_cmd > 0) && (CC_cluster.resume_button_press == 0)) {
 						if(leaf_accel_cmd.accel_cmd > 0) {
 							db_steinhoff_accel_out.port = BRAKE_PORT;
 							db_steinhoff_accel_out.id = 0x99;
 							db_steinhoff_accel_out.size = 2;
+//							if(( input.vehicle_speed_mps > 13.0) && (leaf_accel_cmd.accel_cmd > 1.3))
+//								leaf_accel_cmd.accel_cmd = 1.0;
 							set_leaf_accel_cmd(db_steinhoff_accel_out.data, &leaf_accel_cmd);
 							if(verbose)
-								printf("leaf_can: accel %hhx %#hhx %.2f\n",
+								printf("leaf_can: accel %hhx %#hhx %.2f throttle_pct %.2f speed %.2f\n",
 									db_steinhoff_accel_out.data[0],
 									db_steinhoff_accel_out.data[1],
-									leaf_accel_cmd.accel_cmd
+									leaf_accel_cmd.accel_cmd,
+									output.throttle_pct,
+									input.vehicle_speed_mps
 								);
 							db_clt_write(pclt, DB_STEINHOFF_BRAKE_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
 						}
-
-
-						memset(&db_steinhoff_accel_out, 0, sizeof(db_steinhoff_out_t));
-						if(acceleration > 0) {
-							leaf_accel_cmd.accel_cmd = acceleration;
-							leaf_torque_cmd.torque_cmd = 0;
-						}
-						else
-							leaf_accel_cmd.accel_cmd = output.throttle_pct;
-						if(leaf_accel_cmd.accel_cmd > 0) {
-							db_steinhoff_accel_out.port = PORT_1;
-							db_steinhoff_accel_out.id = 0x99;
-							db_steinhoff_accel_out.size = 2;
-							set_leaf_accel_cmd(db_steinhoff_accel_out.data, &leaf_accel_cmd);
-							if(verbose && ((count % 5) == 0) )
-								printf("leaf_can: acceleration %hhx %.2f\n", db_steinhoff_accel_out.data[0], leaf_accel_cmd.accel_cmd);
-						}
-						db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
+//
+//
+//						memset(&db_steinhoff_accel_out, 0, sizeof(db_steinhoff_out_t));
+//						if(acceleration > 0) {
+//							leaf_accel_cmd.accel_cmd = acceleration;
+//							leaf_torque_cmd.torque_cmd = 0;
+//						}
+//						else
+//							leaf_accel_cmd.accel_cmd = output.throttle_pct;
+//						if(leaf_accel_cmd.accel_cmd > 0) {
+//							db_steinhoff_accel_out.port = PORT_1;
+//							db_steinhoff_accel_out.id = 0x99;
+//							db_steinhoff_accel_out.size = 2;
+//							set_leaf_accel_cmd(db_steinhoff_accel_out.data, &leaf_accel_cmd);
+//							if(verbose && ((count % 5) == 0) )
+//								printf("leaf_can: acceleration %hhx %.2f\n", db_steinhoff_accel_out.data[0], leaf_accel_cmd.accel_cmd);
+//						}
+//						db_clt_write(pclt, DB_STEINHOFF_ACCEL_OUT_VAR, sizeof(db_steinhoff_out_t), &db_steinhoff_accel_out);
 					}
 			}
 

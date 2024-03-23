@@ -29,7 +29,7 @@ static inline void set_leaf_accel_cmd(unsigned char data[], leaf_accel_cmd_t *p)
 	accel_cmd_short =  (short)(p->accel_cmd / acceleration_res);
 	data[1] = accel_cmd_short & 0xff;
 	data[0] = (accel_cmd_short & 0xff00) >> 8;
-	printf("library: set_leaf_accel_cmd: accel_cmd %.2f accel_cmd_short %#hx\n", p->accel_cmd, accel_cmd_short);
+//	printf("library: set_leaf_accel_cmd: accel_cmd %.2f accel_cmd_short %#hx\n", p->accel_cmd, accel_cmd_short);
 }
 
 /*******************************************************************************
@@ -61,7 +61,7 @@ static inline void set_leaf_torque_cmd(unsigned char data[], leaf_torque_cmd_t *
 	data[3] = 0;
 	data[4] = 0;
 	data[5] = 0;
-	printf("library: set_leaf_torque_cmd: torque_cmd %.2f torque_cmd_short %#hx\n", p->torque_cmd, torque_cmd_short);
+//	printf("library: set_leaf_torque_cmd: torque_cmd %.2f torque_cmd_short %#hx\n", p->torque_cmd, torque_cmd_short);
 }
 
 
@@ -288,19 +288,19 @@ static inline void get_leaf_target_object_205_distance_speed(unsigned char *data
 		short_temp = (short)(short_temp | 0xF000);
 	p->object_205_azimuth = short_temp * OBJ_205_AZIMUTH_RES;
 
-printf("library: leaf target object 205 distance %.3f speed %.3f azimuth %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
-		p->object_205_distance,
-		p->object_205_relative_speed,
-		p->object_205_azimuth,
-		data[0],
-		data[1],
-		data[2],
-		data[3],
-		data[4],
-		data[5],
-		data[6],
-		data[7]
-);
+//printf("library: leaf target object 205 distance %.3f speed %.3f azimuth %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+//		p->object_205_distance,
+//		p->object_205_relative_speed,
+//		p->object_205_azimuth,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[4],
+//		data[5],
+//		data[6],
+//		data[7]
+//);
 }
 
 /*******************************************************************************
@@ -348,20 +348,20 @@ static inline void get_leaf_target_object_21F_distance_speed(unsigned char *data
 		short_temp = (short)(short_temp | 0xF000);
 	p->object_21F_relative_speed = short_temp * OBJ_21F_REL_SPEED_RES;
 
-printf("library: leaf target object %#x distance %.3f azimuth %.3f speed %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
-		id,
-		p->object_21F_distance,
-		p->object_21F_azimuth,
-		p->object_21F_relative_speed,
-		data[0],
-		data[1],
-		data[2],
-		data[3],
-		data[4],
-		data[5],
-		data[6],
-		data[7]
-);
+//printf("library: leaf target object %#x distance %.3f azimuth %.3f speed %.3f d[0] %#hhx d[1] %#hhx d[2] %#hhx d[3] %#hhx d[4] %#hhx d[5] %#hhx d[6] %#hhx d[7] %#hhx\n",
+//		id,
+//		p->object_21F_distance,
+//		p->object_21F_azimuth,
+//		p->object_21F_relative_speed,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[4],
+//		data[5],
+//		data[6],
+//		data[7]
+//);
 }
 
 /*******************************************************************************
@@ -472,6 +472,69 @@ static inline void get_leaf_target_relative_speed(unsigned char *data, leaf_targ
 }
 
 /*******************************************************************************
+ *	CC_cluster
+ *      Message ID      0x239 (569)
+ *      Transmitted every 40 ms
+ *
+ *	dbvar = DB_LEAF_MSG239_VAR
+ *
+ *      Byte Position   0-1
+ *      Bit Position    7
+ *      Bit Length      12
+ *
+ 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+ 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+ */
+typedef struct {
+	int ts_ms;
+	unsigned char two_message_periods;
+	unsigned int message_timeout_counter;
+	char CC_button_state;
+	char CC_button_press;
+	char resume_button_press;
+	char set_button_press;
+	char gap_button_press;
+	char accel_pedal_position;
+	char counter;
+} CC_cluster_t;
+
+static inline void get_CC_cluster(unsigned char *data, CC_cluster_t *p) {
+	short short_temp;
+	char char_temp;
+	timestamp_t ts;
+
+	get_current_timestamp(&ts);
+
+	short_temp = ((data[1] << 8) & 0x0F00) + (data[0] & 0xFF);
+	p->accel_pedal_position = (short)(short_temp);
+	p->CC_button_state = (data[2] & 0x20) ? 1 : 0;
+	p->CC_button_press = (data[3] & 0x01) ? 1 : 0;
+	p->resume_button_press = (data[3] & 0x10) ? 1 : 0;
+	p->set_button_press = (data[3] & 0x08) ? 1 : 0;
+	p->gap_button_press = (data[3] & 0x04) ? 1 : 0;
+	p->counter = (unsigned char)(data[4] & 0x3);
+
+	if(p->resume_button_press != 0){
+
+//	print_timestamp(stdout, &ts);
+//	printf("library: accel_pedal_position %d CC_button_state %d CC_button_press %#hhx resume_button_press %d set_button_press %d gap_button_press %d counter %d d[0]: %#hhx d[1]: %#hhx d[2]: %#hhx d[3]: %#hhx d[4]: %#hhx \n",
+//		p->accel_pedal_position,
+//		p->CC_button_state,
+//		p->CC_button_press,
+//		p->resume_button_press,
+//		p->set_button_press,
+//		p->gap_button_press,
+//		p->counter,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[4]
+//	);
+	}
+}
+
+/*******************************************************************************
  *	Torq_brake_ACC
  *      Message ID      0x2B0 (688)
  *      Transmitted every 40 ms
@@ -489,8 +552,8 @@ typedef struct {
 	int ts_ms;
 	unsigned char two_message_periods;
 	unsigned int message_timeout_counter;
-	short Left_side_Torque_cmd;
 	short Right_side_Torque_cmd;
+	short Left_side_Torque_cmd;
 	char ACC_button_state;
 	char Brake_pedal_state;
 	char Cruise_info;
@@ -505,7 +568,10 @@ static inline void get_leaf_torq_brake_acc(unsigned char *data, leaf_Torq_brake_
 
 	get_current_timestamp(&ts);
 
-	short_temp = ((data[1] << 8) & 0x0F00) + (data[0] & 0xFF);
+	short_temp = (short)(((data[1] << 4) & 0x0F00) + (data[0] & 0xFF));
+	if(data[1] & 0x80)
+		short_temp |= 0xF000;
+
 	p->Left_side_Torque_cmd = (short)((short_temp * -1) + 3415);
 
 	short_temp = ((data[2] << 4) & 0x0FF0) + (data[1] & 0xFF);
@@ -544,6 +610,84 @@ static inline void get_leaf_torq_brake_acc(unsigned char *data, leaf_Torq_brake_
 //	);
 	}
 }
+
+///*******************************************************************************
+// *	braking_action
+// *      Message ID      0x1C3 (451)
+// *      Transmitted every 40 ms
+// *
+// *	dbvar = DB_LEAF_MSG2B0_VAR
+// *
+// *      Byte Position   0-1
+// *      Bit Position    7
+// *      Bit Length      12
+// *
+// 7 6 5 4 3 2 1 0   15 14 13 12 11 10 9 8   23 22 21 20 19 18 17 16   31 30 29 28 27 26 25 24
+// 39 38 37 36 35 34 33 32   47 46 45 44 43 42 41 40   55 54 53 52 51 50 49 48   63 62 61 60 59 58 57 56
+// */
+//typedef struct {
+//	int ts_ms;
+//	unsigned char two_message_periods;
+//	unsigned int message_timeout_counter;
+//unsigned short B1B2_BrakingAction;
+//	short Left_side_Torque_cmd;
+//	short Right_side_Torque_cmd;
+//	char ACC_button_state;
+//	char Brake_pedal_state;
+//	char Cruise_info;
+//	char green_cruise_icon;
+//	char counter;
+//} leaf_Torq_brake_ACC_t;
+//
+//static inline void get_leaf_torq_brake_acc(unsigned char *data, leaf_Torq_brake_ACC_t *p) {
+//	short short_temp;
+//	char char_temp;
+//	timestamp_t ts;
+//
+//	get_current_timestamp(&ts);
+//
+//	short_temp = (short)(((data[0] << 3) & 0xFF80) + ((data[1] >> 5 ) & 0x07));
+//	if(data[1] & 0x80)
+//		short_temp |= 0xF000;
+//
+//	p->Left_side_Torque_cmd = (short)((short_temp * -1) + 3415);
+//
+//	short_temp = ((data[2] << 4) & 0x0FF0) + (data[1] & 0xFF);
+//	p->Right_side_Torque_cmd = (short)(short_temp - 680);
+//
+//	//data[3] == 0x8c when brake is not pressed and the ACC button has not been pressed
+//	//data[3] == 0xac when brake is not pressed and the ACC button has been pressed
+//	//data[3] == 0x4c when brake is pressed and the ACC button has not been pressed
+//	//data[3] == 0x6c when brake is pressed and the ACC button has been pressed
+//	p->ACC_button_state = (data[3] & 0x20) ? 1 : 0;
+//	char_temp = data[3] & 0x40;
+//	if(char_temp != 0)
+//		p->Brake_pedal_state = 1;
+//	else
+//		p->Brake_pedal_state = 0;
+//
+//	p->green_cruise_icon = (data[4] & 0x40) == 0 ? 0 : 1;
+//
+//	p->counter = (unsigned char)data[6];
+//
+//	if((p->ACC_button_state != 0) || (p->Brake_pedal_state != 0)){
+//
+//	print_timestamp(stdout, &ts);
+//	printf("library: Left_side_Torque_cmd %d Right_side_Torque_cmd %d ACC_button_state %#hhx Brake_pedal_state %#hhx Cruise_info %d counter %d d[0]: %#hhx d[1]: %#hhx d[2]: %#hhx d[3]: %#hhx d[6]: %#hhx \n",
+//		p->Left_side_Torque_cmd,
+//		p->Right_side_Torque_cmd,
+//		p->ACC_button_state,
+//		p->Brake_pedal_state,
+//		p->Cruise_info,
+//		p->counter,
+//		data[0],
+//		data[1],
+//		data[2],
+//		data[3],
+//		data[6]
+//	);
+//	}
+//}
 
 /*******************************************************************************
  *	Veh_Accel_CAN4
@@ -603,7 +747,7 @@ static inline void get_leaf_accel(unsigned char *data, leaf_Veh_Accel_CAN4_t *p)
 	p->Yaw_Rate_CAN4__degps = (float)(short_temp3 * YAW_RATE_RES) + YAW_RATE_OFF;
 
 	p->Veh_brake_press_CAN4__bar = (unsigned char)data[6];
-//
+
 //	print_timestamp(stdout, &ts);
 //	printf("library: Long_Accel_CAN4__G %.3f G %.3f mps2 short_temp1 %#hX Lateral_Accel_CAN4__mps2 %.3f short_temp2 %#hX Yaw_Rate_CAN4__degps %.3f short_temp3 %#hX Veh_brake_press_CAN4__bar %d %#hhx %#hhx %#hhx %#hhx %#hhx %#hhx %#hhx \n",
 //			p->Long_Accel_CAN4__G,
