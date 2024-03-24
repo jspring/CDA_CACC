@@ -8,6 +8,7 @@ typedef struct {
 	char brake_pressure;
 	char brake_switch;
 	short brake_position;
+	char cc_active;
 	float yaw_rate_dps;		// Yaw rate (if available)
 	float distance_from_start;	// Distance from the beginning of the track for virtual car
 	float fuel_rate;		// Fuel rate, l/s
