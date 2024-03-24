@@ -7,5 +7,5 @@ mkdir -p include
 cd include
 rm -f `ls *.h|grep -v vehicle_common`
 rm -f make_includes.err
-FILELIST=`find .. -name "*.h" | grep -v Leddar`
+FILELIST=`find .. -name "*.h" | grep -v Leddar | grep -v bitsery | grep -v BSM_dir`
 cp $FILELIST . 2>make_includes.err
