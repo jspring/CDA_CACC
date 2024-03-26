@@ -98,30 +98,30 @@ typedef struct{
 
 typedef struct {
 	// Time info
-	short year;
-	char month;
-	char day;
-	char hour;
-	char minute;
-	char second;
-	short ms;
+	short year; //0,1
+	char month; //2
+	char day;	//3
+	char hour;	//4
+	char minute;//5
+	char second;//6
+	short ms;	//7,8
 
 	// Sim veh ID, used to determine if there is a virtual leading vehicle
-	int16_t simID;
+	int16_t simID;//9,10
 
 	// Target test vehicle
-	short targetVehID;
+	short targetVehID;//11,12
 
 	// Virtual leading vehicle
-	int v; // 0.001 m/s
-	int pos; // Position from the start, 0.001 m
+	int v; // 13,14,15,16 0.001 m/s
+	int pos; // 17,18,19,20 Position from the start, 0.001 m
 
 	// Signal control
-	char signalState;
-	int endTime; // numer of ms since 00:00:00 of the day
+	char signalState;//21
+	int endTime; // 22,23,24,25 numer of ms since 00:00:00 of the day
 
 	// TP Info
-	int refAcc; // 0.001 m/s2
+	int refAcc; // 26,27,28,29 0.001 m/s2
 	//int32_t intersectionLoc; // Location of the downstream intersection, 0.001 m
 } IS_PACKED server_2_test_vehicle_t;
 

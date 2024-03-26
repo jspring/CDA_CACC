@@ -17,7 +17,7 @@ PATH_OBJS += $(ASNDIR)/*.o $(OBJDIR)/veh_lib.o
 PATH_LIBS = -lasncodec $(PATH_CORE_LIBS)
 
 #EXEC =  $(OBJDIR)/veh_rcv $(OBJDIR)/veh_snd $(OBJDIR)/veh_snd_test $(OBJDIR)/dvi_rcv $(OBJDIR)/dvi_snd $(OBJDIR)/dvi_snd_db_test $(OBJDIR)/settime2trucksignal $(OBJDIR)/msleep
-EXEC =  $(OBJDIR)/veh_rcv $(OBJDIR)/veh_snd $(OBJDIR)/veh_snd_test
+EXEC =  $(OBJDIR)/veh_rcv $(OBJDIR)/veh_snd $(OBJDIR)/veh_rcv_mod_4_hao $(OBJDIR)/veh_snd_mod_4_hao $(OBJDIR)/veh_snd_test
 
 all:    $(OBJDIR) $(PATH_OBJS) $(EXEC)
 
